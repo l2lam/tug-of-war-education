@@ -44,10 +44,7 @@ onUnmounted(() => {
 });
 
 function handleStart() {
-  store.startGame(
-    { name: 'PLAYER 1', difficulties: ['grade-1-math'] },
-    { name: 'PLAYER 2', difficulties: ['grade-1-math'] }
-  );
+  store.startGame();
   startGameLoop();
 }
 

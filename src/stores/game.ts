@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
-import type { GameState, PlayerConfig, Question } from '../types';
+import type { GameState, Question } from '../types';
 import { PLAYER_ID, type PlayerId } from '../constants';
 
 export const useGameStore = defineStore('game', () => {
@@ -15,6 +15,8 @@ export const useGameStore = defineStore('game', () => {
         leftPlayer: { id: PLAYER_ID.LEFT, name: 'Player 1', score: 0, strength: 1, difficulties: ['grade-1-math'], currentQuestion: undefined },
         rightPlayer: { id: PLAYER_ID.RIGHT, name: 'Player 2', score: 0, strength: 1, difficulties: ['grade-1-math'], currentQuestion: undefined },
         winner: null,
+        p1Config: { name: 'Player 1', difficulties: ['grade-1-math'] },
+        p2Config: { name: 'Player 2', difficulties: ['grade-1-math'] },
     });
 
     const config = ref({
@@ -27,8 +29,9 @@ export const useGameStore = defineStore('game', () => {
 
     const ropeOffset = computed(() => state.value.ropePosition);
 
-    function startGame(leftConfig: PlayerConfig, rightConfig: PlayerConfig) {
+    function startGame() {
         state.value = {
+            ...state.value,
             isPlaying: true,
             isPaused: false,
             isTransitioning: false,
@@ -38,18 +41,18 @@ export const useGameStore = defineStore('game', () => {
             timeLeft: config.value.roundDuration,
             leftPlayer: {
                 id: PLAYER_ID.LEFT,
-                name: leftConfig.name,
+                name: state.value.p1Config.name,
                 score: 0,
                 strength: 3,
-                difficulties: leftConfig.difficulties,
+                difficulties: state.value.p1Config.difficulties,
                 currentQuestion: undefined
             },
             rightPlayer: {
                 id: PLAYER_ID.RIGHT,
-                name: rightConfig.name,
+                name: state.value.p2Config.name,
                 score: 0,
                 strength: 3,
-                difficulties: rightConfig.difficulties,
+                difficulties: state.value.p2Config.difficulties,
                 currentQuestion: undefined
             },
             winner: null,

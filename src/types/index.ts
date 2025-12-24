@@ -39,5 +39,7 @@ export interface GameState {
     timeLeft: number;
     leftPlayer: PlayerState;
     rightPlayer: PlayerState;
+    p1Config: PlayerConfig;
+    p2Config: PlayerConfig;
     winner: PlayerId | null;
 }
