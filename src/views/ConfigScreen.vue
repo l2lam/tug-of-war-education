@@ -20,18 +20,29 @@ onMounted(async () => {
 });
 
 const p1Name = ref('Player 1');
-const p1Diff = ref<Difficulty>('grade-1-math');
+const p1Topics = ref<Difficulty[]>(['grade-1-math']); // Multi-select
 const p2Name = ref('Player 2');
-const p2Diff = ref<Difficulty>('grade-1-math');
+const p2Topics = ref<Difficulty[]>(['grade-1-math']); // Multi-select
+
+function toggleTopic(player: 'p1' | 'p2', topic: Difficulty) {
+  const topics = player === 'p1' ? p1Topics : p2Topics;
+  const index = topics.value.indexOf(topic);
+  
+  if (index > -1) {
+    // Only allow deselect if more than 1 topic selected
+    if (topics.value.length > 1) {
+      topics.value.splice(index, 1);
+    }
+  } else {
+    topics.value.push(topic);
+  }
+}
 
 function handleStart() {
   store.startGame(
-    { name: p1Name.value, difficulties: [p1Diff.value] },
-    { name: p2Name.value, difficulties: [p2Diff.value] }
+    { name: p1Name.value, difficulties: p1Topics.value },
+    { name: p2Name.value, difficulties: p2Topics.value }
   );
-  // Game assumes external trigger for loop usually, but store tracks playing state.
-  // The loop needs to be started.
-  // We should probably start the loop here or in GameScreen on mount if playing.
 }
 </script>
 
@@ -47,10 +58,17 @@ function handleStart() {
           <input v-model="p1Name" />
         </div>
         <div class="field">
-          <label>DIFFICULTY</label>
-          <select v-model="p1Diff">
-            <option v-for="d in difficulties" :key="d" :value="d">{{ d }}</option>
-          </select>
+          <label>TOPICS (Select at least one)</label>
+          <div class="topic-list">
+            <label v-for="d in difficulties" :key="d" class="topic-checkbox">
+              <input 
+                type="checkbox" 
+                :checked="p1Topics.includes(d)"
+                @change="toggleTopic('p1', d)"
+              />
+              <span>{{ d }}</span>
+            </label>
+          </div>
         </div>
       </div>
 
@@ -63,10 +81,17 @@ function handleStart() {
           <input v-model="p2Name" />
         </div>
         <div class="field">
-          <label>DIFFICULTY</label>
-          <select v-model="p2Diff">
-            <option v-for="d in difficulties" :key="d" :value="d">{{ d }}</option>
-          </select>
+          <label>TOPICS (Select at least one)</label>
+          <div class="topic-list">
+            <label v-for="d in difficulties" :key="d" class="topic-checkbox">
+              <input 
+                type="checkbox" 
+                :checked="p2Topics.includes(d)"
+                @change="toggleTopic('p2', d)"
+              />
+              <span>{{ d }}</span>
+            </label>
+          </div>
         </div>
       </div>
     </div>
@@ -122,6 +147,40 @@ input, select {
   background: #000;
   color: white;
   border: 2px solid #555;
+}
+
+.topic-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-height: 200px;
+  overflow-y: auto;
+  padding: 0.5rem;
+  background: #000;
+  border: 2px solid #555;
+}
+
+.topic-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  padding: 0.25rem;
+  transition: background 0.2s;
+}
+
+.topic-checkbox:hover {
+  background: #333;
+}
+
+.topic-checkbox input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+
+.topic-checkbox span {
+  font-size: 1rem;
 }
 
 .vs {

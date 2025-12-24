@@ -42,14 +42,22 @@ export function useGameLoop() {
     async function fetchNewQuestions() {
         const dataService = ServiceFactory.getDataService();
 
-        const p1Diff = store.state.leftPlayer.difficulties[0] || 'grade-1-math';
-        const p2Diff = store.state.rightPlayer.difficulties[0] || 'grade-1-math';
+        // Randomly select from enabled topics
+        const p1Topics = store.state.leftPlayer.difficulties;
+        const p2Topics = store.state.rightPlayer.difficulties;
 
-        const q1 = await dataService.getQuestions(p1Diff, 1);
-        const q2 = await dataService.getQuestions(p2Diff, 1);
+        // Ensure topics arrays are not empty before selecting
+        if (p1Topics.length > 0) {
+            const p1Diff = p1Topics[Math.floor(Math.random() * p1Topics.length)]!;
+            const q1 = await dataService.getQuestions(p1Diff, 1);
+            if (q1.length > 0) store.setQuestion(PLAYER_ID.LEFT, q1[0]!);
+        }
 
-        if (q1.length > 0) store.setQuestion(PLAYER_ID.LEFT, q1[0]!);
-        if (q2.length > 0) store.setQuestion(PLAYER_ID.RIGHT, q2[0]!);
+        if (p2Topics.length > 0) {
+            const p2Diff = p2Topics[Math.floor(Math.random() * p2Topics.length)]!;
+            const q2 = await dataService.getQuestions(p2Diff, 1);
+            if (q2.length > 0) store.setQuestion(PLAYER_ID.RIGHT, q2[0]!);
+        }
     }
 
     function startGameLoop() {

@@ -14,10 +14,27 @@ const emit = defineEmits<{
 
 const currentQuestion = computed(() => props.player.currentQuestion);
 
-function handleAnswer(index: number) {
+// Randomize option order while tracking original indices
+const shuffledOptions = computed(() => {
+  if (!currentQuestion.value) return [];
+  
+  const options = currentQuestion.value.options.map((opt, idx) => ({ opt, originalIdx: idx }));
+  
+  // Fisher-Yates shuffle
+  for (let i = options.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [options[i]!, options[j]!] = [options[j]!, options[i]!];
+  }
+  
+  return options;
+});
+
+function handleAnswer(shuffledIndex: number) {
   if (props.disabled || !currentQuestion.value) return;
   
-  const isCorrect = index === currentQuestion.value.correctIndex;
+  // Map shuffled index back to original index
+  const originalIdx = shuffledOptions.value[shuffledIndex]!.originalIdx;
+  const isCorrect = originalIdx === currentQuestion.value.correctIndex;
   emit('answer', isCorrect);
 }
 </script>
@@ -27,19 +44,19 @@ function handleAnswer(index: number) {
     <div class="stats pixel-border">
       <h2>{{ player.name }}</h2>
       <!-- <div class="score">SCORE: {{ player.score }}</div> -->
-      <div class="strength">POWER: {{ '⚡'.repeat(player.strength) }}</div>
+      <!-- <div class="strength">POWER: {{ '⚡'.repeat(player.strength) }}</div> -->
     </div>
 
     <div class="question-board pixel-border" v-if="currentQuestion">
       <div class="question-text">{{ currentQuestion.text }}</div>
       <div class="options">
         <button 
-          v-for="(opt, idx) in currentQuestion.options" 
+          v-for="(item, idx) in shuffledOptions" 
           :key="idx" 
           @click="handleAnswer(idx)"
           class="option-btn"
         >
-          {{ opt }}
+          {{ item.opt }}
         </button>
       </div>
     </div>
@@ -97,5 +114,6 @@ function handleAnswer(index: number) {
 .option-btn {
   font-size: 2rem;
   border-color: var(--player-color);
+  border-radius: 16px;
 }
 </style>
