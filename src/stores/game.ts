@@ -12,11 +12,11 @@ export const useGameStore = defineStore('game', () => {
         ropeVelocity: 0,
         round: 1,
         timeLeft: 0,
-        leftPlayer: { id: PLAYER_ID.LEFT, name: 'Player 1', score: 0, strength: 1, difficulties: ['grade-1-math'], currentQuestion: undefined },
-        rightPlayer: { id: PLAYER_ID.RIGHT, name: 'Player 2', score: 0, strength: 1, difficulties: ['grade-1-math'], currentQuestion: undefined },
+        leftPlayer: { id: PLAYER_ID.LEFT, name: 'Player 1', score: 0, strength: 1, topics: ['grade-1-math'], currentQuestion: undefined },
+        rightPlayer: { id: PLAYER_ID.RIGHT, name: 'Player 2', score: 0, strength: 1, topics: ['grade-1-math'], currentQuestion: undefined },
         winner: null,
-        p1Config: { name: 'Player 1', difficulties: ['grade-1-math'] },
-        p2Config: { name: 'Player 2', difficulties: ['grade-1-math'] },
+        p1Config: { name: 'Player 1', topics: ['grade-1-math'] },
+        p2Config: { name: 'Player 2', topics: ['grade-1-math'] },
     });
 
     const config = ref({
@@ -44,7 +44,7 @@ export const useGameStore = defineStore('game', () => {
                 name: state.value.p1Config.name,
                 score: 0,
                 strength: 3,
-                difficulties: state.value.p1Config.difficulties,
+                topics: state.value.p1Config.topics,
                 currentQuestion: undefined
             },
             rightPlayer: {
@@ -52,7 +52,7 @@ export const useGameStore = defineStore('game', () => {
                 name: state.value.p2Config.name,
                 score: 0,
                 strength: 3,
-                difficulties: state.value.p2Config.difficulties,
+                topics: state.value.p2Config.topics,
                 currentQuestion: undefined
             },
             winner: null,

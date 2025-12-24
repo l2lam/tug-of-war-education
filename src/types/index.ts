@@ -1,18 +1,18 @@
 import { type PlayerId } from '../constants';
 
-export type Difficulty = string;
+export type Topic = string;
 
 export interface Question {
     id: string;
     text: string;
     options: string[];
     correctIndex: number;
-    difficulty: Difficulty;
+    topic: Topic;
 }
 
 export interface PlayerConfig {
     name: string;
-    difficulties: Difficulty[];
+    topics: Topic[];
 }
 
 export interface PlayerState {
@@ -20,7 +20,7 @@ export interface PlayerState {
     name: string;
     score: number;
     strength: number; // Current pulling power (based on streak/correct answers)
-    difficulties: Difficulty[];
+    topics: Topic[];
     currentQuestion?: Question;
 }
 

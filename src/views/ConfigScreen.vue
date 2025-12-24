@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import { useGameStore } from '../stores/game';
-import type { Difficulty } from '../types';
+import type { Topic } from '../types';
 import ServiceFactory from '../services';
 import { startBackgroundMusic, MUSIC_TRACK } from '../services/audio';
 
@@ -11,7 +11,7 @@ const emit = defineEmits<{
   (e: 'edit'): void;
 }>();
 
-const difficulties = ref<Difficulty[]>(['grade-1-math', 'grade-12-math', 'grade-9-science']);
+const topics = ref<Topic[]>(['grade-1-math', 'grade-12-math', 'grade-9-science']);
 
 onMounted(async () => {
   // Resume menu music when returning to config
@@ -19,20 +19,20 @@ onMounted(async () => {
   const volume = savedVolume ? parseFloat(savedVolume) : 0.3;
   startBackgroundMusic(MUSIC_TRACK.MENU, volume);
 
-  const custom = await ServiceFactory.getDataService().getCustomLevels();
-  difficulties.value = [...difficulties.value, ...custom];
+  const custom = await ServiceFactory.getDataService().getCustomTopics();
+  topics.value = [...topics.value, ...custom];
 });
 
-function toggleTopic(player: 'p1' | 'p2', topic: Difficulty) {
+function toggleTopic(player: 'p1' | 'p2', topic: Topic) {
   const config = player === 'p1' ? store.state.p1Config : store.state.p2Config;
-  const index = config.difficulties.indexOf(topic);
+  const index = config.topics.indexOf(topic);
   
   if (index > -1) {
-    if (config.difficulties.length > 1) {
-      config.difficulties.splice(index, 1);
+    if (config.topics.length > 1) {
+      config.topics.splice(index, 1);
     }
   } else {
-    config.difficulties.push(topic);
+    config.topics.push(topic);
   }
 }
 
@@ -43,7 +43,7 @@ function handleStart() {
 
 <template>
   <div class="config-screen">
-    <h1>BATTLE SETUP</h1>
+    <h1>TUG-OF-WAR SETUP</h1>
     
     <div class="players-setup">
       <div class="p-config p1-border">
@@ -55,13 +55,13 @@ function handleStart() {
         <div class="field">
           <label>TOPICS (Select at least one)</label>
           <div class="topic-list">
-            <label v-for="d in difficulties" :key="d" class="topic-checkbox">
+            <label v-for="t in topics" :key="t" class="topic-checkbox">
               <input 
                 type="checkbox" 
-                :checked="store.state.p1Config.difficulties.includes(d)"
-                @change="toggleTopic('p1', d)"
+                :checked="store.state.p1Config.topics.includes(t)"
+                @change="toggleTopic('p1', t)"
               />
-              <span>{{ d }}</span>
+              <span>{{ t }}</span>
             </label>
           </div>
         </div>
@@ -78,13 +78,13 @@ function handleStart() {
         <div class="field">
           <label>TOPICS (Select at least one)</label>
           <div class="topic-list">
-            <label v-for="d in difficulties" :key="d" class="topic-checkbox">
+            <label v-for="t in topics" :key="t" class="topic-checkbox">
               <input 
                 type="checkbox" 
-                :checked="store.state.p2Config.difficulties.includes(d)"
-                @change="toggleTopic('p2', d)"
+                :checked="store.state.p2Config.topics.includes(t)"
+                @change="toggleTopic('p2', t)"
               />
-              <span>{{ d }}</span>
+              <span>{{ t }}</span>
             </label>
           </div>
         </div>
@@ -92,7 +92,7 @@ function handleStart() {
     </div>
 
     <div class="actions">
-        <button class="editor-btn" @click="emit('edit')">LEVEL EDITOR</button>
+        <button class="editor-btn" @click="emit('edit')">TOPICS EDITOR</button>
         <button class="start-btn" @click="handleStart">FIGHT!</button>
     </div>
   </div>

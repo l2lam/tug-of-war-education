@@ -3,14 +3,13 @@ import { ref, watch } from 'vue';
 import { useGameStore } from './stores/game';
 import GameScreen from './views/GameScreen.vue';
 import ConfigScreen from './views/ConfigScreen.vue';
-import LevelEditor from './views/LevelEditor.vue';
+import TopicsEditor from './views/TopicsEditor.vue';
 import { onMounted } from 'vue';
 import { startBackgroundMusic, MUSIC_TRACK } from './services/audio';
 
 const store = useGameStore();
 
-type View = 'config' | 'game' | 'editor';
-const currentView = ref<View>('config');
+const currentScreen = ref<'config' | 'game' | 'topics-editor'>('config');
 
 // If store isPlaying, force game view?
 // Actually ConfigScreen starts the game.
@@ -18,10 +17,10 @@ const currentView = ref<View>('config');
 // But store.startGame returns void. We can watch store.isPlaying.
 watch(() => store.state.isPlaying, (playing) => {
   if (playing) {
-    currentView.value = 'game';
-  } else if (currentView.value === 'game' && !store.state.winner) {
+    currentScreen.value = 'game';
+  } else if (currentScreen.value === 'game' && !store.state.winner) {
     // Game stopped without winner (e.g., user manually stopped)
-    currentView.value = 'config';
+    currentScreen.value = 'config';
   }
   // If there's a winner, stay on game screen to show victory overlay
 });
@@ -31,21 +30,15 @@ onMounted(() => {
   startBackgroundMusic(MUSIC_TRACK.MENU);
 });
 
-function handleNavigate(view: View) {
-  currentView.value = view;
-}
 </script>
 
 <template>
-  <GameScreen v-if="currentView === 'game'" />
-  <ConfigScreen 
-    v-else-if="currentView === 'config'" 
-    @edit="handleNavigate('editor')" 
+  <TopicsEditor
+    v-if="currentScreen === 'topics-editor'"
+    @back="currentScreen = 'config'"
   />
-  <LevelEditor 
-    v-else-if="currentView === 'editor'" 
-    @back="handleNavigate('config')" 
-  />
+  <GameScreen v-if="currentScreen === 'game'" />
+  <ConfigScreen v-if="currentScreen === 'config'" @edit="currentScreen = 'topics-editor'" />
 </template>
 
 <style scoped>

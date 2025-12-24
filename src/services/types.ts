@@ -1,4 +1,4 @@
-import type { Question, Difficulty } from '../types';
+import type { Question, Topic } from '../types';
 
 export interface User {
     id: string;
@@ -12,7 +12,7 @@ export interface IAuthService {
 }
 
 export interface IDataService {
-    getQuestions(difficulty: Difficulty, count: number): Promise<Question[]>;
-    saveLevel(name: string, questions: Question[]): Promise<boolean>;
-    getCustomLevels(): Promise<string[]>; // Returns definitions or IDs
+    getQuestions(topic: Topic, count: number): Promise<Question[]>;
+    saveTopic(name: string, questions: Question[]): Promise<boolean>;
+    getCustomTopics(): Promise<string[]>; // Returns definitions or IDs
 }

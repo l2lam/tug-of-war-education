@@ -43,20 +43,19 @@ export function useGameLoop() {
         const dataService = ServiceFactory.getDataService();
 
         // Randomly select from enabled topics
-        const p1Topics = store.state.leftPlayer.difficulties;
-        const p2Topics = store.state.rightPlayer.difficulties;
-
-        // Ensure topics arrays are not empty before selecting
-        if (p1Topics.length > 0) {
-            const p1Diff = p1Topics[Math.floor(Math.random() * p1Topics.length)]!;
-            const q1 = await dataService.getQuestions(p1Diff, 1);
-            if (q1.length > 0) store.setQuestion(PLAYER_ID.LEFT, q1[0]!);
+        if (store.state.isPlaying && !store.state.leftPlayer.currentQuestion) {
+            const p1Topics = store.state.leftPlayer.topics;
+            const p1Topic = p1Topics[Math.floor(Math.random() * p1Topics.length)] || 'grade-1-math';
+            dataService.getQuestions(p1Topic, 1).then(qs => {
+                if (qs.length > 0) store.state.leftPlayer.currentQuestion = qs[0];
+            });
         }
-
-        if (p2Topics.length > 0) {
-            const p2Diff = p2Topics[Math.floor(Math.random() * p2Topics.length)]!;
-            const q2 = await dataService.getQuestions(p2Diff, 1);
-            if (q2.length > 0) store.setQuestion(PLAYER_ID.RIGHT, q2[0]!);
+        if (store.state.isPlaying && !store.state.rightPlayer.currentQuestion) {
+            const p2Topics = store.state.rightPlayer.topics;
+            const p2Topic = p2Topics[Math.floor(Math.random() * p2Topics.length)] || 'grade-1-math';
+            dataService.getQuestions(p2Topic, 1).then(qs => {
+                if (qs.length > 0) store.state.rightPlayer.currentQuestion = qs[0];
+            });
         }
     }
 

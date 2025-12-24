@@ -1,31 +1,32 @@
+import { createClient } from '@supabase/supabase-js';
 import type { IDataService } from '../types';
-import type { Question, Difficulty } from '../../types';
-import { supabase } from './client';
+import type { Question, Topic } from '../../types';
+
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+const supabase = (supabaseUrl && supabaseKey) ? createClient(supabaseUrl, supabaseKey) : null;
 
 export class SupabaseDataService implements IDataService {
-    async getQuestions(difficulty: Difficulty, count: number): Promise<Question[]> {
+    async getQuestions(topic: Topic, count: number): Promise<Question[]> {
         if (!supabase) throw new Error('Supabase not configured');
 
         const { data, error } = await supabase
             .from('questions')
             .select('*')
-            .eq('difficulty', difficulty)
-            // Random sorting in SQL is tricky, usually use .rpc() or fetch more and shuffle
-            .limit(count); // Optimistic limit
+            .eq('topic', topic)
+            .limit(count);
 
         if (error) throw error;
-
-        // For now assuming DB schema matches type or we map it
-        return (data || []).map((q: any) => ({
+        return (data || []).map(q => ({
             id: q.id,
-            text: q.question_text,
-            options: q.options, // Assuming JSON array
+            text: q.text,
+            options: q.options,
             correctIndex: q.correct_index,
-            difficulty: q.difficulty
+            topic: q.topic
         }));
     }
 
-    async saveLevel(name: string, questions: Question[]): Promise<boolean> {
+    async saveTopic(name: string, questions: Question[]): Promise<boolean> {
         if (!supabase) throw new Error('Supabase not configured');
 
         // Conceptual implementation for custom levels table
@@ -38,6 +39,13 @@ export class SupabaseDataService implements IDataService {
             });
 
         return !error;
+    }
+
+    async getCustomTopics(): Promise<string[]> {
+        if (!supabase) return [];
+
+        const { data } = await supabase.from('custom_levels').select('name');
+        return (data || []).map((d: any) => d.name);
     }
 
     async getCustomLevels(): Promise<string[]> {

@@ -7,7 +7,7 @@ const emit = defineEmits<{
   (e: 'back'): void;
 }>();
 
-const levelName = ref('');
+const topicName = ref('');
 const questions = ref<Question[]>([]);
 const newQText = ref('');
 const newQOption1 = ref('');
@@ -27,7 +27,7 @@ function addQuestion() {
     text: newQText.value,
     options: [newQOption1.value, newQOption2.value, newQOption3.value, newQOption4.value],
     correctIndex: correctIndex.value,
-    difficulty: 'custom'
+    topic: 'custom'
   };
   
   questions.value.push(q);
@@ -39,12 +39,12 @@ function addQuestion() {
   newQOption4.value = '';
 }
 
-async function saveLevel() {
-  if (!levelName.value || questions.value.length === 0) return;
+async function saveTopic() {
+  if (!topicName.value || questions.value.length === 0) return;
   
   const dataService = ServiceFactory.getDataService();
-  await dataService.saveLevel(levelName.value, questions.value);
-  alert('Level Saved!');
+  await dataService.saveTopic(topicName.value, questions.value);
+  alert('Topic Saved!');
   emit('back');
 }
 
@@ -80,14 +80,14 @@ function handleFileUpload(event: Event) {
   <div class="level-editor">
     <div class="header">
       <button @click="emit('back')">BACK</button>
-      <h1>LEVEL EDITOR</h1>
-      <button @click="saveLevel" :disabled="!levelName || questions.length === 0">SAVE</button>
+      <h1>TOPICS EDITOR</h1>
+      <button @click="saveTopic" :disabled="!topicName || questions.length === 0">SAVE</button>
     </div>
 
     <div class="editor-body">
       <div class="level-meta">
-        <label>LEVEL NAME:</label>
-        <input v-model="levelName" placeholder="My Custom Level" />
+        <label>TOPIC NAME:</label>
+        <input v-model="topicName" placeholder="My Custom Topic" />
       </div>
 
       <div class="new-question-form pixel-border">
@@ -124,7 +124,7 @@ function handleFileUpload(event: Event) {
 </template>
 
 <style scoped>
-.level-editor {
+.topics-editor {
   background: #222;
   color: white;
   height: 100%;
