@@ -115,6 +115,7 @@ function getWinnerStrength() {
         <button v-else @click="store.state.isPaused = !store.state.isPaused">
           {{ store.state.isPaused ? 'RESUME' : 'PAUSE' }}
         </button>
+        <button class="abort-btn" @click="store.abortGame()">ABORT</button>
       </div>
       <div class="volume-control">
         <label for="volume-slider">🔊</label>
@@ -197,6 +198,24 @@ function getWinnerStrength() {
 
 .timer {
   color: yellow;
+}
+
+.controls {
+  display: flex;
+  gap: 1rem;
+}
+
+.abort-btn {
+  background: #ff0000;
+  border-color: #aa0000;
+  color: #fff;
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
+}
+
+.abort-btn:hover {
+  background: #ff4444;
+  box-shadow: 0 0 15px rgba(255, 0, 0, 0.6);
 }
 
 .volume-control {

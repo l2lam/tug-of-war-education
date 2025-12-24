@@ -120,6 +120,11 @@ export const useGameStore = defineStore('game', () => {
         }
     }
 
+    function abortGame() {
+        state.value.isPlaying = false;
+        state.value.winner = null;
+    }
+
     return {
         state,
         config,
@@ -129,6 +134,7 @@ export const useGameStore = defineStore('game', () => {
         tick,
         answerQuestion,
         setQuestion,
-        endGame
+        endGame,
+        abortGame
     };
 });
