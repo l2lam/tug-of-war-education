@@ -1,0 +1,70 @@
+:root {
+  font-family: 'Courier New', monospace;
+  /* Fallback until we load a pixel font */
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: dark;
+  --bg-color: #1a1a2e;
+  --text-main: #e94560;
+  --text-dim: #a0a0a0;
+  --accent-color: #0f3460;
+
+  /* Street Fighter Palette */
+  --p1-color: #e63946;
+  /* Red */
+  --p2-color: #457b9d;
+  /* Blue */
+  --highlight: #f1faee;
+
+  color: var(--highlight);
+  background-color: var(--bg-color);
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  display: flex;
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
+  overflow: hidden;
+  background-image: linear-gradient(45deg, #16213e 25%, #1a1a2e 25%, #1a1a2e 50%, #16213e 50%, #16213e 75%, #1a1a2e 75%, #1a1a2e 100%);
+  background-size: 20px 20px;
+}
+
+#app {
+  width: 100%;
+  height: 100vh;
+  margin: 0 auto;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+button {
+  font-family: inherit;
+  border: 4px solid var(--text-main);
+  background: var(--accent-color);
+  color: var(--highlight);
+  padding: 0.5em 1em;
+  font-weight: bold;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: transform 0.1s;
+  box-shadow: 4px 4px 0px 0px #000;
+}
+
+button:active {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0px 0px #000;
+}
+
+.pixel-border {
+  border: 4px solid var(--highlight);
+  box-shadow: 4px 4px 0px 0px #000;
+}
