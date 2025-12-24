@@ -26,7 +26,7 @@ function handleAnswer(index: number) {
   <div class="player-area" :class="{ disabled: disabled }" :style="{ '--player-color': color }">
     <div class="stats pixel-border">
       <h2>{{ player.name }}</h2>
-      <div class="score">SCORE: {{ player.score }}</div>
+      <!-- <div class="score">SCORE: {{ player.score }}</div> -->
       <div class="strength">POWER: {{ '⚡'.repeat(player.strength) }}</div>
     </div>
 
@@ -70,6 +70,7 @@ function handleAnswer(index: number) {
   background: var(--player-color);
   color: white;
   padding: 0.5rem;
+  text-align: center;
 }
 
 .question-board {
@@ -82,8 +83,9 @@ function handleAnswer(index: number) {
 }
 
 .question-text {
-  font-size: 1.2rem;
+  font-size: 2rem;
   min-height: 3rem;
+  text-align: center;
 }
 
 .options {
@@ -93,7 +95,7 @@ function handleAnswer(index: number) {
 }
 
 .option-btn {
-  font-size: 1rem;
+  font-size: 2rem;
   border-color: var(--player-color);
 }
 </style>

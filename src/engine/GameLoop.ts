@@ -53,9 +53,25 @@ export function useGameLoop() {
     }
 
     function startGameLoop() {
+        if (store.state.isPlaying && timerInterval.value) return;
+
+        store.state.isPlaying = true;
+        store.state.isPaused = false;
+
         fetchNewQuestions().then(() => {
             startRoundTimer();
         });
+
+        // Physics Loop
+        const loop = () => {
+            if (!store.state.isPlaying) return;
+
+            if (!store.state.isPaused) {
+                store.tick();
+            }
+            requestAnimationFrame(loop);
+        };
+        requestAnimationFrame(loop);
     }
 
     function stopGameLoop() {
@@ -63,6 +79,7 @@ export function useGameLoop() {
             clearInterval(timerInterval.value);
             timerInterval.value = null;
         }
+        store.state.isPlaying = false;
     }
 
     // Watch for winner

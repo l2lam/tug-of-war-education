@@ -33,7 +33,8 @@ export interface GameState {
     isPlaying: boolean;
     isPaused: boolean;
     isTransitioning: boolean; // Locks inputs during round change
-    ropePosition: number; // 0 = center, -100 = left wins, 100 = right wins
+    ropePosition: number; // 0 = center, range +/- 100 roughly (visuals will scale)
+    ropeVelocity: number;
     round: number;
     timeLeft: number;
     leftPlayer: PlayerState;

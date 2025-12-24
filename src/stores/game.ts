@@ -9,6 +9,7 @@ export const useGameStore = defineStore('game', () => {
         isPaused: false,
         isTransitioning: false,
         ropePosition: 0,
+        ropeVelocity: 0,
         round: 1,
         timeLeft: 0,
         leftPlayer: { id: PLAYER_ID.LEFT, name: 'Player 1', score: 0, strength: 1, difficulties: ['grade-1-math'], currentQuestion: undefined },
@@ -19,6 +20,9 @@ export const useGameStore = defineStore('game', () => {
     const config = ref({
         winningThreshold: 50,
         roundDuration: 30,
+        mass: 5,
+        friction: 0.95,
+        pullForceMultiplier: 0.01,
     });
 
     const ropeOffset = computed(() => state.value.ropePosition);
@@ -29,13 +33,14 @@ export const useGameStore = defineStore('game', () => {
             isPaused: false,
             isTransitioning: false,
             ropePosition: 0,
+            ropeVelocity: 0,
             round: 1,
             timeLeft: config.value.roundDuration,
             leftPlayer: {
                 id: PLAYER_ID.LEFT,
                 name: leftConfig.name,
                 score: 0,
-                strength: 1,
+                strength: 3,
                 difficulties: leftConfig.difficulties,
                 currentQuestion: undefined
             },
@@ -43,7 +48,7 @@ export const useGameStore = defineStore('game', () => {
                 id: PLAYER_ID.RIGHT,
                 name: rightConfig.name,
                 score: 0,
-                strength: 1,
+                strength: 3,
                 difficulties: rightConfig.difficulties,
                 currentQuestion: undefined
             },
@@ -51,8 +56,28 @@ export const useGameStore = defineStore('game', () => {
         };
     }
 
-    function updateRope(amount: number) {
-        state.value.ropePosition += amount;
+    function tick() {
+        if (!state.value.isPlaying || state.value.isPaused) return;
+
+        // Physics Loop
+        const leftForce = state.value.leftPlayer.strength * config.value.pullForceMultiplier;
+        const rightForce = state.value.rightPlayer.strength * config.value.pullForceMultiplier;
+
+        // Net force (Right is positive, Left is negative)
+        const netForce = rightForce - leftForce;
+
+        // F = ma -> a = F/m
+        const acceleration = netForce / config.value.mass;
+
+        // v = v + a
+        state.value.ropeVelocity += acceleration;
+
+        // Friction / Damping
+        state.value.ropeVelocity *= config.value.friction;
+
+        // p = p + v
+        state.value.ropePosition += state.value.ropeVelocity;
+
         checkWinCondition();
     }
 
@@ -71,18 +96,19 @@ export const useGameStore = defineStore('game', () => {
 
     function answerQuestion(playerId: PlayerId, isCorrect: boolean) {
         const player = playerId === PLAYER_ID.LEFT ? state.value.leftPlayer : state.value.rightPlayer;
+        const opponent = playerId === PLAYER_ID.LEFT ? state.value.rightPlayer : state.value.leftPlayer;
+
         if (isCorrect) {
             player.score += 10;
-            player.strength += 1; // Increase pulling power
-            // Pull rope towards player
-            const pullAmount = playerId === PLAYER_ID.LEFT ? -player.strength : player.strength;
-            updateRope(pullAmount);
+
+            // If player strength is already > 5, penalize opponent instead of gaining more strength
+            if (player.strength > 5) {
+                opponent.strength = Math.max(1, opponent.strength - 1);
+            } else {
+                player.strength += 1; // Increase constant pulling power
+            }
         } else {
-            player.strength = Math.max(1, player.strength - 1); // Decrease power but keep at least 1
-            // Penalty: Rope slips slightly other way? Or just no pull.
-            // Let's say they lose grip, so rope slides 1 unit towards opponent
-            const slipAmount = playerId === PLAYER_ID.LEFT ? 2 : -2;
-            updateRope(slipAmount);
+            player.strength = Math.max(1, player.strength - 1); // Decrease power
         }
     }
 
@@ -99,7 +125,8 @@ export const useGameStore = defineStore('game', () => {
         config,
         ropeOffset,
         startGame,
-        updateRope,
+        updateRope: () => { /* no-op */ }, // Kept for compatibility if external components call it
+        tick,
         answerQuestion,
         setQuestion,
         endGame
