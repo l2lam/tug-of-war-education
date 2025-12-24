@@ -17,10 +17,11 @@ const currentView = ref<View>('config');
 watch(() => store.state.isPlaying, (playing) => {
   if (playing) {
     currentView.value = 'game';
-  } else if (currentView.value === 'game') {
-    // Game over or stopped
+  } else if (currentView.value === 'game' && !store.state.winner) {
+    // Game stopped without winner (e.g., user manually stopped)
     currentView.value = 'config';
   }
+  // If there's a winner, stay on game screen to show victory overlay
 });
 
 function handleNavigate(view: View) {
