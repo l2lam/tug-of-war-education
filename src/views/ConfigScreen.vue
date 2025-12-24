@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { useGameStore } from '../stores/game';
 import type { Difficulty } from '../types';
-
 import ServiceFactory from '../services';
+import { startBackgroundMusic, MUSIC_TRACK } from '../services/audio';
 
 const store = useGameStore();
 
@@ -13,8 +13,12 @@ const emit = defineEmits<{
 
 const difficulties = ref<Difficulty[]>(['grade-1-math', 'grade-12-math', 'grade-9-science']);
 
-import { onMounted } from 'vue';
 onMounted(async () => {
+  // Resume menu music when returning to config
+  const savedVolume = localStorage.getItem('musicVolume');
+  const volume = savedVolume ? parseFloat(savedVolume) : 0.3;
+  startBackgroundMusic(MUSIC_TRACK.MENU, volume);
+
   const custom = await ServiceFactory.getDataService().getCustomLevels();
   difficulties.value = [...difficulties.value, ...custom];
 });

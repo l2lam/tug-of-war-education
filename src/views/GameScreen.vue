@@ -1,19 +1,46 @@
 <script setup lang="ts">
-import { onMounted } from 'vue';
+import { ref, watch, onMounted, onUnmounted } from 'vue';
 import { useGameStore } from '../stores/game';
 import { useGameLoop } from '../engine/GameLoop';
 import PlayerArea from '../components/PlayerArea.vue';
 import RopeAnimation from '../components/RopeAnimation.vue';
 import { PLAYER_ID, SOUND_TYPE } from '../constants';
-import { playSound } from '../services/audio';
+import { playSound, startBackgroundMusic, stopBackgroundMusic, setMusicVolume, MUSIC_TRACK } from '../services/audio';
 
 const store = useGameStore();
 const { startGameLoop, nextRound } = useGameLoop();
 
+// Volume control
+const savedVolume = localStorage.getItem('musicVolume');
+const musicVolume = ref(savedVolume ? parseFloat(savedVolume) : 0.3);
+
+function handleVolumeChange(event: Event) {
+  const target = event.target as HTMLInputElement;
+  const volume = parseFloat(target.value);
+  musicVolume.value = volume;
+  setMusicVolume(volume);
+  localStorage.setItem('musicVolume', volume.toString());
+}
+
 onMounted(() => {
+  // Start background music with persisted volume
+  startBackgroundMusic(MUSIC_TRACK.GAMEPLAY, musicVolume.value);
+  
   if (store.state.isPlaying) {
     startGameLoop();
   }
+});
+
+// Watch for winner to play victory music
+watch(() => store.state.winner, (winner: string | null) => {
+  if (winner) {
+    startBackgroundMusic(MUSIC_TRACK.VICTORY, musicVolume.value);
+  }
+});
+
+onUnmounted(() => {
+  // Stop background music when leaving the game screen
+  stopBackgroundMusic();
 });
 
 function handleStart() {
@@ -89,6 +116,19 @@ function getWinnerStrength() {
           {{ store.state.isPaused ? 'RESUME' : 'PAUSE' }}
         </button>
       </div>
+      <div class="volume-control">
+        <label for="volume-slider">🔊</label>
+        <input 
+          id="volume-slider"
+          type="range" 
+          min="0" 
+          max="1" 
+          step="0.05" 
+          :value="musicVolume" 
+          @input="handleVolumeChange"
+          class="volume-slider"
+        />
+      </div>
     </div>
 
     <!-- Rope Section -->
@@ -157,6 +197,59 @@ function getWinnerStrength() {
 
 .timer {
   color: yellow;
+}
+
+.volume-control {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-left: auto;
+}
+
+.volume-control label {
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+.volume-slider {
+  width: 100px;
+  height: 8px;
+  -webkit-appearance: none;
+  appearance: none;
+  background: #333;
+  border: 2px solid #555;
+  outline: none;
+  cursor: pointer;
+}
+
+.volume-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  background: #ffff00;
+  border: 2px solid #fff;
+  box-shadow: 0 0 5px rgba(255, 255, 0, 0.8);
+  cursor: pointer;
+}
+
+.volume-slider::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  background: #ffff00;
+  border: 2px solid #fff;
+  box-shadow: 0 0 5px rgba(255, 255, 0, 0.8);
+  cursor: pointer;
+}
+
+.volume-slider:hover::-webkit-slider-thumb {
+  background: #fff;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+}
+
+.volume-slider:hover::-moz-range-thumb {
+  background: #fff;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
 }
 
 .players-container {

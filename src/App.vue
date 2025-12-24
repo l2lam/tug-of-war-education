@@ -4,6 +4,8 @@ import { useGameStore } from './stores/game';
 import GameScreen from './views/GameScreen.vue';
 import ConfigScreen from './views/ConfigScreen.vue';
 import LevelEditor from './views/LevelEditor.vue';
+import { onMounted } from 'vue';
+import { startBackgroundMusic, MUSIC_TRACK } from './services/audio';
 
 const store = useGameStore();
 
@@ -22,6 +24,11 @@ watch(() => store.state.isPlaying, (playing) => {
     currentView.value = 'config';
   }
   // If there's a winner, stay on game screen to show victory overlay
+});
+
+onMounted(() => {
+  // Start menu music on initial load
+  startBackgroundMusic(MUSIC_TRACK.MENU);
 });
 
 function handleNavigate(view: View) {
