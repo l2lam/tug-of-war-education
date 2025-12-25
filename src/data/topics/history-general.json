@@ -1,0 +1,12 @@
+[
+    {
+        "id": "4",
+        "text": "In what year did WWII end?",
+        "options": [
+            "1943",
+            "1944",
+            "1945",
+            "1946"
+        ],
+        "correctIndex": 2}
+]

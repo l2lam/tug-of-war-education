@@ -11,14 +11,14 @@ class ServiceFactory {
     private static dataService: IDataService;
     private static authService: IAuthService;
 
-    static initialize(useMock = true) {
-        if (useMock) {
-            this.dataService = new MockDataService();
-            this.authService = new MockAuthService();
-        } else {
+    static initialize() {
+        const useSupabase = import.meta.env.VITE_USE_SUPABASE === 'true';
+        if (useSupabase) {
             this.dataService = new SupabaseDataService();
             this.authService = new SupabaseAuthService();
-            // throw new Error('Supabase services not implemented yet');
+        } else {
+            this.dataService = new MockDataService();
+            this.authService = new MockAuthService();
         }
     }
 

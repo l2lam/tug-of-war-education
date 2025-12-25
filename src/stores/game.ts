@@ -2,8 +2,11 @@ import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
 import type { GameState, Question } from '../types';
 import { PLAYER_ID, type PlayerId } from '../constants';
+import ServiceFactory from '../services';
 
 export const useGameStore = defineStore('game', () => {
+    const p1NameKey = 'last_p1_name';
+    const p2NameKey = 'last_p2_name';
     const state = ref<GameState>({
         isPlaying: false,
         isPaused: false,
@@ -12,11 +15,17 @@ export const useGameStore = defineStore('game', () => {
         ropeVelocity: 0,
         round: 1,
         timeLeft: 0,
-        leftPlayer: { id: PLAYER_ID.LEFT, name: 'Player 1', score: 0, strength: 1, topics: ['grade-1-math'], currentQuestion: undefined },
-        rightPlayer: { id: PLAYER_ID.RIGHT, name: 'Player 2', score: 0, strength: 1, topics: ['grade-1-math'], currentQuestion: undefined },
+        leftPlayer: { id: PLAYER_ID.LEFT, name: 'Player 1', score: 0, strength: 1, topics: [], currentQuestion: undefined },
+        rightPlayer: { id: PLAYER_ID.RIGHT, name: 'Player 2', score: 0, strength: 1, topics: [], currentQuestion: undefined },
         winner: null,
-        p1Config: { name: 'Player 1', topics: ['grade-1-math'] },
-        p2Config: { name: 'Player 2', topics: ['grade-1-math'] },
+        p1Config: {
+            name: localStorage.getItem(p1NameKey) || 'Player 1',
+            topics: []
+        },
+        p2Config: {
+            name: localStorage.getItem(p2NameKey) || 'Player 2',
+            topics: []
+        },
     });
 
     const config = ref({
@@ -29,7 +38,39 @@ export const useGameStore = defineStore('game', () => {
 
     const ropeOffset = computed(() => state.value.ropePosition);
 
+    async function saveConfigs() {
+        const ds = ServiceFactory.getDataService();
+        localStorage.setItem(p1NameKey, state.value.p1Config.name);
+        localStorage.setItem(p2NameKey, state.value.p2Config.name);
+        await Promise.all([
+            ds.savePlayerConfig(state.value.p1Config),
+            ds.savePlayerConfig(state.value.p2Config)
+        ]);
+    }
+
+    async function loadConfigs() {
+        const ds = ServiceFactory.getDataService();
+        const [p1, p2, allTopics] = await Promise.all([
+            ds.getPlayerConfig(state.value.p1Config.name),
+            ds.getPlayerConfig(state.value.p2Config.name),
+            ds.getAllTopics()
+        ]);
+
+        if (p1) state.value.p1Config = p1;
+        if (p2) state.value.p2Config = p2;
+
+        // Fallback for first-time use
+        const fallback = allTopics[0] || '';
+        if (state.value.p1Config.topics.length === 0 && fallback) {
+            state.value.p1Config.topics = [fallback];
+        }
+        if (state.value.p2Config.topics.length === 0 && fallback) {
+            state.value.p2Config.topics = [fallback];
+        }
+    }
+
     function startGame() {
+        saveConfigs(); // Fire and forget
         state.value = {
             ...state.value,
             isPlaying: true,
@@ -133,11 +174,12 @@ export const useGameStore = defineStore('game', () => {
         config,
         ropeOffset,
         startGame,
-        updateRope: () => { /* no-op */ }, // Kept for compatibility if external components call it
         tick,
         answerQuestion,
         setQuestion,
         endGame,
-        abortGame
+        abortGame,
+        saveConfigs,
+        loadConfigs
     };
 });

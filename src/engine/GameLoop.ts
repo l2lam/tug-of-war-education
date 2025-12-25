@@ -1,7 +1,6 @@
 import { ref, watch, onUnmounted } from 'vue';
 import { useGameStore } from '../stores/game';
 import ServiceFactory from '../services';
-import { PLAYER_ID } from '../constants';
 
 export function useGameLoop() {
     const store = useGameStore();
@@ -45,17 +44,21 @@ export function useGameLoop() {
         // Randomly select from enabled topics
         if (store.state.isPlaying && !store.state.leftPlayer.currentQuestion) {
             const p1Topics = store.state.leftPlayer.topics;
-            const p1Topic = p1Topics[Math.floor(Math.random() * p1Topics.length)] || 'grade-1-math';
-            dataService.getQuestions(p1Topic, 1).then(qs => {
-                if (qs.length > 0) store.state.leftPlayer.currentQuestion = qs[0];
-            });
+            const p1Topic = p1Topics[Math.floor(Math.random() * p1Topics.length)];
+            if (p1Topic) {
+                dataService.getQuestions(p1Topic, 1).then(qs => {
+                    if (qs.length > 0) store.state.leftPlayer.currentQuestion = qs[0];
+                });
+            }
         }
         if (store.state.isPlaying && !store.state.rightPlayer.currentQuestion) {
             const p2Topics = store.state.rightPlayer.topics;
-            const p2Topic = p2Topics[Math.floor(Math.random() * p2Topics.length)] || 'grade-1-math';
-            dataService.getQuestions(p2Topic, 1).then(qs => {
-                if (qs.length > 0) store.state.rightPlayer.currentQuestion = qs[0];
-            });
+            const p2Topic = p2Topics[Math.floor(Math.random() * p2Topics.length)];
+            if (p2Topic) {
+                dataService.getQuestions(p2Topic, 1).then(qs => {
+                    if (qs.length > 0) store.state.rightPlayer.currentQuestion = qs[0];
+                });
+            }
         }
     }
 

@@ -48,18 +48,19 @@ To import questions, upload a JSON file containing an array of question objects 
     "id": "q1",
     "text": "What is the capital of France?",
     "options": ["London", "Berlin", "Paris", "Madrid"],
-    "correctIndex": 2,
-    "topic": "custom"
+    "correctIndex": 2
   },
   {
     "id": "q2",
     "text": "Solve: 5 * 5",
     "options": ["10", "25", "50", "5"],
-    "correctIndex": 1,
-    "topic": "custom"
+    "correctIndex": 1
   }
 ]
 ```
+
+> [!NOTE]
+> The **Topic** name is automatically assigned based on the **filename**. For example, if you import `capitals.json`, the topic will be named "capitals".
 
 ## 🏗️ Technical Architecture
 
@@ -76,7 +77,20 @@ This project is built with a modern, performance-oriented stack:
   - Velocity damping (friction).
   - Real-time rope displacement.
 
-## 🛠️ Development Setup
+## � Service Providers
+
+This application supports two data backends, which can be toggled in your **`.env`** file:
+
+- **Mock (Default)**: Uses local `localStorage` and the built-in JSON library in `src/data/topics/`.
+- **Supabase**: Uses a remote Supabase instance for topics, questions, and player configurations.
+
+To switch, modify the following line in `.env`:
+
+```bash
+VITE_USE_SUPABASE=false # Set to true to enable Supabase
+```
+
+## �🛠️ Development Setup
 
 ```bash
 # Install dependencies

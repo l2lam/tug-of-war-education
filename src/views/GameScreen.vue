@@ -105,15 +105,6 @@ function getWinnerStrength() {
 <template>
   <div class="game-screen">
     <div class="header-bar">
-      <div class="timer">{{ store.state.timeLeft }}</div>
-      <div class="round">ROUND {{ store.state.round }}</div>
-      <div class="controls">
-        <button v-if="!store.state.isPlaying" @click="handleStart">START FIGHT!</button>
-        <button v-else @click="store.state.isPaused = !store.state.isPaused">
-          {{ store.state.isPaused ? 'RESUME' : 'PAUSE' }}
-        </button>
-        <button class="abort-btn" @click="store.abortGame()">ABORT</button>
-      </div>
       <div class="volume-control">
         <label for="volume-slider">🔊</label>
         <input 
@@ -126,6 +117,19 @@ function getWinnerStrength() {
           @input="handleVolumeChange"
           class="volume-slider"
         />
+      </div>
+
+      <div class="center-stats">
+        <div class="timer">{{ store.state.timeLeft }}</div>
+        <div class="round">ROUND {{ store.state.round }}</div>
+      </div>
+
+      <div class="controls">
+        <button v-if="!store.state.isPlaying" @click="handleStart">START FIGHT!</button>
+        <button v-else @click="store.state.isPaused = !store.state.isPaused" class="arcade-btn pause-btn">
+          {{ store.state.isPaused ? 'RESUME' : 'PAUSE' }}
+        </button>
+        <button class="abort-btn arcade-btn" @click="store.abortGame()">ABORT</button>
       </div>
     </div>
 
@@ -183,30 +187,57 @@ function getWinnerStrength() {
 }
 
 .header-bar {
+  display: grid;
+  grid-template-columns: 200px 1fr 200px;
+  align-items: center;
+  padding: 0.75rem 1.5rem;
+  background: rgba(0, 0, 0, 0.9);
+  border-bottom: 3px solid #444;
+  font-family: 'Inter', sans-serif;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+  z-index: 100;
+}
+
+.center-stats {
   display: flex;
   justify-content: center;
-  gap: 2rem;
-  padding: 1rem;
-  background: #000;
-  border-bottom: 2px solid #555;
-  font-size: 1.5rem;
-  font-weight: bold;
+  align-items: center;
+  gap: 3rem;
+  font-size: 2rem;
+  font-weight: 800;
+  text-shadow: 0 0 10px rgba(255, 255, 0, 0.3);
 }
 
 .timer {
-  color: yellow;
+  color: #ffcc00;
+  min-width: 60px;
+  text-align: center;
+}
+
+.round {
+  color: #fff;
+  letter-spacing: 2px;
 }
 
 .controls {
   display: flex;
+  justify-content: flex-end;
   gap: 1rem;
 }
 
-.abort-btn {
-  background: #ff0000;
-  border-color: #aa0000;
+.pause-btn {
+  background: #333;
   color: #fff;
-  font-size: 1rem;
+  border-color: #555;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+}
+
+.abort-btn {
+  background: #c1121f;
+  border-color: #780000;
+  color: #fff;
+  font-size: 0.9rem;
   padding: 0.5rem 1rem;
 }
 
@@ -218,8 +249,7 @@ function getWinnerStrength() {
 .volume-control {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  margin-left: auto;
+  gap: 0.8rem;
 }
 
 .volume-control label {

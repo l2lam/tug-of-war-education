@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import { useGameStore } from '../stores/game';
 import type { Topic } from '../types';
 import ServiceFactory from '../services';
@@ -11,7 +11,7 @@ const emit = defineEmits<{
   (e: 'edit'): void;
 }>();
 
-const topics = ref<Topic[]>(['grade-1-math', 'grade-12-math', 'grade-9-science']);
+const topics = ref<Topic[]>([]);
 
 onMounted(async () => {
   // Resume menu music when returning to config
@@ -19,8 +19,21 @@ onMounted(async () => {
   const volume = savedVolume ? parseFloat(savedVolume) : 0.3;
   startBackgroundMusic(MUSIC_TRACK.MENU, volume);
 
-  const custom = await ServiceFactory.getDataService().getCustomTopics();
-  topics.value = [...topics.value, ...custom];
+  // Load saved topics for the current names
+  await store.loadConfigs();
+
+  topics.value = await ServiceFactory.getDataService().getAllTopics();
+});
+
+// Watch for name changes to load topics for known players
+watch(() => store.state.p1Config.name, async (newName) => {
+  const config = await ServiceFactory.getDataService().getPlayerConfig(newName);
+  if (config) store.state.p1Config.topics = config.topics;
+});
+
+watch(() => store.state.p2Config.name, async (newName) => {
+  const config = await ServiceFactory.getDataService().getPlayerConfig(newName);
+  if (config) store.state.p2Config.topics = config.topics;
 });
 
 function toggleTopic(player: 'p1' | 'p2', topic: Topic) {
