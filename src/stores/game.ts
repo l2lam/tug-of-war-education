@@ -154,6 +154,8 @@ export const useGameStore = defineStore('game', () => {
         } else {
             player.strength = Math.max(1, player.strength - 1); // Decrease power
         }
+        state.value.leftPlayer.currentQuestion = undefined;
+        state.value.rightPlayer.currentQuestion = undefined;
     }
 
     function setQuestion(playerId: PlayerId, question: Question) {

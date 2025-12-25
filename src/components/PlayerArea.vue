@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, ref, watch } from 'vue';
 import type { PlayerState } from '../types';
 
 const props = defineProps<{
@@ -15,19 +15,24 @@ const emit = defineEmits<{
 const currentQuestion = computed(() => props.player.currentQuestion);
 
 // Randomize option order while tracking original indices
-const shuffledOptions = computed(() => {
-  if (!currentQuestion.value) return [];
+const shuffledOptions = ref<{ opt: string; originalIdx: number }[]>([]);
+
+watch(currentQuestion, (newQ) => {
+  if (!newQ) {
+    shuffledOptions.value = [];
+    return;
+  }
   
-  const options = currentQuestion.value.options.map((opt, idx) => ({ opt, originalIdx: idx }));
+  const options = newQ.options.map((opt, idx) => ({ opt, originalIdx: idx }));
   
   // Fisher-Yates shuffle
   for (let i = options.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
-    [options[i]!, options[j]!] = [options[j]!, options[i]!];
+    [options[i], options[j]] = [options[j]!, options[i]!];
   }
   
-  return options;
-});
+  shuffledOptions.value = options;
+}, { immediate: true });
 
 function handleAnswer(shuffledIndex: number) {
   if (props.disabled || !currentQuestion.value) return;
