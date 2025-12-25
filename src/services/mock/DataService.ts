@@ -3,6 +3,7 @@ import type { Question, Topic, PlayerConfig } from '../types';
 import { BaseDataService } from '../BaseDataService';
 
 export class MockDataService extends BaseDataService implements IDataService {
+    private customTopics: Topic[] = [];
     private customQuestions: Question[] = [];
 
     constructor() {
@@ -11,19 +12,24 @@ export class MockDataService extends BaseDataService implements IDataService {
     }
 
     private loadCustomFromStorage() {
-        const stored = localStorage.getItem('mock_custom_questions');
-        if (stored) {
+        const storedTopics = localStorage.getItem('mock_custom_topics');
+        const storedQs = localStorage.getItem('mock_custom_questions');
+
+        if (storedTopics) {
             try {
-                this.customQuestions = JSON.parse(stored);
-            } catch (e) {
-                console.error('Failed to parse mock custom questions', e);
-            }
+                this.customTopics = JSON.parse(storedTopics);
+            } catch (e) { console.error(e); }
+        }
+        if (storedQs) {
+            try {
+                this.customQuestions = JSON.parse(storedQs);
+            } catch (e) { console.error(e); }
         }
     }
 
-    async getQuestions(topic: Topic, count: number): Promise<Question[]> {
-        const library = this.getLibraryQuestions(topic);
-        const custom = this.customQuestions.filter(q => q.topic === topic);
+    async getQuestions(topicId: string, count: number): Promise<Question[]> {
+        const library = this.getLibraryQuestions(topicId);
+        const custom = this.customQuestions.filter(q => q.topicId === topicId);
         const all = [...library, ...custom];
 
         // Fisher-Yates shuffle
@@ -38,21 +44,34 @@ export class MockDataService extends BaseDataService implements IDataService {
         return all.slice(0, count);
     }
 
-    async saveTopic(name: string, questions: Question[]): Promise<boolean> {
-        const newQuestionsWithTopic = questions.map(q => ({ ...q, topic: name }));
-        this.customQuestions.push(...newQuestionsWithTopic);
+    async saveTopic(topic: Topic, questions: Question[]): Promise<boolean> {
+        // Update or Add topic
+        const index = this.customTopics.findIndex(t => t.id === topic.id);
+        if (index > -1) {
+            this.customTopics[index] = topic;
+        } else {
+            this.customTopics.push(topic);
+        }
+
+        // Add questions linked to this topic
+        const linkedQs = questions.map(q => ({ ...q, topicId: topic.id }));
+        this.customQuestions = [
+            ...this.customQuestions.filter(q => q.topicId !== topic.id),
+            ...linkedQs
+        ];
+
+        localStorage.setItem('mock_custom_topics', JSON.stringify(this.customTopics));
         localStorage.setItem('mock_custom_questions', JSON.stringify(this.customQuestions));
         return true;
     }
 
-    async getCustomTopics(): Promise<string[]> {
-        return this.getAllTopics(); // Redirect for now
+    async getAllTopics(): Promise<Topic[]> {
+        const libraryTopics = this.getLibraryTopics();
+        return Array.from(new Set([...libraryTopics, ...this.customTopics]));
     }
 
-    async getAllTopics(): Promise<string[]> {
-        const libraryTopics = this.getLibraryTopics();
-        const customTopics = Array.from(new Set(this.customQuestions.map(q => q.topic)));
-        return Array.from(new Set([...libraryTopics, ...customTopics]));
+    async getTopic(id: string): Promise<Topic | null> {
+        return this.getLibraryTopic(id) || this.customTopics.find(t => t.id === id) || null;
     }
 
     async savePlayerConfig(config: PlayerConfig): Promise<boolean> {

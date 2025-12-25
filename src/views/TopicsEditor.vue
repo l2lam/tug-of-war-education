@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import ServiceFactory from '../services';
-import type { Question } from '../types';
+import type { Question, Topic } from '../types';
 
 const emit = defineEmits<{
   (e: 'back'): void;
 }>();
 
 const topicName = ref('');
+const topicDescription = ref('');
 const questions = ref<Question[]>([]);
 const newQText = ref('');
 const newQOption1 = ref('');
@@ -22,15 +23,15 @@ const generateId = () => Math.random().toString(36).substr(2, 9);
 function addQuestion() {
   if (!newQText.value) return;
   
-  const q: Question = {
+  // Note: topicId will be assigned during saveTopic
+  const q: any = {
     id: generateId(),
     text: newQText.value,
     options: [newQOption1.value, newQOption2.value, newQOption3.value, newQOption4.value],
-    correctIndex: correctIndex.value,
-    topic: 'custom'
+    correctIndex: correctIndex.value
   };
   
-  questions.value.push(q);
+  questions.value.push(q as Question);
   // Reset fields
   newQText.value = '';
   newQOption1.value = '';
@@ -42,8 +43,15 @@ function addQuestion() {
 async function saveTopic() {
   if (!topicName.value || questions.value.length === 0) return;
   
+  const topicId = topicName.value.toLowerCase().replace(/\s+/g, '-');
+  const topic: Topic = {
+    id: topicId,
+    name: topicName.value,
+    description: topicDescription.value
+  };
+
   const dataService = ServiceFactory.getDataService();
-  await dataService.saveTopic(topicName.value, questions.value);
+  await dataService.saveTopic(topic, questions.value);
   alert('Topic Saved!');
   emit('back');
 }
@@ -61,11 +69,17 @@ function handleFileUpload(event: Event) {
             const content = e.target?.result as string;
             const parsed = JSON.parse(content);
             if (Array.isArray(parsed)) {
-                // Validate structure briefly or just cast
-                questions.value = parsed as Question[];
+                // Legacy flat array
+                questions.value = parsed.map(q => ({ ...q, topicId: '' })) as Question[];
                 alert(`Imported ${parsed.length} questions!`);
+            } else if (parsed && typeof parsed === 'object') {
+                // Hierarchical format
+                topicName.value = parsed.name || topicName.value;
+                topicDescription.value = parsed.description || topicDescription.value;
+                questions.value = (parsed.questions || []).map((q: any) => ({ ...q, topicId: parsed.id || '' })) as Question[];
+                alert(`Imported ${questions.value.length} questions from ${topicName.value}!`);
             } else {
-                alert('Invalid format: structure must be an array of questions');
+                alert('Invalid format: structure must be an array or a topic object');
             }
         } catch (err) {
             console.error(err);
@@ -77,7 +91,7 @@ function handleFileUpload(event: Event) {
 </script>
 
 <template>
-  <div class="level-editor">
+  <div class="topics-editor">
     <div class="header">
       <button @click="emit('back')">BACK</button>
       <h1>TOPICS EDITOR</h1>
@@ -86,8 +100,14 @@ function handleFileUpload(event: Event) {
 
     <div class="editor-body">
       <div class="level-meta">
-        <label>TOPIC NAME:</label>
-        <input v-model="topicName" placeholder="My Custom Topic" />
+        <div class="field">
+            <label>TOPIC NAME:</label>
+            <input v-model="topicName" placeholder="My Custom Topic" />
+        </div>
+        <div class="field">
+            <label>DESCRIPTION:</label>
+            <input v-model="topicDescription" placeholder="Optional description..." />
+        </div>
       </div>
 
       <div class="new-question-form pixel-border">
@@ -110,13 +130,13 @@ function handleFileUpload(event: Event) {
       <div class="questions-list">
         <h3>QUESTIONS ({{ questions.length }})</h3>
         <div v-for="(q, idx) in questions" :key="q.id" class="q-item">
-          <span class="badg">{{ idx + 1 }}</span>
+          <span class="badge">{{ idx + 1 }}</span>
           <span>{{ q.text }}</span>
         </div>
       </div>
       
       <div class="import-section">
-         <label>Import JSON:</label>
+         <label>Import JSON (Flat or Hierarchical):</label>
          <input type="file" @change="handleFileUpload" />
       </div>
     </div>

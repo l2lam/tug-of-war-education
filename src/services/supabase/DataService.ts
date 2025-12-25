@@ -12,9 +12,9 @@ export class SupabaseDataService extends BaseDataService implements IDataService
         super();
     }
 
-    async getQuestions(topic: Topic, count: number): Promise<Question[]> {
+    async getQuestions(topicId: string, count: number): Promise<Question[]> {
         // Try library first
-        const library = this.getLibraryQuestions(topic);
+        const library = this.getLibraryQuestions(topicId);
         if (library.length > 0) return library.slice(0, count);
 
         if (!supabase) throw new Error('Supabase not configured');
@@ -22,7 +22,7 @@ export class SupabaseDataService extends BaseDataService implements IDataService
         const { data, error } = await supabase
             .from('questions')
             .select('*')
-            .eq('topic', topic)
+            .eq('topic_id', topicId)
             .limit(count);
 
         if (error) throw error;
@@ -31,37 +31,60 @@ export class SupabaseDataService extends BaseDataService implements IDataService
             text: q.text,
             options: q.options,
             correctIndex: q.correct_index,
-            topic: q.topic
+            topicId: q.topic_id
         }));
     }
 
-    async saveTopic(name: string, questions: Question[]): Promise<boolean> {
+    async saveTopic(topic: Topic, questions: Question[]): Promise<boolean> {
         if (!supabase) throw new Error('Supabase not configured');
 
-        const { error } = await supabase
-            .from('custom_topics')
-            .insert({
-                name,
-                questions_json: questions
+        // Upsert topic
+        const { error: topicError } = await supabase
+            .from('topics')
+            .upsert({
+                id: topic.id,
+                name: topic.name,
+                description: topic.description,
+                updated_at: new Date().toISOString()
             });
 
-        return !error;
+        if (topicError) return false;
+
+        // Upsert questions
+        const linkedQs = questions.map(q => ({
+            id: q.id,
+            text: q.text,
+            options: q.options,
+            correct_index: q.correctIndex,
+            topic_id: topic.id
+        }));
+
+        const { error: qsError } = await supabase
+            .from('questions')
+            .upsert(linkedQs);
+
+        return !qsError;
     }
 
-    async getCustomTopics(): Promise<string[]> {
-        return this.getAllTopics();
-    }
-
-    async getAllTopics(): Promise<string[]> {
+    async getAllTopics(): Promise<Topic[]> {
         const libraryTopics = this.getLibraryTopics();
 
-        let customTopics: string[] = [];
+        let remoteTopics: Topic[] = [];
         if (supabase) {
-            const { data } = await supabase.from('custom_topics').select('name');
-            customTopics = (data || []).map((d: any) => d.name);
+            const { data } = await supabase.from('topics').select('*');
+            remoteTopics = data || [];
         }
 
-        return Array.from(new Set([...libraryTopics, ...customTopics]));
+        return Array.from(new Set([...libraryTopics, ...remoteTopics]));
+    }
+
+    async getTopic(id: string): Promise<Topic | null> {
+        const library = this.getLibraryTopic(id);
+        if (library) return library;
+
+        if (!supabase) return null;
+        const { data } = await supabase.from('topics').select('*').eq('id', id).single();
+        return data || null;
     }
 
     async savePlayerConfig(config: PlayerConfig): Promise<boolean> {

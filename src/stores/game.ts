@@ -60,12 +60,12 @@ export const useGameStore = defineStore('game', () => {
         if (p2) state.value.p2Config = p2;
 
         // Fallback for first-time use
-        const fallback = allTopics[0] || '';
+        const fallback = allTopics[0];
         if (state.value.p1Config.topics.length === 0 && fallback) {
-            state.value.p1Config.topics = [fallback];
+            state.value.p1Config.topics = [fallback.id];
         }
         if (state.value.p2Config.topics.length === 0 && fallback) {
-            state.value.p2Config.topics = [fallback];
+            state.value.p2Config.topics = [fallback.id];
         }
     }
 

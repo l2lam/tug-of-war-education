@@ -36,16 +36,16 @@ watch(() => store.state.p2Config.name, async (newName) => {
   if (config) store.state.p2Config.topics = config.topics;
 });
 
-function toggleTopic(player: 'p1' | 'p2', topic: Topic) {
+function toggleTopic(player: 'p1' | 'p2', topicId: string) {
   const config = player === 'p1' ? store.state.p1Config : store.state.p2Config;
-  const index = config.topics.indexOf(topic);
+  const index = config.topics.indexOf(topicId);
   
   if (index > -1) {
     if (config.topics.length > 1) {
       config.topics.splice(index, 1);
     }
   } else {
-    config.topics.push(topic);
+    config.topics.push(topicId);
   }
 }
 
@@ -68,13 +68,13 @@ function handleStart() {
         <div class="field">
           <label>TOPICS (Select at least one)</label>
           <div class="topic-list">
-            <label v-for="t in topics" :key="t" class="topic-checkbox">
+            <label v-for="t in topics" :key="t.id" class="topic-checkbox">
               <input 
                 type="checkbox" 
-                :checked="store.state.p1Config.topics.includes(t)"
-                @change="toggleTopic('p1', t)"
+                :checked="store.state.p1Config.topics.includes(t.id)"
+                @change="toggleTopic('p1', t.id)"
               />
-              <span>{{ t }}</span>
+              <span :title="t.description">{{ t.name }}</span>
             </label>
           </div>
         </div>
@@ -91,13 +91,13 @@ function handleStart() {
         <div class="field">
           <label>TOPICS (Select at least one)</label>
           <div class="topic-list">
-            <label v-for="t in topics" :key="t" class="topic-checkbox">
+            <label v-for="t in topics" :key="t.id" class="topic-checkbox">
               <input 
                 type="checkbox" 
-                :checked="store.state.p2Config.topics.includes(t)"
-                @change="toggleTopic('p2', t)"
+                :checked="store.state.p2Config.topics.includes(t.id)"
+                @change="toggleTopic('p2', t.id)"
               />
-              <span>{{ t }}</span>
+              <span :title="t.description">{{ t.name }}</span>
             </label>
           </div>
         </div>

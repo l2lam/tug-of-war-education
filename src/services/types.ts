@@ -13,10 +13,10 @@ export interface IAuthService {
 }
 
 export interface IDataService {
-    getQuestions(topic: Topic, count: number): Promise<Question[]>;
-    saveTopic(name: string, questions: Question[]): Promise<boolean>;
-    getCustomTopics(): Promise<string[]>; // Deprecated
-    getAllTopics(): Promise<string[]>;
+    getQuestions(topicId: string, count: number): Promise<Question[]>;
+    saveTopic(topic: Topic, questions: Question[]): Promise<boolean>;
+    getAllTopics(): Promise<Topic[]>;
+    getTopic(id: string): Promise<Topic | null>;
 
     // Config Persistence
     savePlayerConfig(config: PlayerConfig): Promise<boolean>;
