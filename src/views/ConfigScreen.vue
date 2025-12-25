@@ -56,7 +56,7 @@ function handleStart() {
 
 <template>
   <div class="config-screen">
-    <h1>TUG-OF-WAR SETUP</h1>
+    <h1>TUG-OF-WAR Setup</h1>
     
     <div class="players-setup">
       <div class="p-config p1-border">

@@ -1,22 +1,11 @@
 {
     "id": "grade-1-math",
-    "name": "Grade 1 Math",
-    "description": "General math for grade 1.",
+    "name": "Ontario Grade 1 Math",
+    "description": "Comprehensive math following the 2020 Ontario Curriculum (Number Sense, Algebra, Data, Spatial Sense, and Financial Literacy).",
     "questions": [
         {
-            "id": "1",
-            "text": "What is 2 + 2?",
-            "options": [
-                "3",
-                "4",
-                "5",
-                "6"
-            ],
-            "correctIndex": 1
-        },
-        {
-            "id": "2",
-            "text": "What is the square root of 64?",
+            "id": "ont-g1-1",
+            "text": "What is 5 + 3?",
             "options": [
                 "6",
                 "7",
@@ -24,6 +13,270 @@
                 "9"
             ],
             "correctIndex": 2
+        },
+        {
+            "id": "ont-g1-2",
+            "text": "What is 10 - 4?",
+            "options": [
+                "4",
+                "5",
+                "6",
+                "7"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "id": "ont-g1-3",
+            "text": "What number comes right after 19?",
+            "options": [
+                "18",
+                "20",
+                "21",
+                "29"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "id": "ont-g1-4",
+            "text": "Skip counting by 5s: 5, 10, 15, ...?",
+            "options": [
+                "16",
+                "20",
+                "25",
+                "30"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "id": "ont-g1-5",
+            "text": "1 ten and 4 ones is the same as...?",
+            "options": [
+                "5",
+                "14",
+                "41",
+                "104"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "id": "ont-g1-6",
+            "text": "What is 9 + 7?",
+            "options": [
+                "15",
+                "16",
+                "17",
+                "18"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "id": "ont-g1-7",
+            "text": "What is 15 - 5?",
+            "options": [
+                "0",
+                "5",
+                "10",
+                "20"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "id": "ont-g1-8",
+            "text": "Which shape has 3 sides and 3 corners?",
+            "options": [
+                "Square",
+                "Circle",
+                "Triangle",
+                "Rectangle"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "id": "ont-g1-9",
+            "text": "Which shape has 4 sides that are all the same length?",
+            "options": [
+                "Triangle",
+                "Rectangle",
+                "Square",
+                "Hexagon"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "id": "ont-g1-10",
+            "text": "If you share a cookie with a friend equally, you each get a...?",
+            "options": [
+                "Whole",
+                "Half",
+                "Quarter",
+                "Nothing"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "id": "ont-g1-11",
+            "text": "Which is HEAVIER?",
+            "options": [
+                "A feather",
+                "A leaf",
+                "A big rock",
+                "A pencil"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "id": "ont-g1-12",
+            "text": "How many cents is a Nickel worth?",
+            "options": [
+                "1 cent",
+                "5 cents",
+                "10 cents",
+                "25 cents"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "id": "ont-g1-13",
+            "text": "How many cents is a Dime worth?",
+            "options": [
+                "5 cents",
+                "10 cents",
+                "25 cents",
+                "100 cents"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "id": "ont-g1-14",
+            "text": "What is the name of the Canadian $2 coin?",
+            "options": [
+                "Loonie",
+                "Toonie",
+                "Nickel",
+                "Quarter"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "id": "ont-g1-15",
+            "text": "Which Canadian coin has a picture of a loon?",
+            "options": [
+                "Nickel",
+                "Dime",
+                "Loonie",
+                "Toonie"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "id": "ont-g1-16",
+            "text": "Finish the pattern: Red, Blue, Red, Blue, ...?",
+            "options": [
+                "Red",
+                "Blue",
+                "Green",
+                "Yellow"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "id": "ont-g1-17",
+            "text": "Solve: 4 + ? = 6",
+            "options": [
+                "1",
+                "2",
+                "3",
+                "10"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "id": "ont-g1-18",
+            "text": "Finish the skip counting: 2, 4, 6, 8, ...?",
+            "options": [
+                "9",
+                "10",
+                "12",
+                "14"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "id": "ont-g1-19",
+            "text": "Which belongs in a group of RED things?",
+            "options": [
+                "Blue Car",
+                "Green Grass",
+                "Red Ball",
+                "Yellow Lemon"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "id": "ont-g1-20",
+            "text": "Is it likely or unlikely that the sun will rise tomorrow?",
+            "options": [
+                "Impossible",
+                "Unlikely",
+                "Possible",
+                "Certain"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "id": "ont-g1-21",
+            "text": "Can a cow fly to the moon?",
+            "options": [
+                "Impossible",
+                "Unlikely",
+                "Possible",
+                "Certain"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "id": "ont-g1-22",
+            "text": "How many quarters make a whole loaf of bread?",
+            "options": [
+                "1",
+                "2",
+                "3",
+                "4"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "id": "ont-g1-23",
+            "text": "What is 10 more than 30?",
+            "options": [
+                "20",
+                "31",
+                "40",
+                "50"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "id": "ont-g1-24",
+            "text": "A basketball is shaped most like a...?",
+            "options": [
+                "Circle",
+                "Sphere",
+                "Cube",
+                "Triangle"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "id": "ont-g1-25",
+            "text": "Which is LONGER?",
+            "options": [
+                "A grain of rice",
+                "A school bus",
+                "A pencil",
+                "An ant"
+            ],
+            "correctIndex": 1
         }
     ]
 }
