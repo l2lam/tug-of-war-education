@@ -458,4 +458,52 @@ function getWinnerStrength() {
     transform: translateY(0); 
   }
 }
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) and (orientation: landscape), (max-height: 500px) {
+  .header-bar {
+    padding: 0.25rem 1rem;
+    grid-template-columns: auto 1fr auto;
+    gap: 0.5rem;
+  }
+
+  .center-stats {
+    font-size: 1.2rem;
+    gap: 1rem;
+  }
+
+  .volume-control label {
+    font-size: 1rem;
+  }
+
+  .volume-slider {
+    width: 60px;
+  }
+
+  .players-container {
+    padding: 0.25rem;
+    gap: 0.25rem;
+  }
+
+  .vs-divider {
+    font-size: 1.5rem;
+  }
+
+  /* Victory Overlay scaling */
+  .winner-overlay { gap: 1rem; }
+  .winner-name { font-size: 2rem; margin: 0; }
+  .wins-text { font-size: 1.2rem; }
+  .ko-badge { font-size: 2rem; margin-top: 0; }
+  .victory-banner { gap: 0.25rem; }
+  
+  .victory-stats { 
+    padding: 0.5rem 1.5rem; 
+    gap: 0.25rem;
+    border-width: 2px;
+  }
+  
+  .stat-row { font-size: 0.9rem; gap: 0.5rem; }
+  .stat-row .label { min-width: 80px; }
+  .rematch-btn { font-size: 1rem; padding: 0.25rem 1rem; }
+}
 </style>

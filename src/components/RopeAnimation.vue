@@ -161,4 +161,12 @@ const rightPullers = computed(() => Math.min(store.state.rightPlayer.strength, 8
     0% { transform: scaleX(1) rotate(0deg); }
     100% { transform: scaleX(1) rotate(-20deg); } 
 }
+
+@media (max-height: 500px) {
+  .rope-viewport { height: 120px; }
+  .rope-assembly { width: 500px; height: 60px; }
+  .sprite { font-size: 1.5rem; }
+  .center-flag { font-size: 2rem; }
+  .rope-line { left: 20px; right: 20px; }
+}
 </style>

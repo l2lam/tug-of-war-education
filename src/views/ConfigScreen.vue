@@ -245,4 +245,40 @@ input, select {
   50% { transform: scale(1.05); }
   100% { transform: scale(1); }
 }
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) and (orientation: landscape), (max-height: 500px) {
+  .config-screen {
+    justify-content: flex-start;
+    padding: 1rem;
+    overflow-y: auto;
+    gap: 1rem;
+  }
+
+  h1 { font-size: 1.5rem; margin: 0.5rem 0; }
+  h2 { font-size: 1.2rem; }
+
+  .players-setup {
+    gap: 1rem;
+    align-items: stretch;
+  }
+
+  .p-config {
+    padding: 1rem;
+    gap: 0.5rem;
+  }
+
+  .vs { font-size: 2rem; }
+
+  .topic-list {
+    max-height: 100px;
+  }
+
+  .game-settings { max-width: 300px; }
+
+  .start-btn {
+    font-size: 1.5rem;
+    padding: 0.5rem 2rem;
+  }
+}
 </style>

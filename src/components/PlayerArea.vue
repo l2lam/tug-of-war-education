@@ -121,4 +121,13 @@ function handleAnswer(shuffledIndex: number) {
   border-color: var(--player-color);
   border-radius: 16px;
 }
+
+@media (max-height: 500px) {
+  .player-area { padding: 0.25rem; gap: 0.25rem; }
+  .question-text { font-size: 1.1rem; min-height: 1.5rem; margin-bottom: 0.25rem; }
+  .option-btn { font-size: 1.1rem; padding: 0.25rem; border-radius: 8px; }
+  .stats h2 { font-size: 1rem; margin: 0; padding: 0.25rem; }
+  .question-board { padding: 0.5rem; gap: 0.5rem; }
+  .options { gap: 0.5rem; }
+}
 </style>
