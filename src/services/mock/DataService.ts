@@ -29,7 +29,9 @@ export class MockDataService extends BaseDataService implements IDataService {
 
     async getQuestions(topicId: string, count: number): Promise<Question[]> {
         const library = this.getLibraryQuestions(topicId);
-        const custom = this.customQuestions.filter(q => q.topicId === topicId);
+        const custom = this.customQuestions
+            .filter(q => q.topicId === topicId)
+            .map(q => this.instantiateQuestion(q));
         const all = [...library, ...custom];
 
         // Fisher-Yates shuffle

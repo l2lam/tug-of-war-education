@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import ServiceFactory from '../services';
-import type { Question, Topic } from '../types';
+import type { Question, Topic, VariableDefinition, QuestionTemplate } from '../types';
 
 const emit = defineEmits<{
   (e: 'back'): void;
@@ -17,6 +17,31 @@ const newQOption3 = ref('');
 const newQOption4 = ref('');
 const correctIndex = ref(0);
 
+// Variable Management
+const currentVariables = ref<Record<string, VariableDefinition>>({});
+const newVarName = ref('');
+const newVarMin = ref(1);
+const newVarMax = ref(10);
+
+function addVariable() {
+    const name = newVarName.value.trim();
+    if (!name || newVarMin.value >= newVarMax.value) {
+        alert('Invalid variable: Check name and min/max range');
+        return;
+    }
+    currentVariables.value[name] = {
+        min: newVarMin.value,
+        max: newVarMax.value
+    };
+    newVarName.value = '';
+    newVarMin.value = 1;
+    newVarMax.value = 10;
+}
+
+function removeVariable(name: string) {
+    delete currentVariables.value[name];
+}
+
 // Simple ID generator
 const generateId = () => Math.random().toString(36).substr(2, 9);
 
@@ -24,20 +49,23 @@ function addQuestion() {
   if (!newQText.value) return;
   
   // Note: topicId will be assigned during saveTopic
-  const q: any = {
+  const q: QuestionTemplate = {
     id: generateId(),
     text: newQText.value,
     options: [newQOption1.value, newQOption2.value, newQOption3.value, newQOption4.value],
-    correctIndex: correctIndex.value
+    correctIndex: correctIndex.value,
+    topicId: '', // placeholder
+    variables: Object.keys(currentVariables.value).length > 0 ? { ...currentVariables.value } : undefined
   };
   
-  questions.value.push(q as Question);
+  questions.value.push(q);
   // Reset fields
   newQText.value = '';
   newQOption1.value = '';
   newQOption2.value = '';
   newQOption3.value = '';
   newQOption4.value = '';
+  currentVariables.value = {};
 }
 
 async function saveTopic() {
@@ -112,12 +140,29 @@ function handleFileUpload(event: Event) {
 
       <div class="new-question-form pixel-border">
         <h3>NEW QUESTION</h3>
-        <textarea v-model="newQText" placeholder="Question Text" rows="3"></textarea>
+        <textarea v-model="newQText" placeholder="Question Text (use {{VAR}} for variables)" rows="3"></textarea>
         
+        <!-- Variables Section -->
+        <div class="variables-section">
+            <h4>Variables (Optional)</h4>
+            <div class="var-inputs">
+                <input v-model="newVarName" placeholder="Name (e.g. X)" style="width: 100px;" />
+                <input v-model.number="newVarMin" type="number" placeholder="Min" style="width: 60px;" />
+                <input v-model.number="newVarMax" type="number" placeholder="Max" style="width: 60px;" />
+                <button @click="addVariable" class="small-btn">+</button>
+            </div>
+            <div class="var-list">
+                <span v-for="(def, name) in currentVariables" :key="name" class="var-tag">
+                    {{ name }}: [{{ def.min }}-{{ def.max }}]
+                    <b @click="removeVariable(name as string)" class="remove-x">x</b>
+                </span>
+            </div>
+        </div>
+
         <div class="options-grid">
            <div v-for="i in 4" :key="i" class="opt-input">
              <input :radio-value="i-1" type="radio" :value="i-1" v-model="correctIndex" name="correct" />
-             <input v-if="i===1" v-model="newQOption1" placeholder="Option 1" />
+             <input v-if="i===1" v-model="newQOption1" placeholder="Option 1 (e.g. {{X + Y}})" />
              <input v-if="i===2" v-model="newQOption2" placeholder="Option 2" />
              <input v-if="i===3" v-model="newQOption3" placeholder="Option 3" />
              <input v-if="i===4" v-model="newQOption4" placeholder="Option 4" />
@@ -214,5 +259,54 @@ textarea, input[type="text"], input[type="file"] {
   margin-bottom: 0.5rem;
   display: flex;
   gap: 1rem;
+}
+
+.variables-section {
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+  background: #2a2a2a;
+  border: 1px dashed #555;
+}
+
+.var-inputs {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.small-btn {
+  padding: 0 1rem;
+  background: #4CAF50;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.var-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.var-tag {
+  background: #555;
+  padding: 0.2rem 0.6rem;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.remove-x {
+  color: #ff6b6b;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.remove-x:hover {
+  color: #ff0000;
 }
 </style>

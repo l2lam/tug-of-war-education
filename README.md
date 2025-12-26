@@ -61,6 +61,30 @@ To import questions, upload a JSON file containing an array of question objects 
 
 > [!NOTE]
 > The **Topic** name is automatically assigned based on the **filename**. For example, if you import `capitals.json`, the topic will be named "capitals".
+>
+### 3. Dynamic Questions
+
+You can create questions with randomized numbers using the `variables` property. The system will auto-generate values and evaluate math expressions.
+
+```json
+{
+  "id": "dyn-1",
+  "text": "What is {{A}} + {{B}}?",
+  "variables": {
+    "A": { "min": 1, "max": 10 },
+    "B": { "min": 1, "max": 10 }
+  },
+  "options": [
+    "{{A + B}}",       // Correct answer (evaluated)
+    "{{A + B + 1}}",   // Distractor
+    "{{A - B}}",       // Distractor
+    "{{A * B}}"        // Distractor
+  ],
+  "correctIndex": 0
+}
+```
+
+Expressions inside `{{ }}` are evaluated safely. You can use standard math operators: `+`, `-`, `*`, `/`, `()`.
 
 ## 🏗️ Technical Architecture
 

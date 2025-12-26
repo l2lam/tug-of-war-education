@@ -14,6 +14,16 @@ export interface Question {
     topicId: string;
 }
 
+export interface VariableDefinition {
+    type?: 'integer'; // Default is integer
+    min: number;
+    max: number;
+}
+
+export interface QuestionTemplate extends Question {
+    variables?: Record<string, VariableDefinition>;
+}
+
 export interface PlayerConfig {
     name: string;
     topics: string[]; // Store topic IDs

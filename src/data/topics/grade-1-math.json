@@ -5,34 +5,60 @@
     "questions": [
         {
             "id": "ont-g1-1",
-            "text": "What is 5 + 3?",
+            "text": "What is {{A}} + {{B}}?",
+            "variables": {
+                "A": {
+                    "min": 1,
+                    "max": 10
+                },
+                "B": {
+                    "min": 1,
+                    "max": 10
+                }
+            },
             "options": [
-                "6",
-                "7",
-                "8",
-                "9"
+                "{{A + B}}",
+                "{{A + B + 1}}",
+                "{{A + B + 2}}",
+                "{{A + B - 1}}"
             ],
-            "correctIndex": 2
+            "correctIndex": 0
         },
         {
             "id": "ont-g1-2",
-            "text": "What is 10 - 4?",
+            "text": "What is {{A}} - {{B}}?",
+            "variables": {
+                "A": {
+                    "min": 5,
+                    "max": 15
+                },
+                "B": {
+                    "min": 1,
+                    "max": 4
+                }
+            },
             "options": [
-                "4",
-                "5",
-                "6",
-                "7"
+                "{{A - B + 1}}",
+                "{{A - B + 2}}",
+                "{{A - B}}",
+                "{{A - B - 1}}"
             ],
             "correctIndex": 2
         },
         {
             "id": "ont-g1-3",
-            "text": "What number comes right after 19?",
+            "text": "What number comes right after {{A}}?",
+            "variables": {
+                "A": {
+                    "min": 10,
+                    "max": 40
+                }
+            },
             "options": [
-                "18",
-                "20",
-                "21",
-                "29"
+                "{{A - 1}}",
+                "{{A + 1}}",
+                "{{A + 2}}",
+                "{{A + 10}}"
             ],
             "correctIndex": 1
         },
@@ -49,36 +75,20 @@
         },
         {
             "id": "ont-g1-5",
-            "text": "1 ten and 4 ones is the same as...?",
+            "text": "1 ten and {{O}} ones is the same as...?",
+            "variables": {
+                "O": {
+                    "min": 1,
+                    "max": 9
+                }
+            },
             "options": [
-                "5",
-                "14",
-                "41",
-                "104"
+                "{{10 + O}}",
+                "{{O}}",
+                "{{10 * O}}",
+                "{{10 + O + 1}}"
             ],
-            "correctIndex": 1
-        },
-        {
-            "id": "ont-g1-6",
-            "text": "What is 9 + 7?",
-            "options": [
-                "15",
-                "16",
-                "17",
-                "18"
-            ],
-            "correctIndex": 1
-        },
-        {
-            "id": "ont-g1-7",
-            "text": "What is 15 - 5?",
-            "options": [
-                "0",
-                "5",
-                "10",
-                "20"
-            ],
-            "correctIndex": 2
+            "correctIndex": 0
         },
         {
             "id": "ont-g1-8",
@@ -181,12 +191,22 @@
         },
         {
             "id": "ont-g1-17",
-            "text": "Solve: 4 + ? = 6",
+            "text": "Solve: {{A}} + ? = {{T}}",
+            "variables": {
+                "A": {
+                    "min": 1,
+                    "max": 5
+                },
+                "T": {
+                    "min": 6,
+                    "max": 10
+                }
+            },
             "options": [
-                "1",
-                "2",
-                "3",
-                "10"
+                "{{T - A + 1}}",
+                "{{T - A}}",
+                "{{T - A - 1}}",
+                "{{T + A}}"
             ],
             "correctIndex": 1
         },
@@ -247,12 +267,18 @@
         },
         {
             "id": "ont-g1-23",
-            "text": "What is 10 more than 30?",
+            "text": "What is 10 more than {{A}}?",
+            "variables": {
+                "A": {
+                    "min": 10,
+                    "max": 80
+                }
+            },
             "options": [
-                "20",
-                "31",
-                "40",
-                "50"
+                "{{A + 1}}",
+                "{{A - 10}}",
+                "{{A + 10}}",
+                "{{A + 20}}"
             ],
             "correctIndex": 2
         },

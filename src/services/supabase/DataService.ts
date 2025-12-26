@@ -32,7 +32,7 @@ export class SupabaseDataService extends BaseDataService implements IDataService
             options: q.options,
             correctIndex: q.correct_index,
             topicId: q.topic_id
-        }));
+        })).map(q => this.instantiateQuestion(q));
     }
 
     async saveTopic(topic: Topic, questions: Question[]): Promise<boolean> {
