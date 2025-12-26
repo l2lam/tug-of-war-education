@@ -104,6 +104,20 @@ function handleStart() {
       </div>
     </div>
 
+    <div class="game-settings">
+      <div class="field">
+        <label>GAME SPEED (Force Multiplier: {{ store.config.pullForceMultiplier.toFixed(3) }})</label>
+        <input 
+          type="range" 
+          min="0.001" 
+          max="0.05" 
+          step="0.001" 
+          v-model.number="store.config.pullForceMultiplier" 
+          class="slider"
+        />
+      </div>
+    </div>
+
     <div class="actions">
         <button class="editor-btn" @click="emit('edit')">TOPICS EDITOR</button>
         <button class="start-btn" @click="handleStart">FIGHT!</button>
@@ -155,6 +169,16 @@ input, select {
   background: #000;
   color: white;
   border: 2px solid #555;
+}
+
+.slider {
+  width: 100%;
+  cursor: pointer;
+}
+
+.game-settings {
+  width: 100%;
+  max-width: 400px;
 }
 
 .topic-list {

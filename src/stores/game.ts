@@ -33,7 +33,7 @@ export const useGameStore = defineStore('game', () => {
         roundDuration: 30,
         mass: 5,
         friction: 0.95,
-        pullForceMultiplier: 0.01,
+        pullForceMultiplier: parseFloat(localStorage.getItem('pullForceMultiplier') || '0.01'),
     });
 
     const ropeOffset = computed(() => state.value.ropePosition);
@@ -42,6 +42,7 @@ export const useGameStore = defineStore('game', () => {
         const ds = ServiceFactory.getDataService();
         localStorage.setItem(p1NameKey, state.value.p1Config.name);
         localStorage.setItem(p2NameKey, state.value.p2Config.name);
+        localStorage.setItem('pullForceMultiplier', config.value.pullForceMultiplier.toString());
         await Promise.all([
             ds.savePlayerConfig(state.value.p1Config),
             ds.savePlayerConfig(state.value.p2Config)
