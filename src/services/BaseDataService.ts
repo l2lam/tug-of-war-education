@@ -66,8 +66,8 @@ export abstract class BaseDataService {
             // Find {{...}} blocks and evaluate them as expressions with variables in scope
             return str.replace(/{{(.*?)}}/g, (_, expression) => {
                 try {
-                    // Safe-ish eval: allow alphanumeric (vars) and math chars
-                    if (!/^[0-9+\-*/().\sA-Za-z]+$/.test(expression)) {
+                    // Safe-ish eval: allow alphanumeric (vars), math chars, comma, ternary/comparison
+                    if (!/^[0-9+\-*/().\sA-Za-z,?:><=]+$/.test(expression)) {
                         console.warn('Unsafe expression skipped:', expression);
                         return `{{${expression}}}`; // Return original if unsafe
                     }
