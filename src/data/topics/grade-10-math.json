@@ -131,10 +131,10 @@
         },
         {
             "id": "mpm2d-geo-3",
-            "text": "Radius of circle x^2 + y^2 = {{Rsq}}?",
+            "text": "Radius of circle x^2 + y^2 = {{R*R}}?",
             "variables": {
                 "R": {
-                    "min": 2,
+                    "min": 3,
                     "max": 11
                 }
             },
@@ -144,8 +144,7 @@
                 "{{R / 2}}",
                 "{{R * 2}}"
             ],
-            "correctIndex": 0,
-            "_comment": "We display R^2 in text using Rsq variable? No, we can just use R*R expression in text"
+            "correctIndex": 0
         },
         {
             "id": "mpm2d-geo-3-fixed",

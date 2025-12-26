@@ -1,4 +1,5 @@
 import type { Question, QuestionTemplate, Topic } from '../types';
+import { factorial, permutations, combinations } from 'mathjs';
 
 export abstract class BaseDataService {
     protected libraryTopics: Topic[] = [];
@@ -67,13 +68,15 @@ export abstract class BaseDataService {
             return str.replace(/{{(.*?)}}/g, (_, expression) => {
                 try {
                     // Safe-ish eval: allow alphanumeric (vars), math chars, comma, ternary/comparison
-                    if (!/^[0-9+\-*/().\sA-Za-z,?:><=]+$/.test(expression)) {
+                    if (!/^[0-9+\-*/().\sA-Za-z,?:><="']+$/.test(expression)) {
                         console.warn('Unsafe expression skipped:', expression);
                         return `{{${expression}}}`; // Return original if unsafe
                     }
 
-                    const keys = Object.keys(values);
-                    const args = Object.values(values);
+                    const math = { factorial, permutations, combinations };
+                    const keys = [...Object.keys(values), 'math', 'factorial', 'permutations', 'combinations'];
+                    const args = [...Object.values(values), math, factorial, permutations, combinations];
+
                     // Create function with variable names as arguments
                     // eslint-disable-next-line no-new-func
                     const func = new Function(...keys, `return (${expression})`);
