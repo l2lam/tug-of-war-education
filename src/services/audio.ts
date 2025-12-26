@@ -86,26 +86,36 @@ const TRACKS: Record<MusicTrack, TrackDef> = {
         ]
     },
     [MUSIC_TRACK.GAMEPLAY]: {
-        bpm: 135,
+        bpm: 150,
         type: 'square',
         melody: [
-            // Bar 1-2
-            { freq: FREQ.C4, duration: 2 }, { freq: FREQ.E4, duration: 2 }, { freq: FREQ.G4, duration: 2 }, { freq: FREQ.C5, duration: 2 },
-            { freq: FREQ.A4, duration: 2 }, { freq: FREQ.F4, duration: 2 }, { freq: FREQ.D4, duration: 2 }, { freq: FREQ.G4, duration: 2 },
-            // Bar 3-4
-            { freq: FREQ.E4, duration: 2 }, { freq: FREQ.G4, duration: 2 }, { freq: FREQ.C5, duration: 2 }, { freq: FREQ.B4, duration: 2 },
-            { freq: FREQ.A4, duration: 2 }, { freq: FREQ.G4, duration: 2 }, { freq: FREQ.F4, duration: 2 }, { freq: FREQ.G4, duration: 2 },
-            // Bar 5-6 (Variation)
-            { freq: FREQ.C4, duration: 2 }, { freq: FREQ.E4, duration: 2 }, { freq: FREQ.G4, duration: 2 }, { freq: FREQ.C5, duration: 2 },
-            { freq: FREQ.D5, duration: 2 }, { freq: FREQ.B4, duration: 2 }, { freq: FREQ.G4, duration: 2 }, { freq: FREQ.B4, duration: 2 },
-            // Bar 7-8
-            { freq: FREQ.C5, duration: 4 }, { freq: FREQ.G4, duration: 4 }, { freq: FREQ.E4, duration: 4 }, { freq: FREQ.C4, duration: 4 }
+            // Theme A - Part 1
+            { freq: FREQ.E5, duration: 4 }, { freq: FREQ.B4, duration: 2 }, { freq: FREQ.C5, duration: 2 }, { freq: FREQ.D5, duration: 4 },
+            { freq: FREQ.C5, duration: 2 }, { freq: FREQ.B4, duration: 2 }, { freq: FREQ.A4, duration: 4 }, { freq: FREQ.A4, duration: 2 },
+            { freq: FREQ.C5, duration: 2 }, { freq: FREQ.E5, duration: 4 }, { freq: FREQ.D5, duration: 2 }, { freq: FREQ.C5, duration: 2 },
+            { freq: FREQ.B4, duration: 6 }, { freq: FREQ.C5, duration: 2 }, { freq: FREQ.D5, duration: 4 }, { freq: FREQ.E5, duration: 4 },
+            { freq: FREQ.C5, duration: 4 }, { freq: FREQ.A4, duration: 4 }, { freq: FREQ.A4, duration: 8 },
+
+            // Theme A - Part 2 (Bridge)
+            { freq: FREQ.REST, duration: 2 }, { freq: FREQ.D5, duration: 2 }, { freq: FREQ.F5, duration: 4 }, { freq: FREQ.A5, duration: 4 },
+            { freq: FREQ.G5, duration: 2 }, { freq: FREQ.F5, duration: 2 }, { freq: FREQ.E5, duration: 6 }, { freq: FREQ.C5, duration: 2 },
+            { freq: FREQ.E5, duration: 4 }, { freq: FREQ.D5, duration: 2 }, { freq: FREQ.C5, duration: 2 }, { freq: FREQ.B4, duration: 4 },
+            { freq: FREQ.B4, duration: 2 }, { freq: FREQ.C5, duration: 2 }, { freq: FREQ.D5, duration: 4 }, { freq: FREQ.E5, duration: 4 },
+            { freq: FREQ.C5, duration: 4 }, { freq: FREQ.A4, duration: 4 }, { freq: FREQ.A4, duration: 8 },
+            { freq: FREQ.REST, duration: 4 }
         ],
         bassline: [
-            { freq: FREQ.C3, duration: 4 }, { freq: 110, duration: 4 }, { freq: FREQ.C3, duration: 4 }, { freq: 110, duration: 4 },
-            { freq: 110, duration: 4 }, { freq: 87, duration: 4 }, { freq: FREQ.C3, duration: 4 }, { freq: 110, duration: 4 },
-            { freq: FREQ.C3, duration: 4 }, { freq: 110, duration: 4 }, { freq: FREQ.C3, duration: 4 }, { freq: 110, duration: 4 },
-            { freq: FREQ.F3, duration: 4 }, { freq: FREQ.G3, duration: 4 }, { freq: FREQ.C3, duration: 8 }
+            // Simple pumping bass
+            { freq: FREQ.E3, duration: 4 }, { freq: FREQ.E4, duration: 4 }, { freq: FREQ.E3, duration: 4 }, { freq: FREQ.E4, duration: 4 },
+            { freq: FREQ.A3, duration: 4 }, { freq: FREQ.A4, duration: 4 }, { freq: FREQ.A3, duration: 4 }, { freq: FREQ.A4, duration: 4 },
+            { freq: FREQ.G3, duration: 4 }, { freq: FREQ.G4, duration: 4 }, { freq: FREQ.E3, duration: 4 }, { freq: FREQ.E4, duration: 4 },
+            { freq: FREQ.B3, duration: 4 }, { freq: FREQ.B4, duration: 4 }, { freq: FREQ.A3, duration: 4 }, { freq: FREQ.A4, duration: 4 },
+
+            // Bridge bass
+            { freq: FREQ.D3, duration: 4 }, { freq: FREQ.D4, duration: 4 }, { freq: FREQ.F3, duration: 4 }, { freq: FREQ.F4, duration: 4 },
+            { freq: FREQ.C3, duration: 4 }, { freq: FREQ.C4, duration: 4 }, { freq: FREQ.E3, duration: 4 }, { freq: FREQ.E4, duration: 4 },
+            { freq: FREQ.E3, duration: 4 }, { freq: FREQ.E4, duration: 4 }, { freq: FREQ.G3, duration: 4 }, { freq: FREQ.G4, duration: 4 },
+            { freq: FREQ.A3, duration: 4 }, { freq: FREQ.A4, duration: 4 }, { freq: FREQ.A3, duration: 4 }, { freq: FREQ.REST, duration: 4 }
         ]
     },
     [MUSIC_TRACK.VICTORY]: {
