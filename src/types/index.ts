@@ -14,6 +14,13 @@ export interface Question {
     topicId: string;
 }
 
+export interface Character {
+    id: string;
+    name: string;
+    emoji: string;
+    strength: number;
+}
+
 export interface VariableDefinition {
     type?: 'integer'; // Default is integer
     min: number;
@@ -34,6 +41,7 @@ export interface PlayerState {
     name: string;
     score: number;
     strength: number; // Current pulling power (based on streak/correct answers)
+    crew: Character[]; // The team of animals pulling
     topics: string[];
     currentQuestion?: Question;
 }
@@ -56,4 +64,5 @@ export interface GameState {
     p1Config: PlayerConfig;
     p2Config: PlayerConfig;
     winner: PlayerId | null;
+    roundReward?: Character; // The character up for grabs this round
 }

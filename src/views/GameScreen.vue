@@ -121,7 +121,12 @@ function getWinnerStrength() {
 
       <div class="center-stats">
         <div class="timer">{{ store.state.timeLeft }}</div>
-        <div class="round">ROUND {{ store.state.round }}</div>
+        <div class="round-info">
+            <!-- <div class="round-label">ROUND {{ store.state.round }}</div> -->
+            <div class="recruit-target" v-if="store.state.roundReward">
+                ROUND {{ store.state.round }}: {{ store.state.roundReward.emoji }}
+            </div>
+        </div>
       </div>
 
       <div class="controls">
@@ -214,9 +219,22 @@ function getWinnerStrength() {
   text-align: center;
 }
 
-.round {
+.round-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.round-label {
   color: #fff;
   letter-spacing: 2px;
+}
+
+.recruit-target {
+    color: #00ff00;
+    font-size: 1.5rem;
+    text-shadow: 0 0 5px #0f0;
+    animation: pulse 1s infinite alternate;
 }
 
 .controls {

@@ -1,6 +1,7 @@
 import { ref, watch, onUnmounted } from 'vue';
 import { useGameStore } from '../stores/game';
 import ServiceFactory from '../services';
+import { CHARACTERS } from '../constants';
 
 export function useGameLoop() {
     const store = useGameStore();
@@ -40,6 +41,8 @@ export function useGameLoop() {
 
     async function fetchNewQuestions() {
         const dataService = ServiceFactory.getDataService();
+        rollForRoundReward();
+
 
         // Randomly select from enabled topics
         if (store.state.isPlaying && !store.state.leftPlayer.currentQuestion) {
@@ -102,6 +105,25 @@ export function useGameLoop() {
     onUnmounted(() => {
         stopGameLoop();
     });
+
+    function rollForRoundReward() {
+        let totalWeight = 0;
+        const weights = CHARACTERS.map(c => {
+            const weight = 1 / c.strength; // Inverse proportional
+            totalWeight += weight;
+            return { c, weight };
+        });
+
+        let random = Math.random() * totalWeight;
+        for (const item of weights) {
+            random -= item.weight;
+            if (random <= 0) {
+                store.state.roundReward = item.c;
+                return;
+            }
+        }
+        store.state.roundReward = CHARACTERS[0];
+    }
 
     return {
         startGameLoop,

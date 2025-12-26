@@ -12,10 +12,6 @@ const ropeTranslate = computed(() => {
   return `${ratio * maxVW}vw`; // Use viewport width units, not percentage of assembly
 });
 
-
-const leftPullers = computed(() => Math.min(store.state.leftPlayer.strength, 8));
-const rightPullers = computed(() => Math.min(store.state.rightPlayer.strength, 8));
-
 </script>
 
 <template>
@@ -34,15 +30,15 @@ const rightPullers = computed(() => Math.min(store.state.rightPlayer.strength, 8
 
         <!-- Left Pullers (P1) -->
         <div class="puller-group left-group">
-            <div v-for="n in leftPullers" :key="n" class="sprite p1-sprite">
-                🏃
+            <div v-for="(char, idx) in store.state.leftPlayer.crew" :key="idx" class="sprite p1-sprite">
+                {{ char.emoji }}
             </div>
         </div>
 
         <!-- Right Pullers (P2) -->
         <div class="puller-group right-group">
-            <div v-for="n in rightPullers" :key="n" class="sprite p2-sprite">
-                🏃
+            <div v-for="(char, idx) in store.state.rightPlayer.crew" :key="idx" class="sprite p2-sprite">
+                {{ char.emoji }}
             </div>
         </div>
     </div>

@@ -48,8 +48,13 @@ function handleAnswer(shuffledIndex: number) {
   <div class="player-area" :class="{ disabled: disabled }" :style="{ '--player-color': color }">
     <div class="stats pixel-border">
       <h2>{{ player.name }}</h2>
-      <!-- <div class="score">SCORE: {{ player.score }}</div> -->
-      <!-- <div class="strength">POWER: {{ '⚡'.repeat(player.strength) }}</div> -->
+      <!-- <div class="p-info">
+        <span class="score">SCORE: {{ player.score }}</span>
+        <span class="strength">POWER: {{ player.strength.toFixed(1) }}</span>
+      </div>
+      <div class="crew-list">
+          <span v-for="(char, i) in player.crew" :key="i" class="crew-member">{{ char.emoji }}</span>
+      </div> -->
     </div>
 
     <div class="question-board pixel-border" v-if="currentQuestion">
@@ -93,6 +98,31 @@ function handleAnswer(shuffledIndex: number) {
   color: white;
   padding: 0.5rem;
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.p-info {
+    display: flex;
+    justify-content: space-around;
+    font-weight: bold;
+    font-size: 1.0rem;
+}
+
+.crew-list {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 2px;
+    background: rgba(0,0,0,0.2);
+    padding: 2px;
+    border-radius: 4px;
+}
+
+.crew-member {
+    font-size: 1.5rem;
+    filter: drop-shadow(1px 1px 0px rgba(0,0,0,0.5));
 }
 
 .question-board {

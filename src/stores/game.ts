@@ -1,8 +1,10 @@
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
 import type { GameState, Question } from '../types';
-import { PLAYER_ID, type PlayerId } from '../constants';
+import { PLAYER_ID, type PlayerId, CHARACTERS } from '../constants';
 import ServiceFactory from '../services';
+
+const ANT = CHARACTERS[0];
 
 export const useGameStore = defineStore('game', () => {
     const p1NameKey = 'last_p1_name';
@@ -15,8 +17,8 @@ export const useGameStore = defineStore('game', () => {
         ropeVelocity: 0,
         round: 1,
         timeLeft: 0,
-        leftPlayer: { id: PLAYER_ID.LEFT, name: 'Player 1', score: 0, strength: 1, topics: [], currentQuestion: undefined },
-        rightPlayer: { id: PLAYER_ID.RIGHT, name: 'Player 2', score: 0, strength: 1, topics: [], currentQuestion: undefined },
+        leftPlayer: { id: PLAYER_ID.LEFT, name: 'Player 1', score: 0, strength: 3, topics: [], currentQuestion: undefined, crew: [ANT, ANT, ANT] },
+        rightPlayer: { id: PLAYER_ID.RIGHT, name: 'Player 2', score: 0, strength: 3, topics: [], currentQuestion: undefined, crew: [ANT, ANT, ANT] },
         winner: null,
         p1Config: {
             name: localStorage.getItem(p1NameKey) || 'Player 1',
@@ -87,7 +89,8 @@ export const useGameStore = defineStore('game', () => {
                 score: 0,
                 strength: 3,
                 topics: state.value.p1Config.topics,
-                currentQuestion: undefined
+                currentQuestion: undefined,
+                crew: [ANT, ANT, ANT]
             },
             rightPlayer: {
                 id: PLAYER_ID.RIGHT,
@@ -95,7 +98,8 @@ export const useGameStore = defineStore('game', () => {
                 score: 0,
                 strength: 3,
                 topics: state.value.p2Config.topics,
-                currentQuestion: undefined
+                currentQuestion: undefined,
+                crew: [ANT, ANT, ANT]
             },
             winner: null,
         };
@@ -105,8 +109,16 @@ export const useGameStore = defineStore('game', () => {
         if (!state.value.isPlaying || state.value.isPaused) return;
 
         // Physics Loop
-        const leftForce = state.value.leftPlayer.strength * config.value.pullForceMultiplier;
-        const rightForce = state.value.rightPlayer.strength * config.value.pullForceMultiplier;
+        // Physics Loop - Strength is sum of crew
+        const leftStrength = state.value.leftPlayer.crew.reduce((sum, c) => sum + c.strength, 0);
+        const rightStrength = state.value.rightPlayer.crew.reduce((sum, c) => sum + c.strength, 0);
+
+        // Sync strength property for UI
+        state.value.leftPlayer.strength = parseFloat(leftStrength.toFixed(1));
+        state.value.rightPlayer.strength = parseFloat(rightStrength.toFixed(1));
+
+        const leftForce = leftStrength * config.value.pullForceMultiplier;
+        const rightForce = rightStrength * config.value.pullForceMultiplier;
 
         // Net force (Right is positive, Left is negative)
         const netForce = rightForce - leftForce;
@@ -146,15 +158,46 @@ export const useGameStore = defineStore('game', () => {
         if (isCorrect) {
             player.score += 10;
 
-            // If player strength is already > 5, penalize opponent instead of gaining more strength
-            if (player.strength > 5) {
-                opponent.strength = Math.max(1, opponent.strength - 1);
-            } else {
-                player.strength += 1; // Increase constant pulling power
+            // Recruitment / Sabotage Logic
+            if (state.value.roundReward) {
+                if (player.crew.length < 6) {
+                    // Normal recruit
+                    player.crew.push(state.value.roundReward);
+                } else {
+                    // Sabotage: Opponent loses weakest, but can't go below 1
+                    if (opponent.crew.length > 1) {
+                        // Find weakest strength
+                        const oppStrengths = opponent.crew.map(c => c.strength);
+                        const minStrength = Math.min(...oppStrengths);
+
+                        // Find index of first character with that strength
+                        const indexToRemove = opponent.crew.findIndex(c => c.strength === minStrength);
+
+                        if (indexToRemove !== -1) {
+                            opponent.crew.splice(indexToRemove, 1);
+                        }
+                    }
+                }
             }
         } else {
-            player.strength = Math.max(1, player.strength - 1); // Decrease power
+            // Penalty Logic - Remove Weakest
+            if (player.crew.length > 1) {
+                // Find weakest strength
+                const strengths = player.crew.map(c => c.strength);
+                const minStrength = Math.min(...strengths);
+
+                // Find index of first character with that strength
+                const indexToRemove = player.crew.findIndex(c => c.strength === minStrength);
+
+                if (indexToRemove !== -1) {
+                    player.crew.splice(indexToRemove, 1);
+                }
+            }
         }
+
+        // Recalculate total strength immediately for both
+        player.strength = parseFloat(player.crew.reduce((sum, c) => sum + c.strength, 0).toFixed(1));
+        opponent.strength = parseFloat(opponent.crew.reduce((sum, c) => sum + c.strength, 0).toFixed(1));
         state.value.leftPlayer.currentQuestion = undefined;
         state.value.rightPlayer.currentQuestion = undefined;
     }
