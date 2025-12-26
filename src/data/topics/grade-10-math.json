@@ -1,0 +1,326 @@
+{
+    "id": "grade-10-math",
+    "name": "Ontario Grade 10 Math (MPM2D)",
+    "description": "Academic math: Linear Systems, Analytic Geometry, Quadratics, and Trigonometry.",
+    "questions": [
+        {
+            "id": "mpm2d-lin-1",
+            "text": "Solve linear system: y = {{A}} and x + y = {{B}}",
+            "variables": {
+                "A": {
+                    "min": 1,
+                    "max": 10
+                },
+                "B": {
+                    "min": 11,
+                    "max": 20
+                }
+            },
+            "options": [
+                "x={{B - A}}, y={{A}}",
+                "x={{B + A}}, y={{A}}",
+                "x={{A}}, y={{B}}",
+                "x={{B}}, y={{A}}"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "id": "mpm2d-lin-2",
+            "text": "Solve linear system: x + y = {{S}} and x - y = {{D}}",
+            "variables": {
+                "S": {
+                    "min": 10,
+                    "max": 20
+                },
+                "D": {
+                    "min": 2,
+                    "max": 8
+                }
+            },
+            "options": [
+                "x={{(S + D)/2}}, y={{(S - D)/2}}",
+                "x={{S}}, y={{D}}",
+                "x={{(S - D)/2}}, y={{(S + D)/2}}",
+                "x={{S + D}}, y={{S - D}}"
+            ],
+            "correctIndex": 0,
+            "_comment": "x = (S+D)/2, y = (S-D)/2. We assume S+D and S-D produce integers or .5, usually set distinct parities?"
+        },
+        {
+            "id": "mpm2d-lin-3",
+            "text": "How many solutions do parallel distinct lines have?",
+            "options": [
+                "0",
+                "1",
+                "2",
+                "Infinite"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "id": "mpm2d-lin-4",
+            "text": "Find intersection of y = x and y = {{K}}x + {{C}}",
+            "variables": {
+                "K": {
+                    "min": 2,
+                    "max": 5
+                },
+                "C": {
+                    "min": 2,
+                    "max": 10
+                }
+            },
+            "options": [
+                "({{(-C / (K - 1)).toFixed(1)}}, {{(-C / (K - 1)).toFixed(1)}})",
+                "({{C}}, {{C}})",
+                "(0, {{C}})",
+                "({{-C}}, {{-C}})"
+            ],
+            "correctIndex": 0,
+            "_comment": "x = Kx + C => x(1-K) = C => x = C/(1-K) = -C/(K-1)"
+        },
+        {
+            "id": "mpm2d-geo-1",
+            "text": "Midpoint of ({{X1}}, {{Y1}}) and ({{X2}}, {{Y2}})?",
+            "variables": {
+                "X1": {
+                    "min": 0,
+                    "max": 10
+                },
+                "Y1": {
+                    "min": 0,
+                    "max": 10
+                },
+                "X2": {
+                    "min": 12,
+                    "max": 22
+                },
+                "Y2": {
+                    "min": 12,
+                    "max": 22
+                }
+            },
+            "options": [
+                "({{((X1+X2)/2).toFixed(1)}}, {{((Y1+Y2)/2).toFixed(1)}})",
+                "({{X1+X2}}, {{Y1+Y2}})",
+                "({{Math.abs(X1-X2)}}, {{Math.abs(Y1-Y2)}})",
+                "({{((X1+X2)/2 - 1).toFixed(1)}}, {{((Y1+Y2)/2 - 1).toFixed(1)}})"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "id": "mpm2d-geo-2",
+            "text": "Length of segment from (0,0) to ({{X}}, {{Y}})?",
+            "variables": {
+                "X": {
+                    "min": 3,
+                    "max": 6
+                },
+                "Y": {
+                    "min": 4,
+                    "max": 8
+                }
+            },
+            "options": [
+                "{{Math.sqrt(X*X + Y*Y).toFixed(2)}}",
+                "{{(X + Y).toFixed(2)}}",
+                "{{Math.max(X, Y)}}",
+                "{{(X * Y).toFixed(2)}}"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "id": "mpm2d-geo-3",
+            "text": "Radius of circle x^2 + y^2 = {{Rsq}}?",
+            "variables": {
+                "R": {
+                    "min": 2,
+                    "max": 11
+                }
+            },
+            "options": [
+                "{{R}}",
+                "{{R * R}}",
+                "{{R / 2}}",
+                "{{R * 2}}"
+            ],
+            "correctIndex": 0,
+            "_comment": "We display R^2 in text using Rsq variable? No, we can just use R*R expression in text"
+        },
+        {
+            "id": "mpm2d-geo-3-fixed",
+            "text": "Radius of circle x^2 + y^2 = {{R * R}}?",
+            "variables": {
+                "R": {
+                    "min": 2,
+                    "max": 11
+                }
+            },
+            "options": [
+                "{{R}}",
+                "{{R * R}}",
+                "{{R / 2}}",
+                "{{R * 2}}"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "id": "mpm2d-geo-4",
+            "text": "Slope of line perpendicular to slope {{M}}?",
+            "variables": {
+                "M": {
+                    "min": 2,
+                    "max": 5
+                }
+            },
+            "options": [
+                "{{-1/M}}",
+                "{{M}}",
+                "{{-M}}",
+                "{{1/M}}"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "id": "mpm2d-quad-1",
+            "text": "Expand: (x + {{A}})(x + {{B}})",
+            "variables": {
+                "A": {
+                    "min": 1,
+                    "max": 5
+                },
+                "B": {
+                    "min": 6,
+                    "max": 10
+                }
+            },
+            "options": [
+                "x^2 + {{A+B}}x + {{A*B}}",
+                "x^2 + {{A*B}}x + {{A+B}}",
+                "x^2 - {{A+B}}x + {{A*B}}",
+                "x^2 + {{A+B}}x - {{A*B}}"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "id": "mpm2d-quad-2",
+            "text": "Vertex of parabola y = (x - {{H}})^2 + {{K}}",
+            "variables": {
+                "H": {
+                    "min": 1,
+                    "max": 9
+                },
+                "K": {
+                    "min": 1,
+                    "max": 9
+                }
+            },
+            "options": [
+                "({{H}}, {{K}})",
+                "({{-H}}, {{K}})",
+                "({{H}}, {{-K}})",
+                "({{-H}}, {{-K}})"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "id": "mpm2d-quad-3",
+            "text": "y-intercept of y = x^2 + {{B}}x + {{C}}",
+            "variables": {
+                "B": {
+                    "min": 1,
+                    "max": 9
+                },
+                "C": {
+                    "min": 5,
+                    "max": 20
+                }
+            },
+            "options": [
+                "{{C}}",
+                "{{B}}",
+                "0",
+                "{{B+C}}"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "id": "mpm2d-quad-4",
+            "text": "Factor: x^2 + {{A+B}}x + {{A*B}}",
+            "variables": {
+                "A": {
+                    "min": 1,
+                    "max": 4
+                },
+                "B": {
+                    "min": 5,
+                    "max": 9
+                }
+            },
+            "options": [
+                "(x + {{A}})(x + {{B}})",
+                "(x - {{A}})(x - {{B}})",
+                "(x + {{A}})(x - {{B}})",
+                "(x + {{A+B}})(x + 1)"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "id": "mpm2d-trig-1",
+            "text": "In right triangle, sin(A) = ...?",
+            "options": [
+                "Opp / Hyp",
+                "Adj / Hyp",
+                "Opp / Adj",
+                "Hyp / Opp"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "id": "mpm2d-trig-2",
+            "text": "Find x if tan(45°) = x / {{A}}",
+            "variables": {
+                "A": {
+                    "min": 5,
+                    "max": 20
+                }
+            },
+            "options": [
+                "{{A}}",
+                "{{(A * Math.sqrt(3)).toFixed(1)}}",
+                "{{(A / 2)}}",
+                "{{A * 2}}"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "id": "mpm2d-trig-3",
+            "text": "Find Hypotenuse if Adj = {{A}} and cos(Angle) = 0.5",
+            "variables": {
+                "A": {
+                    "min": 4,
+                    "max": 12
+                }
+            },
+            "options": [
+                "{{A * 2}}",
+                "{{A}}",
+                "{{A / 2}}",
+                "{{A * 0.5}}"
+            ],
+            "correctIndex": 0,
+            "_comment": "cos(60)=0.5 = Adj/Hyp => 0.5 = A/H => H = A/0.5 = 2A"
+        },
+        {
+            "id": "mpm2d-trig-4",
+            "text": "Sine Law: a/sinA = ...?",
+            "options": [
+                "b/sinB",
+                "sinB/b",
+                "c/cosC",
+                "b*sinB"
+            ],
+            "correctIndex": 0
+        }
+    ]
+}
