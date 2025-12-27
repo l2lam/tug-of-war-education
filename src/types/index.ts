@@ -36,12 +36,17 @@ export interface PlayerConfig {
     topics: string[]; // Store topic IDs
 }
 
+export interface CrewMember {
+    instanceId: string;
+    character: Character;
+}
+
 export interface PlayerState {
     id: PlayerId;
     name: string;
     score: number;
     strength: number; // Current pulling power (based on streak/correct answers)
-    crew: Character[]; // The team of animals pulling
+    crew: CrewMember[]; // The team of animals pulling
     topics: string[];
     currentQuestion?: Question;
 }

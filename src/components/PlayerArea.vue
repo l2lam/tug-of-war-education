@@ -53,7 +53,7 @@ function handleAnswer(shuffledIndex: number) {
         <span class="strength">POWER: {{ player.strength.toFixed(1) }}</span>
       </div>
       <div class="crew-list">
-          <span v-for="(char, i) in player.crew" :key="i" class="crew-member">{{ char.emoji }}</span>
+          <span v-for="member in player.crew" :key="member.instanceId" class="crew-member">{{ member.character.emoji }}</span>
       </div> -->
     </div>
 

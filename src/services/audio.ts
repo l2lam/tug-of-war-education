@@ -7,36 +7,122 @@ function getCtx() {
     return ctx;
 }
 
-function beep(freq: number, type: OscillatorType, duration: number, vol = 0.1) {
-    const c = getCtx();
-    if (c.state === 'suspended') c.resume();
-    const osc = c.createOscillator();
-    const gain = c.createGain();
-    osc.type = type;
-    osc.frequency.setValueAtTime(freq, c.currentTime);
-    gain.gain.setValueAtTime(vol, c.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.01, c.currentTime + duration);
-    osc.connect(gain);
-    gain.connect(c.destination);
-    osc.start();
-    osc.stop(c.currentTime + duration);
-}
+
 
 import { SOUND_TYPE } from '../constants';
 
 export function playSound(type: string) {
+    const c = getCtx();
+    if (c.state === 'suspended') c.resume();
+
+    const now = c.currentTime;
+
     switch (type) {
         case SOUND_TYPE.HIT:
-            beep(600, 'square', 0.1);
-            setTimeout(() => beep(900, 'square', 0.2), 50);
+            // "Ding!" - High clear bell/coin sound
+            {
+                const osc = c.createOscillator();
+                const gain = c.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(1200, now);
+                osc.frequency.exponentialRampToValueAtTime(1800, now + 0.1);
+
+                gain.gain.setValueAtTime(0.3, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+
+                osc.connect(gain);
+                gain.connect(c.destination);
+                osc.start(now);
+                osc.stop(now + 0.3);
+
+                // Accompaniment overtone
+                const osc2 = c.createOscillator();
+                const gain2 = c.createGain();
+                osc2.type = 'triangle';
+                osc2.frequency.setValueAtTime(600, now);
+                gain2.gain.setValueAtTime(0.1, now);
+                gain2.gain.linearRampToValueAtTime(0, now + 0.1);
+                osc2.connect(gain2);
+                gain2.connect(c.destination);
+                osc2.start(now);
+                osc2.stop(now + 0.1);
+            }
             break;
+
         case SOUND_TYPE.MISS:
-            beep(150, 'sawtooth', 0.3);
-            setTimeout(() => beep(100, 'sawtooth', 0.3), 100);
+            // "Buzzer" / "Womp" - Low saw buzz sliding down
+            {
+                const osc = c.createOscillator();
+                const gain = c.createGain();
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(150, now);
+                osc.frequency.linearRampToValueAtTime(100, now + 0.3);
+
+                gain.gain.setValueAtTime(0.3, now);
+                gain.gain.linearRampToValueAtTime(0.01, now + 0.3);
+
+                osc.connect(gain);
+                gain.connect(c.destination);
+                osc.start(now);
+                osc.stop(now + 0.3);
+            }
             break;
+
+        case SOUND_TYPE.SPAWN:
+            // "Power Up" - Rapid slide up
+            {
+                const osc = c.createOscillator();
+                const gain = c.createGain();
+                osc.type = 'square';
+                osc.frequency.setValueAtTime(200, now);
+                osc.frequency.linearRampToValueAtTime(600, now + 0.15);
+
+                gain.gain.setValueAtTime(0.05, now);
+                gain.gain.linearRampToValueAtTime(0.15, now + 0.1);
+                gain.gain.linearRampToValueAtTime(0, now + 0.2);
+
+                osc.connect(gain);
+                gain.connect(c.destination);
+                osc.start(now);
+                osc.stop(now + 0.2);
+            }
+            break;
+
+        case SOUND_TYPE.ELIMINATE:
+            // "Shrink/Pop" - Quick slide down with noise feel
+            {
+                const osc = c.createOscillator();
+                const gain = c.createGain();
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(400, now);
+                osc.frequency.exponentialRampToValueAtTime(50, now + 0.2);
+
+                gain.gain.setValueAtTime(0.2, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
+
+                osc.connect(gain);
+                gain.connect(c.destination);
+                osc.start(now);
+                osc.stop(now + 0.2);
+            }
+            break;
+
         case SOUND_TYPE.WIN:
-            [440, 554, 659, 880].forEach((freq, i) => {
-                setTimeout(() => beep(freq, 'square', 0.2), i * 100);
+            // Dramatic Fanfare
+            [440, 554, 659, 880, 1108, 1318].forEach((freq, i) => {
+                const start = now + (i * 0.08);
+                const osc = c.createOscillator();
+                const gain = c.createGain();
+                osc.type = i % 2 === 0 ? 'square' : 'triangle';
+                osc.frequency.value = freq;
+
+                gain.gain.setValueAtTime(0.1, start);
+                gain.gain.exponentialRampToValueAtTime(0.01, start + 0.4);
+
+                osc.connect(gain);
+                gain.connect(c.destination);
+                osc.start(start);
+                osc.stop(start + 0.4);
             });
             break;
     }

@@ -1,10 +1,20 @@
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
 import type { GameState, Question } from '../types';
-import { PLAYER_ID, type PlayerId, CHARACTERS } from '../constants';
+import { PLAYER_ID, type PlayerId, CHARACTERS, SOUND_TYPE } from '../constants';
 import ServiceFactory from '../services';
+import { playSound } from '../services/audio';
+
+import type { Character } from '../types';
 
 const ANT = CHARACTERS[0];
+
+function createCrewMember(character: Character) {
+    return {
+        instanceId: Math.random().toString(36).substr(2, 9),
+        character
+    };
+}
 
 export const useGameStore = defineStore('game', () => {
     const p1NameKey = 'last_p1_name';
@@ -17,8 +27,8 @@ export const useGameStore = defineStore('game', () => {
         ropeVelocity: 0,
         round: 1,
         timeLeft: 0,
-        leftPlayer: { id: PLAYER_ID.LEFT, name: 'Player 1', score: 0, strength: 3, topics: [], currentQuestion: undefined, crew: [ANT, ANT, ANT] },
-        rightPlayer: { id: PLAYER_ID.RIGHT, name: 'Player 2', score: 0, strength: 3, topics: [], currentQuestion: undefined, crew: [ANT, ANT, ANT] },
+        leftPlayer: { id: PLAYER_ID.LEFT, name: 'Player 1', score: 0, strength: 3, topics: [], currentQuestion: undefined, crew: [createCrewMember(ANT), createCrewMember(ANT), createCrewMember(ANT)] },
+        rightPlayer: { id: PLAYER_ID.RIGHT, name: 'Player 2', score: 0, strength: 3, topics: [], currentQuestion: undefined, crew: [createCrewMember(ANT), createCrewMember(ANT), createCrewMember(ANT)] },
         winner: null,
         p1Config: {
             name: localStorage.getItem(p1NameKey) || 'Player 1',
@@ -90,7 +100,7 @@ export const useGameStore = defineStore('game', () => {
                 strength: 3,
                 topics: state.value.p1Config.topics,
                 currentQuestion: undefined,
-                crew: [ANT, ANT, ANT]
+                crew: [createCrewMember(ANT), createCrewMember(ANT), createCrewMember(ANT)]
             },
             rightPlayer: {
                 id: PLAYER_ID.RIGHT,
@@ -99,7 +109,7 @@ export const useGameStore = defineStore('game', () => {
                 strength: 3,
                 topics: state.value.p2Config.topics,
                 currentQuestion: undefined,
-                crew: [ANT, ANT, ANT]
+                crew: [createCrewMember(ANT), createCrewMember(ANT), createCrewMember(ANT)]
             },
             winner: null,
         };
@@ -110,8 +120,8 @@ export const useGameStore = defineStore('game', () => {
 
         // Physics Loop
         // Physics Loop - Strength is sum of crew
-        const leftStrength = state.value.leftPlayer.crew.reduce((sum, c) => sum + c.strength, 0);
-        const rightStrength = state.value.rightPlayer.crew.reduce((sum, c) => sum + c.strength, 0);
+        const leftStrength = state.value.leftPlayer.crew.reduce((sum, c) => sum + c.character.strength, 0);
+        const rightStrength = state.value.rightPlayer.crew.reduce((sum, c) => sum + c.character.strength, 0);
 
         // Sync strength property for UI
         state.value.leftPlayer.strength = parseFloat(leftStrength.toFixed(1));
@@ -149,6 +159,7 @@ export const useGameStore = defineStore('game', () => {
     function endGame(winner: PlayerId) {
         state.value.isPlaying = false;
         state.value.winner = winner;
+        playSound(SOUND_TYPE.WIN);
     }
 
     function answerQuestion(playerId: PlayerId, isCorrect: boolean) {
@@ -156,48 +167,53 @@ export const useGameStore = defineStore('game', () => {
         const opponent = playerId === PLAYER_ID.LEFT ? state.value.rightPlayer : state.value.leftPlayer;
 
         if (isCorrect) {
+            playSound(SOUND_TYPE.HIT);
             player.score += 10;
 
             // Recruitment / Sabotage Logic
             if (state.value.roundReward) {
                 if (player.crew.length < 6) {
                     // Normal recruit
-                    player.crew.push(state.value.roundReward);
+                    player.crew.push(createCrewMember(state.value.roundReward));
+                    setTimeout(() => playSound(SOUND_TYPE.SPAWN), 150);
                 } else {
                     // Sabotage: Opponent loses weakest, but can't go below 1
                     if (opponent.crew.length > 1) {
                         // Find weakest strength
-                        const oppStrengths = opponent.crew.map(c => c.strength);
+                        const oppStrengths = opponent.crew.map(c => c.character.strength);
                         const minStrength = Math.min(...oppStrengths);
 
                         // Find index of first character with that strength
-                        const indexToRemove = opponent.crew.findIndex(c => c.strength === minStrength);
+                        const indexToRemove = opponent.crew.findIndex(c => c.character.strength === minStrength);
 
                         if (indexToRemove !== -1) {
                             opponent.crew.splice(indexToRemove, 1);
+                            setTimeout(() => playSound(SOUND_TYPE.ELIMINATE), 150);
                         }
                     }
                 }
             }
         } else {
+            playSound(SOUND_TYPE.MISS);
             // Penalty Logic - Remove Weakest
             if (player.crew.length > 1) {
                 // Find weakest strength
-                const strengths = player.crew.map(c => c.strength);
+                const strengths = player.crew.map(c => c.character.strength);
                 const minStrength = Math.min(...strengths);
 
                 // Find index of first character with that strength
-                const indexToRemove = player.crew.findIndex(c => c.strength === minStrength);
+                const indexToRemove = player.crew.findIndex(c => c.character.strength === minStrength);
 
                 if (indexToRemove !== -1) {
                     player.crew.splice(indexToRemove, 1);
+                    setTimeout(() => playSound(SOUND_TYPE.ELIMINATE), 150);
                 }
             }
         }
 
         // Recalculate total strength immediately for both
-        player.strength = parseFloat(player.crew.reduce((sum, c) => sum + c.strength, 0).toFixed(1));
-        opponent.strength = parseFloat(opponent.crew.reduce((sum, c) => sum + c.strength, 0).toFixed(1));
+        player.strength = parseFloat(player.crew.reduce((sum, c) => sum + c.character.strength, 0).toFixed(1));
+        opponent.strength = parseFloat(opponent.crew.reduce((sum, c) => sum + c.character.strength, 0).toFixed(1));
         state.value.leftPlayer.currentQuestion = undefined;
         state.value.rightPlayer.currentQuestion = undefined;
     }

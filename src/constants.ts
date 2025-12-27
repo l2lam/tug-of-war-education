@@ -8,7 +8,9 @@ export type PlayerId = typeof PLAYER_ID[keyof typeof PLAYER_ID];
 export const SOUND_TYPE = {
     HIT: 'hit',
     MISS: 'miss',
-    WIN: 'win'
+    WIN: 'win',
+    SPAWN: 'spawn',
+    ELIMINATE: 'eliminate'
 } as const;
 
 export type SoundType = typeof SOUND_TYPE[keyof typeof SOUND_TYPE];

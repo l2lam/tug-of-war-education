@@ -29,18 +29,22 @@ const ropeTranslate = computed(() => {
         <div class="center-flag">🚩</div>
 
         <!-- Left Pullers (P1) -->
-        <div class="puller-group left-group">
-            <div v-for="(char, idx) in store.state.leftPlayer.crew" :key="idx" class="sprite p1-sprite">
-                {{ char.emoji }}
+        <TransitionGroup name="pop" tag="div" class="puller-group left-group">
+            <div v-for="member in store.state.leftPlayer.crew" :key="member.instanceId" class="sprite-wrapper">
+                <div class="sprite p1-sprite">
+                    {{ member.character.emoji }}
+                </div>
             </div>
-        </div>
+        </TransitionGroup>
 
         <!-- Right Pullers (P2) -->
-        <div class="puller-group right-group">
-            <div v-for="(char, idx) in store.state.rightPlayer.crew" :key="idx" class="sprite p2-sprite">
-                {{ char.emoji }}
+        <TransitionGroup name="pop" tag="div" class="puller-group right-group">
+            <div v-for="member in store.state.rightPlayer.crew" :key="member.instanceId" class="sprite-wrapper">
+                <div class="sprite p2-sprite">
+                    {{ member.character.emoji }}
+                </div>
             </div>
-        </div>
+        </TransitionGroup>
     </div>
   </div>
 </template>
@@ -156,6 +160,22 @@ const ropeTranslate = computed(() => {
 @keyframes pull-right {
     0% { transform: scaleX(1) rotate(0deg); }
     100% { transform: scaleX(1) rotate(-20deg); } 
+}
+
+/* Animations */
+.pop-enter-active,
+.pop-leave-active {
+  transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.pop-enter-from {
+  opacity: 0;
+  transform: scale(0) translateY(-50px);
+}
+
+.pop-leave-to {
+  opacity: 0;
+  transform: scale(0) translateY(50px);
 }
 
 @media (max-height: 500px) {
