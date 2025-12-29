@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, ref, onMounted, onUnmounted } from 'vue';
 import { useGameStore } from '../stores/game';
+import { COMMENTARY, COMMENTARY_TYPE, type CommentaryType } from '../data/commentary';
 
 const store = useGameStore();
 
@@ -12,6 +13,63 @@ const ropeTranslate = computed(() => {
   return `${ratio * maxVW}vw`; // Use viewport width units, not percentage of assembly
 });
 
+// Commentary System
+const commentaries = ref<Record<string, string>>({});
+let commentaryInterval: number | null = null;
+
+const getPlayerState = (isLeft: boolean): CommentaryType => {
+    const current = store.state.ropePosition;
+    const threshold = store.config.winningThreshold;
+    const ratio = current / threshold; // -1 to 1 (approx)
+    
+    // Tie condition
+    if (Math.abs(ratio) < 0.15) return COMMENTARY_TYPE.TIE;
+
+    if (isLeft) {
+        // Left wins if rope moves Left (negative ratio)
+        if (ratio < -0.7) return COMMENTARY_TYPE.IMMINENT_VICTORY;
+        if (ratio < -0.15) return COMMENTARY_TYPE.WINNING;
+        if (ratio > 0.7) return COMMENTARY_TYPE.IMMINENT_DEFEAT;
+        if (ratio > 0.15) return COMMENTARY_TYPE.LOSING;
+    } else {
+        // Right wins if rope moves Right (positive ratio)
+        if (ratio > 0.7) return COMMENTARY_TYPE.IMMINENT_VICTORY;
+        if (ratio > 0.15) return COMMENTARY_TYPE.WINNING;
+        if (ratio < -0.7) return COMMENTARY_TYPE.IMMINENT_DEFEAT;
+        if (ratio < -0.15) return COMMENTARY_TYPE.LOSING;
+    }
+    return COMMENTARY_TYPE.TIE;
+};
+
+const triggerCommentary = () => {
+    const isLeft = Math.random() > 0.5;
+    const crew = isLeft ? store.state.leftPlayer.crew : store.state.rightPlayer.crew;
+
+    if (crew.length === 0) return;
+
+    const member = crew[Math.floor(Math.random() * crew.length)];
+    if (!member) return;
+    
+    const state = getPlayerState(isLeft);
+    const phrases = COMMENTARY[state];
+    const text = phrases[Math.floor(Math.random() * phrases.length)];
+
+    if (text) {
+        commentaries.value[member.instanceId] = text;
+
+        setTimeout(() => {
+            delete commentaries.value[member.instanceId];
+        }, 2500 + Math.random() * 1000); // 2.5 - 3.5s duration
+    }
+};
+
+onMounted(() => {
+    commentaryInterval = window.setInterval(triggerCommentary, 3000);
+});
+
+onUnmounted(() => {
+    if (commentaryInterval) clearInterval(commentaryInterval);
+});
 </script>
 
 <template>
@@ -31,6 +89,11 @@ const ropeTranslate = computed(() => {
         <!-- Left Pullers (P1) -->
         <TransitionGroup name="pop" tag="div" class="puller-group left-group">
             <div v-for="member in store.state.leftPlayer.crew" :key="member.instanceId" class="sprite-wrapper">
+                <Transition name="fade">
+                    <div v-if="commentaries[member.instanceId]" class="commentary-bubble">
+                        {{ commentaries[member.instanceId] }}
+                    </div>
+                </Transition>
                 <div class="sprite p1-sprite">
                     {{ member.character.emoji }}
                 </div>
@@ -40,6 +103,11 @@ const ropeTranslate = computed(() => {
         <!-- Right Pullers (P2) -->
         <TransitionGroup name="pop" tag="div" class="puller-group right-group">
             <div v-for="member in store.state.rightPlayer.crew" :key="member.instanceId" class="sprite-wrapper">
+                <Transition name="fade">
+                    <div v-if="commentaries[member.instanceId]" class="commentary-bubble">
+                        {{ commentaries[member.instanceId] }}
+                    </div>
+                </Transition>
                 <div class="sprite p2-sprite">
                     {{ member.character.emoji }}
                 </div>
@@ -145,6 +213,51 @@ const ropeTranslate = computed(() => {
 .p2-sprite { 
     animation: pull-right 0.8s infinite alternate ease-in-out;
     animation-delay: 0.4s;
+}
+
+.sprite-wrapper {
+    position: relative;
+    display: flex;
+    justify-content: center;
+}
+
+.commentary-bubble {
+    position: absolute;
+    bottom: 110%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: white;
+    color: black;
+    padding: 4px 8px;
+    border-radius: 8px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    white-space: nowrap;
+    z-index: 10;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    pointer-events: none;
+    border: 1px solid #ccc;
+}
+
+.commentary-bubble::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: white transparent transparent transparent;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }
 
 @keyframes wave {

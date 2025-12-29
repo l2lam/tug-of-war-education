@@ -338,7 +338,7 @@ function getWinnerStrength() {
 .winner-overlay {
   position: absolute;
   top: 0; left: 0; right: 0; bottom: 0;
-  background: radial-gradient(circle, rgba(0,0,0,0.95), rgba(0,0,0,1));
+  background: radial-gradient(circle, rgba(0,0,0,0.95), rgba(0,0,0,0.3));
   display: flex;
   flex-direction: column;
   align-items: center;
