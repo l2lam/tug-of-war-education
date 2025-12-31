@@ -21,6 +21,25 @@ const getPlayerState = (isLeft: boolean): CommentaryType => {
     const current = store.state.ropePosition;
     const threshold = store.config.winningThreshold;
     const ratio = current / threshold; // -1 to 1 (approx)
+    const winner = store.state.winner;
+    
+    // Check for game-over states
+    if (winner) {
+        if (isLeft) {
+            return winner === 'left' ? COMMENTARY_TYPE.WON : COMMENTARY_TYPE.LOST;
+        } else {
+            return winner === 'right' ? COMMENTARY_TYPE.WON : COMMENTARY_TYPE.LOST;
+        }
+    }
+    
+    // Determine momentum based on strength comparison
+    const leftStrength = store.state.leftPlayer.strength;
+    const rightStrength = store.state.rightPlayer.strength;
+    const playerStrength = isLeft ? leftStrength : rightStrength;
+    const opponentStrength = isLeft ? rightStrength : leftStrength;
+    
+    const hasStrengthAdvantage = playerStrength > opponentStrength;
+    const hasStrengthDisadvantage = playerStrength < opponentStrength;
     
     // Tie condition
     if (Math.abs(ratio) < 0.15) return COMMENTARY_TYPE.TIE;
@@ -28,15 +47,39 @@ const getPlayerState = (isLeft: boolean): CommentaryType => {
     if (isLeft) {
         // Left wins if rope moves Left (negative ratio)
         if (ratio < -0.7) return COMMENTARY_TYPE.IMMINENT_VICTORY;
-        if (ratio < -0.15) return COMMENTARY_TYPE.WINNING;
+        if (ratio < -0.15) {
+            // Winning position but weaker strength = losing momentum
+            if (hasStrengthDisadvantage) {
+                return COMMENTARY_TYPE.WINNING_LOSING_MOMENTUM;
+            }
+            return COMMENTARY_TYPE.WINNING;
+        }
         if (ratio > 0.7) return COMMENTARY_TYPE.IMMINENT_DEFEAT;
-        if (ratio > 0.15) return COMMENTARY_TYPE.LOSING;
+        if (ratio > 0.15) {
+            // Losing position but stronger strength = gaining momentum
+            if (hasStrengthAdvantage) {
+                return COMMENTARY_TYPE.LOSING_GAINING_MOMENTUM;
+            }
+            return COMMENTARY_TYPE.LOSING;
+        }
     } else {
         // Right wins if rope moves Right (positive ratio)
         if (ratio > 0.7) return COMMENTARY_TYPE.IMMINENT_VICTORY;
-        if (ratio > 0.15) return COMMENTARY_TYPE.WINNING;
+        if (ratio > 0.15) {
+            // Winning position but weaker strength = losing momentum
+            if (hasStrengthDisadvantage) {
+                return COMMENTARY_TYPE.WINNING_LOSING_MOMENTUM;
+            }
+            return COMMENTARY_TYPE.WINNING;
+        }
         if (ratio < -0.7) return COMMENTARY_TYPE.IMMINENT_DEFEAT;
-        if (ratio < -0.15) return COMMENTARY_TYPE.LOSING;
+        if (ratio < -0.15) {
+            // Losing position but stronger strength = gaining momentum
+            if (hasStrengthAdvantage) {
+                return COMMENTARY_TYPE.LOSING_GAINING_MOMENTUM;
+            }
+            return COMMENTARY_TYPE.LOSING;
+        }
     }
     return COMMENTARY_TYPE.TIE;
 };
@@ -51,6 +94,7 @@ const triggerCommentary = () => {
     if (!member) return;
     
     const state = getPlayerState(isLeft);
+    console.log(state);
     const phrases = COMMENTARY[state];
     const text = phrases[Math.floor(Math.random() * phrases.length)];
 

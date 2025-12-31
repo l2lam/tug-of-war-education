@@ -3,7 +3,11 @@ export const COMMENTARY_TYPE = {
     LOSING: 'losing',
     TIE: 'tie',
     IMMINENT_DEFEAT: 'imminent_defeat',
-    IMMINENT_VICTORY: 'imminent_victory'
+    IMMINENT_VICTORY: 'imminent_victory',
+    WINNING_LOSING_MOMENTUM: 'winning_losing_momentum',
+    LOSING_GAINING_MOMENTUM: 'losing_gaining_momentum',
+    WON: 'won',
+    LOST: 'lost'
 } as const;
 
 export type CommentaryType = typeof COMMENTARY_TYPE[keyof typeof COMMENTARY_TYPE];
@@ -72,5 +76,57 @@ export const COMMENTARY: Record<CommentaryType, readonly string[]> = {
         "You guys suck!",
         "We are the champions, no time for losers",
         "Bye bye!"
+    ],
+    [COMMENTARY_TYPE.WINNING_LOSING_MOMENTUM]: [
+        "Wait, what's happening?",
+        "They're coming back!",
+        "Hold the line!",
+        "Don't let them catch up!",
+        "We're slipping!",
+        "Focus!",
+        "They're getting stronger!",
+        "Uh oh...",
+        "Keep the pressure on!",
+        "Don't lose it now!"
+    ],
+    [COMMENTARY_TYPE.LOSING_GAINING_MOMENTUM]: [
+        "We're coming back!",
+        "I feel it turning!",
+        "There's hope!",
+        "Keep it up!",
+        "We can do this!",
+        "The tide is turning!",
+        "They're weakening!",
+        "Push harder!",
+        "We're gaining ground!",
+        "Don't stop now!"
+    ],
+    [COMMENTARY_TYPE.WON]: [
+        "We did it!",
+        "Victory!",
+        "Champions!",
+        "That's how it's done!",
+        "Too easy!",
+        "First try...",
+        "Who's the best?",
+        "They never had a chance!",
+        "GG EZ!",
+        "Who's your daddy?"
+    ],
+    [COMMENTARY_TYPE.LOST]: [
+        "GG",
+        "Nooo!",
+        "We lost...",
+        "Defeated...",
+        "They were too strong",
+        "Better luck next time fellas",
+        "I gave it my all",
+        "So close...",
+        "We'll get them next time",
+        "Ugh, embarrassing",
+        "You got lucky",
+        "Rematch!",
+        "How did this happen?",
+        "We have brought shame upon our family"
     ]
 };
