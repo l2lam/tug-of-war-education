@@ -6,11 +6,17 @@ import { COMMENTARY, COMMENTARY_TYPE, type CommentaryType } from '../data/commen
 const store = useGameStore();
 
 const ropeTranslate = computed(() => {
-  const maxVW = 10; // Maximum movement in viewport width units (±10vw = reaching 40% or 60% from 50% center)
+  const maxVW = 20; // Increased from 10 to match new threshold lines at 30%/70% (±20% from center)
   const current = store.state.ropePosition; 
   const threshold = store.config.winningThreshold;
   const ratio = current / threshold; 
   return `${ratio * maxVW}vw`; // Use viewport width units, not percentage of assembly
+});
+
+const tension = computed(() => {
+    const leftStrength = store.state.leftPlayer.crew.reduce((sum, c) => sum + c.character.strength, 0);
+    const rightStrength = store.state.rightPlayer.crew.reduce((sum, c) => sum + c.character.strength, 0);
+    return leftStrength + rightStrength;
 });
 
 // Commentary System
@@ -94,7 +100,6 @@ const triggerCommentary = () => {
     if (!member) return;
     
     const state = getPlayerState(isLeft);
-    console.log(state);
     const phrases = COMMENTARY[state];
     const text = phrases[Math.floor(Math.random() * phrases.length)];
 
@@ -124,7 +129,7 @@ onUnmounted(() => {
     <div class="threshold right-threshold"></div>
     
     <!-- Moving Assembly (Rope + Pullers) -->
-    <div class="rope-assembly" :style="{ transform: `translate(calc(-50% + ${ropeTranslate}), -50%)` }">
+    <div class="rope-assembly" :class="{ 'jitter': tension > 10 }" :style="{ transform: `translate(calc(-50% + ${ropeTranslate}), -50%)`, '--tension-scale': Math.min(tension / 20, 1) }">
         <div class="rope-line"></div>
         
         <!-- Center Flag -->
@@ -180,10 +185,10 @@ onUnmounted(() => {
     width: 4px;
     background: rgba(255, 200, 0, 0.6);
     border-left: 3px dashed #ff0;
-    z-index: 100;
+    z-index: 0;
 }
-.left-threshold { left: 40%; }
-.right-threshold { left: 60%; }
+.left-threshold { left: 30%; }
+.right-threshold { left: 70%; }
 
 /* Assembly - this entire container moves left/right */
 .rope-assembly {
@@ -212,7 +217,7 @@ onUnmounted(() => {
     );
     border: 1px solid #654;
     border-radius: 3px;
-    z-index: 1;
+    z-index: 2;
 }
 
 .center-flag {
@@ -230,7 +235,7 @@ onUnmounted(() => {
     position: absolute;
     display: flex;
     gap: 1px;
-    z-index: 2;
+    z-index: 3;
     top: 60%;
     transform: translateY(-50%); /* Center vertically on rope */
 }
@@ -307,6 +312,18 @@ onUnmounted(() => {
 @keyframes wave {
     from { transform: translate(-50%, -70%) rotate(-10deg); }
     to { transform: translate(-50%, -70%) rotate(10deg); }
+}
+
+.jitter {
+    animation: jitter-frames 0.2s infinite ease-in-out;
+}
+
+@keyframes jitter-frames {
+    0% { margin-top: 0; margin-left: 0; }
+    25% { margin-top: calc(var(--tension-scale) * -1px); margin-left: calc(var(--tension-scale) * 1px); }
+    50% { margin-top: calc(var(--tension-scale) * 1px); margin-left: calc(var(--tension-scale) * -1px); }
+    75% { margin-top: calc(var(--tension-scale) * -1px); margin-left: calc(var(--tension-scale) * -1px); }
+    100% { margin-top: 0; margin-left: 0; }
 }
 
 @keyframes pull-left {

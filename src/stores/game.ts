@@ -133,8 +133,21 @@ export const useGameStore = defineStore('game', () => {
         // Net force (Right is positive, Left is negative)
         const netForce = rightForce - leftForce;
 
+        // --- Struggle Force (Back and Forth Motion) ---
+        // A combination of sine waves creates a natural "wobble"
+        const time = performance.now() / 1000;
+        const totalStrength = leftStrength + rightStrength;
+        const struggleOscillation =
+            Math.sin(time * 8.0) * 0.4 +
+            Math.sin(time * 3.7) * 0.3 +
+            Math.sin(time * 1.5) * 0.2;
+
+        // Struggle intensity scales with total strength and provides resistance
+        const struggleIntensity = totalStrength * config.value.pullForceMultiplier * 1;
+        const struggleForce = struggleOscillation * struggleIntensity;
+
         // F = ma -> a = F/m
-        const acceleration = netForce / config.value.mass;
+        const acceleration = (netForce + struggleForce) / config.value.mass;
 
         // v = v + a
         state.value.ropeVelocity += acceleration;
