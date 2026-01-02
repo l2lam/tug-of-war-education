@@ -57,6 +57,12 @@ export interface GameConfig {
     roundDuration: number; // seconds
 }
 
+export interface GameOutcome {
+    type: 'correct' | 'wrong';
+    playerId: PlayerId;
+    timestamp: number;
+}
+
 export interface GameState {
     isPlaying: boolean;
     isPaused: boolean;
@@ -71,4 +77,5 @@ export interface GameState {
     p2Config: PlayerConfig;
     winner: PlayerId | null;
     roundReward?: Character; // The character up for grabs this round
+    lastOutcome?: GameOutcome;
 }

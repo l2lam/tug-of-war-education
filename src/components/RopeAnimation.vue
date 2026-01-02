@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, onMounted, onUnmounted } from 'vue';
+import { computed, ref, watch, onMounted, onUnmounted } from 'vue';
 import { useGameStore } from '../stores/game';
 import { COMMENTARY, COMMENTARY_TYPE, type CommentaryType } from '../data/commentary';
 
@@ -112,6 +112,22 @@ const triggerCommentary = () => {
     }
 };
 
+// Recoil Effect
+const isRecoilLeft = ref(false);
+const isRecoilRight = ref(false);
+
+watch(() => store.state.lastOutcome, (outcome) => {
+    if (!outcome) return;
+    
+    if (outcome.playerId === 'left') {
+        isRecoilLeft.value = true;
+        setTimeout(() => isRecoilLeft.value = false, 500);
+    } else {
+        isRecoilRight.value = true;
+        setTimeout(() => isRecoilRight.value = false, 500);
+    }
+});
+
 onMounted(() => {
     commentaryInterval = window.setInterval(triggerCommentary, 3000);
 });
@@ -129,7 +145,7 @@ onUnmounted(() => {
     <div class="threshold right-threshold"></div>
     
     <!-- Moving Assembly (Rope + Pullers) -->
-    <div class="rope-assembly" :class="{ 'jitter': tension > 10 }" :style="{ transform: `translate(calc(-50% + ${ropeTranslate}), -50%)`, '--tension-scale': Math.min(tension / 20, 1) }">
+    <div class="rope-assembly" :class="{ 'jitter': tension > 10, 'recoil-left': isRecoilLeft, 'recoil-right': isRecoilRight }" :style="{ transform: `translate(calc(-50% + ${ropeTranslate}), -50%)`, '--tension-scale': Math.min(tension / 20, 1), '--rope-pos': ropeTranslate }">
         <div class="rope-line"></div>
         
         <!-- Center Flag -->
@@ -350,6 +366,26 @@ onUnmounted(() => {
 .pop-leave-to {
   opacity: 0;
   transform: scale(0) translateY(50px);
+}
+
+.recoil-left {
+    animation: recoil-frames-left 0.5s ease-out;
+}
+
+.recoil-right {
+    animation: recoil-frames-right 0.5s ease-out;
+}
+
+@keyframes recoil-frames-left {
+    0% { transform: translate(calc(-50% + var(--rope-pos, 0vw)), -50%) scale(1.05); }
+    20% { transform: translate(calc(-50% + var(--rope-pos, 0vw) - 20px), -50%) scale(1.1); }
+    100% { transform: translate(calc(-50% + var(--rope-pos, 0vw)), -50%) scale(1); }
+}
+
+@keyframes recoil-frames-right {
+    0% { transform: translate(calc(-50% + var(--rope-pos, 0vw)), -50%) scale(1.05); }
+    20% { transform: translate(calc(-50% + var(--rope-pos, 0vw) + 20px), -50%) scale(1.1); }
+    100% { transform: translate(calc(-50% + var(--rope-pos, 0vw)), -50%) scale(1); }
 }
 
 @media (max-height: 500px) {

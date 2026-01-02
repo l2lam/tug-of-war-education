@@ -227,6 +227,14 @@ export const useGameStore = defineStore('game', () => {
         // Recalculate total strength immediately for both
         player.strength = parseFloat(player.crew.reduce((sum, c) => sum + c.character.strength, 0).toFixed(1));
         opponent.strength = parseFloat(opponent.crew.reduce((sum, c) => sum + c.character.strength, 0).toFixed(1));
+
+        // Track outcome for visual feedback
+        state.value.lastOutcome = {
+            type: isCorrect ? 'correct' : 'wrong',
+            playerId,
+            timestamp: Date.now()
+        };
+
         state.value.leftPlayer.currentQuestion = undefined;
         state.value.rightPlayer.currentQuestion = undefined;
     }

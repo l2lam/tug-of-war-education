@@ -100,6 +100,32 @@ function getWinnerStrength() {
     : store.state.rightPlayer.strength;
 }
 
+// Visual Feedback State
+const feedback = ref<{ active: boolean; type: 'correct' | 'wrong'; text: string; side: 'left' | 'right' } | null>(null);
+const isShaking = ref(false);
+
+watch(() => store.state.lastOutcome, (outcome) => {
+    if (!outcome) return;
+
+    const isCorrect = outcome.type === 'correct';
+    feedback.value = {
+        active: true,
+        type: outcome.type,
+        text: isCorrect ? 'PERFECT!' : 'OH NO!',
+        side: outcome.playerId as 'left' | 'right'
+    };
+
+    if (!isCorrect) {
+        isShaking.value = true;
+        setTimeout(() => isShaking.value = false, 500);
+    }
+
+    setTimeout(() => {
+        if (feedback.value?.active) {
+            feedback.value.active = false;
+        }
+    }, 800);
+});
 </script>
 
 <template>
@@ -124,7 +150,7 @@ function getWinnerStrength() {
         <div class="round-info">
             <!-- <div class="round-label">ROUND {{ store.state.round }}</div> -->
             <div class="recruit-target" v-if="store.state.roundReward">
-                ROUND {{ store.state.round }}: {{ store.state.roundReward.emoji }}
+                ROUND {{ store.state.round }}: {{ store.state.roundReward?.emoji }}
             </div>
         </div>
       </div>
@@ -138,24 +164,35 @@ function getWinnerStrength() {
       </div>
     </div>
 
-    <!-- Rope Section -->
-    <RopeAnimation />
+    <!-- Outcome Feedback Overlay -->
+    <Transition name="outcome">
+      <div v-if="feedback?.active" class="outcome-overlay" :class="[feedback.type, feedback.side]">
+        <div class="outcome-content">
+          <div class="outcome-text">{{ feedback.text }}</div>
+        </div>
+      </div>
+    </Transition>
 
-    <!-- Players Section -->
-    <div class="players-container">
-      <PlayerArea 
-        :player="store.state.leftPlayer" 
-        color="#e63946"
-        :disabled="store.state.isTransitioning || store.state.isPaused"
-        @answer="(c) => handleAnswer(PLAYER_ID.LEFT, c)"
-      />
-      <div class="vs-divider">VS</div>
-      <PlayerArea 
-        :player="store.state.rightPlayer" 
-        color="#457b9d"
-        :disabled="store.state.isTransitioning || store.state.isPaused"
-        @answer="(c) => handleAnswer(PLAYER_ID.RIGHT, c)"
-      />
+    <div class="game-content" :class="{ 'screen-shake': isShaking }">
+        <!-- Rope Section -->
+        <RopeAnimation />
+
+        <!-- Players Section -->
+        <div class="players-container">
+          <PlayerArea 
+            :player="store.state.leftPlayer" 
+            color="#e63946"
+            :disabled="store.state.isTransitioning || store.state.isPaused"
+            @answer="(c) => handleAnswer(PLAYER_ID.LEFT, c)"
+          />
+          <div class="vs-divider">VS</div>
+          <PlayerArea 
+            :player="store.state.rightPlayer" 
+            color="#457b9d"
+            :disabled="store.state.isTransitioning || store.state.isPaused"
+            @answer="(c) => handleAnswer(PLAYER_ID.RIGHT, c)"
+          />
+        </div>
     </div>
 
     <!-- Victory Overlay - Street Fighter 2 Style -->
@@ -475,6 +512,90 @@ function getWinnerStrength() {
     opacity: 1;
     transform: translateY(0); 
   }
+}
+
+/* Outcome Feedback Styling */
+.outcome-overlay {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  pointer-events: none;
+}
+
+.outcome-overlay.correct {
+  background: radial-gradient(circle at center, rgba(0, 255, 0, 0.4) 0%, transparent 70%);
+}
+
+.outcome-overlay.wrong {
+  background: radial-gradient(circle at center, rgba(255, 0, 0, 0.5) 0%, transparent 70%);
+}
+
+.outcome-overlay.left {
+    right: 50%;
+    justify-content: center;
+}
+
+.outcome-overlay.right {
+    left: 50%;
+    justify-content: center;
+}
+
+.outcome-overlay.left.correct { background: linear-gradient(to right, rgba(0, 255, 0, 0.4) 0%, transparent 100%); }
+.outcome-overlay.right.correct { background: linear-gradient(to left, rgba(0, 255, 0, 0.4) 0%, transparent 100%); }
+.outcome-overlay.left.wrong { background: linear-gradient(to right, rgba(255, 0, 0, 0.4) 0%, transparent 100%); }
+.outcome-overlay.right.wrong { background: linear-gradient(to left, rgba(255, 0, 0, 0.4) 0%, transparent 100%); }
+
+.outcome-text {
+  font-size: 8rem;
+  font-weight: 900;
+  font-style: italic;
+  letter-spacing: -4px;
+  animation: outcome-punch 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.correct .outcome-text {
+  color: #00ff00;
+  text-shadow: 0 0 20px #0f0, 4px 4px 0 #fff;
+}
+
+.wrong .outcome-text {
+  color: #ff0000;
+  text-shadow: 0 0 20px #f00, 4px 4px 0 #000;
+}
+
+@keyframes outcome-punch {
+  0% { transform: scale(0) rotate(-20deg) translateY(50px); opacity: 0; }
+  50% { transform: scale(1.2) rotate(5deg) translateY(-10px); opacity: 1; }
+  100% { transform: scale(1) rotate(0deg) translateY(0); opacity: 1; }
+}
+
+.outcome-enter-active, .outcome-leave-active {
+  transition: opacity 0.3s ease;
+}
+.outcome-enter-from, .outcome-leave-to {
+  opacity: 0;
+}
+
+/* Camera Shake */
+.game-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.1s;
+}
+
+.screen-shake {
+  animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+}
+
+@keyframes shake {
+  10%, 90% { transform: translate3d(-2px, 0, 0); }
+  20%, 80% { transform: translate3d(4px, 0, 0); }
+  30%, 50%, 70% { transform: translate3d(-8px, 0, 0); }
+  40%, 60% { transform: translate3d(8px, 0, 0); }
 }
 
 /* Mobile Responsiveness */

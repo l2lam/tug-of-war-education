@@ -19,52 +19,84 @@ export function playSound(type: string) {
 
     switch (type) {
         case SOUND_TYPE.HIT:
-            // "Ding!" - High clear bell/coin sound
+            // Dramatic "Victory" Chord - Layered for punch
             {
-                const osc = c.createOscillator();
-                const gain = c.createGain();
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(1200, now);
-                osc.frequency.exponentialRampToValueAtTime(1800, now + 0.1);
+                // Core Ding
+                const osc1 = c.createOscillator();
+                const gain1 = c.createGain();
+                osc1.type = 'sine';
+                osc1.frequency.setValueAtTime(1200, now);
+                osc1.frequency.exponentialRampToValueAtTime(1800, now + 0.1);
+                gain1.gain.setValueAtTime(0.4, now);
+                gain1.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
+                osc1.connect(gain1);
+                gain1.connect(c.destination);
+                osc1.start(now);
+                osc1.stop(now + 0.4);
 
-                gain.gain.setValueAtTime(0.3, now);
-                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
-
-                osc.connect(gain);
-                gain.connect(c.destination);
-                osc.start(now);
-                osc.stop(now + 0.3);
-
-                // Accompaniment overtone
+                // Brass-like "Triumph" Layer (Perfect 5th)
                 const osc2 = c.createOscillator();
                 const gain2 = c.createGain();
                 osc2.type = 'triangle';
-                osc2.frequency.setValueAtTime(600, now);
-                gain2.gain.setValueAtTime(0.1, now);
-                gain2.gain.linearRampToValueAtTime(0, now + 0.1);
+                osc2.frequency.setValueAtTime(800, now); // Approx E5
+                gain2.gain.setValueAtTime(0.15, now);
+                gain2.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
                 osc2.connect(gain2);
                 gain2.connect(c.destination);
                 osc2.start(now);
-                osc2.stop(now + 0.1);
+                osc2.stop(now + 0.3);
+
+                // High Sparkle (Octave + 5th)
+                const osc3 = c.createOscillator();
+                const gain3 = c.createGain();
+                osc3.type = 'sine';
+                osc3.frequency.setValueAtTime(2400, now);
+                gain3.gain.setValueAtTime(0.1, now);
+                gain3.gain.linearRampToValueAtTime(0, now + 0.15);
+                osc3.connect(gain3);
+                gain3.connect(c.destination);
+                osc3.start(now);
+                osc3.stop(now + 0.15);
             }
             break;
 
         case SOUND_TYPE.MISS:
-            // "Buzzer" / "Womp" - Low saw buzz sliding down
+            // Dramatic "Ouch" / "Failure" - Low minor chord cluster + descend
             {
-                const osc = c.createOscillator();
-                const gain = c.createGain();
-                osc.type = 'sawtooth';
-                osc.frequency.setValueAtTime(150, now);
-                osc.frequency.linearRampToValueAtTime(100, now + 0.3);
+                [110, 130, 155].forEach((freq) => { // Minor chord cluster
+                    const osc = c.createOscillator();
+                    const gain = c.createGain();
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(freq, now);
+                    osc.frequency.linearRampToValueAtTime(freq * 0.7, now + 0.5);
 
-                gain.gain.setValueAtTime(0.3, now);
-                gain.gain.linearRampToValueAtTime(0.01, now + 0.3);
+                    gain.gain.setValueAtTime(0.2, now);
+                    gain.gain.linearRampToValueAtTime(0.01, now + 0.5);
 
-                osc.connect(gain);
-                gain.connect(c.destination);
-                osc.start(now);
-                osc.stop(now + 0.3);
+                    // Low pass filter to make it "heavy/muffled"
+                    const filter = c.createBiquadFilter();
+                    filter.type = 'lowpass';
+                    filter.frequency.setValueAtTime(500, now);
+                    filter.Q.value = 10;
+
+                    osc.connect(filter);
+                    filter.connect(gain);
+                    gain.connect(c.destination);
+                    osc.start(now);
+                    osc.stop(now + 0.5);
+                });
+
+                // Sudden sharp discord hit at start
+                const noise = c.createOscillator();
+                const nGain = c.createGain();
+                noise.type = 'square';
+                noise.frequency.setValueAtTime(60, now);
+                nGain.gain.setValueAtTime(0.1, now);
+                nGain.gain.linearRampToValueAtTime(0, now + 0.1);
+                noise.connect(nGain);
+                nGain.connect(c.destination);
+                noise.start(now);
+                noise.stop(now + 0.1);
             }
             break;
 
