@@ -1,5 +1,6 @@
 {
     "id": "grade-12-data",
+    "category": "Math",
     "name": "Ontario Grade 12 Data Management (MDM4U)",
     "description": "Probability, Statistics, and Combinatorics.",
     "questions": [

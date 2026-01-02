@@ -1,0 +1,360 @@
+{
+    "id": "grade-10-science",
+    "category": "Science",
+    "name": "Ontario Grade 10 Science (SNC2D)",
+    "description": "Academic science curriculum: Biology, Chemistry, Physics (Optics), and Climate Change.",
+    "questions": [
+        {
+            "id": "snc2d-bio-1",
+            "text": "What is the basic unit of life in all living things?",
+            "options": [
+                "Tissue",
+                "Organ",
+                "Cell",
+                "System"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "id": "snc2d-bio-2",
+            "text": "Which organelle is known as the powerhouse of the cell?",
+            "options": [
+                "Nucleus",
+                "Ribosome",
+                "Mitochondria",
+                "Chloroplast"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "id": "snc2d-bio-3",
+            "text": "In which phase of mitosis do chromosomes align in the middle of the cell?",
+            "options": [
+                "Prophase",
+                "Metaphase",
+                "Anaphase",
+                "Telophase"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "id": "snc2d-bio-4",
+            "text": "The process of cell division that results in two identical daughter cells is:",
+            "options": [
+                "Meiosis",
+                "Mitosis",
+                "Diffusion",
+                "Osmosis"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "id": "snc2d-bio-5",
+            "text": "Which tissue type is responsible for transmitting electrical signals?",
+            "options": [
+                "Epithelial",
+                "Connective",
+                "Muscle",
+                "Nervous"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "id": "snc2d-bio-6",
+            "text": "What is the primary function of the large intestine?",
+            "options": [
+                "Digestion",
+                "Absorption of nutrients",
+                "Water absorption",
+                "Bile production"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "id": "snc2d-bio-7",
+            "text": "Which blood vessel carries blood away from the heart?",
+            "options": [
+                "Vein",
+                "Artery",
+                "Capillary",
+                "Venule"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "id": "snc2d-bio-8",
+            "text": "The site of gas exchange in the human respiratory system is the:",
+            "options": [
+                "Trachea",
+                "Bronchi",
+                "Alveoli",
+                "Pharynx"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "id": "snc2d-chem-1",
+            "text": "A chemical reaction that releases energy in the form of heat is:",
+            "options": [
+                "Endothermic",
+                "Exothermic",
+                "Isothermic",
+                "Cytothermic"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "id": "snc2d-chem-2",
+            "text": "What is a pH of 7 considered?",
+            "options": [
+                "Acidic",
+                "Basic",
+                "Neutral",
+                "Corrosive"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "id": "snc2d-chem-3",
+            "text": "A substance with a pH of 3 is a:",
+            "options": [
+                "Weak acid",
+                "Strong acid",
+                "Weak base",
+                "Strong base"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "id": "snc2d-chem-4",
+            "text": "What are the products of a neutralization reaction?",
+            "options": [
+                "Salt and Oxygen",
+                "Salt and Water",
+                "Acid and Base",
+                "Hydrogen and Water"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "id": "snc2d-chem-5",
+            "text": "Which type of reaction follows the pattern: A + B → AB?",
+            "options": [
+                "Decomposition",
+                "Single Displacement",
+                "Synthesis",
+                "Double Displacement"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "id": "snc2d-chem-6",
+            "text": "In a chemical equation, the substances on the left side are called:",
+            "options": [
+                "Products",
+                "Reactants",
+                "Catalysts",
+                "Isotopes"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "id": "snc2d-chem-7",
+            "text": "The law of conservation of mass states that mass is:",
+            "options": [
+                "Created",
+                "Destroyed",
+                "Neither created nor destroyed",
+                "Increased"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "id": "snc2d-chem-8",
+            "text": "What would be the formula for Magnesium Chloride?",
+            "options": [
+                "MgCl",
+                "MgCl2",
+                "Mg2Cl",
+                "Mg2Cl2"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "id": "snc2d-phy-1",
+            "text": "What is the speed of light in a vacuum (approx)?",
+            "options": [
+                "300,000 km/s",
+                "3,000 km/s",
+                "30,000 km/s",
+                "3,000,000 km/s"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "id": "snc2d-phy-2",
+            "text": "Bending of light as it passes from one medium to another is:",
+            "options": [
+                "Reflection",
+                "Refraction",
+                "Absorption",
+                "Diffraction"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "id": "snc2d-phy-3",
+            "text": "A mirror that curves inward like a cave is a:",
+            "options": [
+                "Convex mirror",
+                "Concave mirror",
+                "Plane mirror",
+                "Diverging mirror"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "id": "snc2d-phy-4",
+            "text": "The point where parallel light rays meet after being reflected or refracted is:",
+            "options": [
+                "Center of curvature",
+                "Vertex",
+                "Principal focus",
+                "Optical center"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "id": "snc2d-phy-5",
+            "text": "Which lens is used to correct nearsightedness (myopia)?",
+            "options": [
+                "Converging",
+                "Diverging",
+                "Biconvex",
+                "Cylindrical"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "id": "snc2d-phy-6",
+            "text": "The ratio of the speed of light in vacuum to the speed in a medium is:",
+            "options": [
+                "Snell's Law",
+                "Index of Refraction",
+                "Magnification",
+                "Critical Angle"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "id": "snc2d-phy-7",
+            "text": "What type of image is formed by a plane mirror?",
+            "options": [
+                "Real and Inverted",
+                "Virtual and Upright",
+                "Real and Upright",
+                "Virtual and Inverted"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "id": "snc2d-phy-8",
+            "text": "Total internal reflection occurs when the angle of incidence is:",
+            "options": [
+                "Less than critical",
+                "Equal to critical",
+                "Greater than critical",
+                "Zero"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "id": "snc2d-cli-1",
+            "text": "The ability of a surface to reflect solar radiation is:",
+            "options": [
+                "Greenhouse effect",
+                "Albedo",
+                "Convection",
+                "Conduction"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "id": "snc2d-cli-2",
+            "text": "Which gas is the most significant contributor to the greenhouse effect?",
+            "options": [
+                "Oxygen",
+                "Carbon Dioxide",
+                "Water Vapor",
+                "Argon"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "id": "snc2d-cli-3",
+            "text": "What is the main cause of current rapid global warming?",
+            "options": [
+                "Solar cycles",
+                "Volcanic activity",
+                "Human activities",
+                "Earth's orbit"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "id": "snc2d-cli-4",
+            "text": "As oceans warm, they expand. This contribution to sea level rise is:",
+            "options": [
+                "Tidal expansion",
+                "Salinity expansion",
+                "Thermal expansion",
+                "Glacial expansion"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "id": "snc2d-cli-5",
+            "text": "An example of a proxy record for past climate is:",
+            "options": [
+                "Thermometer data",
+                "Ice cores",
+                "Satellite imagery",
+                "Weather balloons"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "id": "snc2d-cli-6",
+            "text": "The long-term average of weather patterns in a region is:",
+            "options": [
+                "Weather",
+                "Climate",
+                "Season",
+                "Cycle"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "id": "snc2d-cli-7",
+            "text": "Which of the following is a potential impact of climate change in Ontario?",
+            "options": [
+                "Less frequent storms",
+                "Increased biodiversity",
+                "More frequent heatwaves",
+                "Colder summers"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "id": "snc2d-cli-8",
+            "text": "Methane is released into the atmosphere from:",
+            "options": [
+                "Photosynthesis",
+                "Melting permafrost",
+                "Condensation",
+                "Solar panels"
+            ],
+            "correctIndex": 1
+        }
+    ]
+}

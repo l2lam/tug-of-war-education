@@ -1,0 +1,360 @@
+{
+    "id": "grade-9-science",
+    "category": "Science",
+    "name": "Ontario Grade 9 Science (SNC1W)",
+    "description": "De-streamed science curriculum: Biology, Chemistry, Physics, and Earth and Space Science.",
+    "questions": [
+        {
+            "id": "snc1w-bio-1",
+            "text": "Which of the following is a biotic factor in an ecosystem?",
+            "options": [
+                "Rocks",
+                "Water",
+                "Bacteria",
+                "Sunlight"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "id": "snc1w-bio-2",
+            "text": "What is the primary source of energy for most ecosystems on Earth?",
+            "options": [
+                "Geothermal heat",
+                "The Sun",
+                "Chemical reactions",
+                "Wind"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "id": "snc1w-bio-3",
+            "text": "Which process removes carbon dioxide from the atmosphere?",
+            "options": [
+                "Respiration",
+                "Combustion",
+                "Photosynthesis",
+                "Decomposition"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "id": "snc1w-bio-4",
+            "text": "An organism that produces its own food is called a:",
+            "options": [
+                "Consumer",
+                "Decomposer",
+                "Producer",
+                "Herbivore"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "id": "snc1w-bio-5",
+            "text": "Bioaccumulation refers to the buildup of toxins in:",
+            "options": [
+                "The atmosphere",
+                "Individual organisms",
+                "Rocks",
+                "Clouds"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "id": "snc1w-bio-6",
+            "text": "Which of these is a greenhouse gas?",
+            "options": [
+                "Oxygen",
+                "Nitrogen",
+                "Methane",
+                "Argon"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "id": "snc1w-bio-7",
+            "text": "A predator-prey relationship is an example of which type of interaction?",
+            "options": [
+                "Symbiosis",
+                "Interspecific competition",
+                "Mutualism",
+                "Exploitation"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "id": "snc1w-bio-8",
+            "text": "What happens to the amount of available energy as you move up a food chain?",
+            "options": [
+                "It increases",
+                "It stays the same",
+                "It decreases",
+                "It fluctuates randomly"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "id": "snc1w-chem-1",
+            "text": "Which state of matter has a definite volume but no definite shape?",
+            "options": [
+                "Solid",
+                "Liquid",
+                "Gas",
+                "Plasma"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "id": "snc1w-chem-2",
+            "text": "What is the chemical symbol for Gold?",
+            "options": [
+                "Gd",
+                "Go",
+                "Ag",
+                "Au"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "id": "snc1w-chem-3",
+            "text": "Which subatomic particle has a negative charge?",
+            "options": [
+                "Proton",
+                "Neutron",
+                "Electron",
+                "Nucleus"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "id": "snc1w-chem-4",
+            "text": "A substance made of only one type of atom is called:",
+            "options": [
+                "A mixture",
+                "A compound",
+                "An element",
+                "A solution"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "id": "snc1w-chem-5",
+            "text": "Which of the following is a physical change?",
+            "options": [
+                "Burning wood",
+                "Rusting iron",
+                "Ice melting",
+                "Baking a cake"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "id": "snc1w-chem-6",
+            "text": "What is the atomic number of an element with 6 protons and 6 neutrons?",
+            "options": [
+                "12",
+                "6",
+                "0",
+                "36"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "id": "snc1w-chem-7",
+            "text": "The columns in the periodic table are called:",
+            "options": [
+                "Periods",
+                "Rows",
+                "Groups",
+                "Metals"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "id": "snc1w-chem-8",
+            "text": "Which element is a noble gas?",
+            "options": [
+                "Oxygen",
+                "Hydrogen",
+                "Helium",
+                "Chlorine"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "id": "snc1w-phy-1",
+            "text": "What is the unit of electric current?",
+            "options": [
+                "Volt",
+                "Ohm",
+                "Watt",
+                "Ampere"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "id": "snc1w-phy-2",
+            "text": "A material that does NOT allow electricity to flow easily is a(n):",
+            "options": [
+                "Conductor",
+                "Insulator",
+                "Semiconductor",
+                "Metal"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "id": "snc1w-phy-3",
+            "text": "In a series circuit, if one bulb burns out, the others will:",
+            "options": [
+                "Stay lit",
+                "Get brighter",
+                "Go out",
+                "Flicker"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "id": "snc1w-phy-4",
+            "text": "Which law states that Voltage = Current × Resistance (V = IR)?",
+            "options": [
+                "Newton's Law",
+                "Ohm's Law",
+                "Boyle's Law",
+                "Pascal's Law"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "id": "snc1w-phy-5",
+            "text": "Static electricity is the buildup of _____ on the surface of an object.",
+            "options": [
+                "Protons",
+                "Neutrons",
+                "Charges",
+                "Atoms"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "id": "snc1w-phy-6",
+            "text": "What device is used to measure potential difference (voltage)?",
+            "options": [
+                "Ammeter",
+                "Ohmmeter",
+                "Voltmeter",
+                "Galvanometer"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "id": "snc1w-phy-7",
+            "text": "Renewable energy comes from:",
+            "options": [
+                "Coal",
+                "Natural Gas",
+                "Wind",
+                "Nuclear Fission"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "id": "snc1w-phy-8",
+            "text": "What is the correct unit for electrical resistance?",
+            "options": [
+                "Ohm (Ω)",
+                "Volt (V)",
+                "Amp (A)",
+                "Joule (J)"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "id": "snc1w-spa-1",
+            "text": "Which planet is known as the Red Planet?",
+            "options": [
+                "Venus",
+                "Jupiter",
+                "Mars",
+                "Saturn"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "id": "snc1w-spa-2",
+            "text": "The spinning of Earth on its axis is called:",
+            "options": [
+                "Orbit",
+                "Rotation",
+                "Revolution",
+                "Precession"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "id": "snc1w-spa-3",
+            "text": "What galaxy do we live in?",
+            "options": [
+                "Andromeda",
+                "Milky Way",
+                "Sombrero",
+                "Whirlpool"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "id": "snc1w-spa-4",
+            "text": "Which celestial body is at the center of our solar system?",
+            "options": [
+                "Earth",
+                "The Moon",
+                "The Sun",
+                "Jupiter"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "id": "snc1w-spa-5",
+            "text": "A light-year is a unit of:",
+            "options": [
+                "Time",
+                "Distance",
+                "Speed",
+                "Brightness"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "id": "snc1w-spa-6",
+            "text": "Which of these is NOT a terrestrial (rocky) planet?",
+            "options": [
+                "Mercury",
+                "Earth",
+                "Neptune",
+                "Venus"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "id": "snc1w-spa-7",
+            "text": "What causes the seasons on Earth?",
+            "options": [
+                "Distance from Sun",
+                "Earth's axial tilt",
+                "Moon's phase",
+                "Ocean currents"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "id": "snc1w-spa-8",
+            "text": "A rocky object that orbits the Sun, mostly between Mars and Jupiter:",
+            "options": [
+                "Comet",
+                "Meteor",
+                "Asteroid",
+                "Black Hole"
+            ],
+            "correctIndex": 2
+        }
+    ]
+}

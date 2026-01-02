@@ -4,6 +4,7 @@ export interface Topic {
     id: string;
     name: string;
     description?: string;
+    category?: string;
 }
 
 export interface Question {

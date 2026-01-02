@@ -12,6 +12,8 @@ const emit = defineEmits<{
 }>();
 
 const topics = ref<Topic[]>([]);
+const categories = ref<string[]>([]);
+const collapsedCategories = ref<Record<string, boolean>>({});
 
 onMounted(async () => {
   // Resume menu music when returning to config
@@ -22,8 +24,21 @@ onMounted(async () => {
   // Load saved topics for the current names
   await store.loadConfigs();
 
-  topics.value = await ServiceFactory.getDataService().getAllTopics();
+  const allTopics = await ServiceFactory.getDataService().getAllTopics();
+  topics.value = allTopics;
+  
+  // Extract unique categories
+  const cats = Array.from(new Set(allTopics.map(t => t.category || 'Other')));
+  categories.value = cats.sort();
 });
+
+function getTopicsByCategory(cat: string) {
+  return topics.value.filter(t => (t.category || 'Other') === cat);
+}
+
+function toggleCategory(cat: string) {
+  collapsedCategories.value[cat] = !collapsedCategories.value[cat];
+}
 
 // Watch for name changes to load topics for known players
 watch(() => store.state.p1Config.name, async (newName) => {
@@ -68,14 +83,22 @@ function handleStart() {
         <div class="field">
           <label>TOPICS (Select at least one)</label>
           <div class="topic-list">
-            <label v-for="t in topics" :key="t.id" class="topic-checkbox">
-              <input 
-                type="checkbox" 
-                :checked="store.state.p1Config.topics.includes(t.id)"
-                @change="toggleTopic('p1', t.id)"
-              />
-              <span :title="t.description">{{ t.name }}</span>
-            </label>
+            <div v-for="cat in categories" :key="cat" class="category-group">
+                <div class="category-header" @click="toggleCategory(cat)">
+                    <span class="chevron" :class="{ rotated: collapsedCategories[cat] }">▼</span>
+                    {{ cat }}
+                </div>
+                <div v-show="!collapsedCategories[cat]" class="category-content">
+                    <label v-for="t in getTopicsByCategory(cat)" :key="t.id" class="topic-checkbox">
+                    <input 
+                        type="checkbox" 
+                        :checked="store.state.p1Config.topics.includes(t.id)"
+                        @change="toggleTopic('p1', t.id)"
+                    />
+                    <span :title="t.description">{{ t.name }}</span>
+                    </label>
+                </div>
+            </div>
           </div>
         </div>
       </div>
@@ -91,14 +114,22 @@ function handleStart() {
         <div class="field">
           <label>TOPICS (Select at least one)</label>
           <div class="topic-list">
-            <label v-for="t in topics" :key="t.id" class="topic-checkbox">
-              <input 
-                type="checkbox" 
-                :checked="store.state.p2Config.topics.includes(t.id)"
-                @change="toggleTopic('p2', t.id)"
-              />
-              <span :title="t.description">{{ t.name }}</span>
-            </label>
+            <div v-for="cat in categories" :key="cat" class="category-group">
+                <div class="category-header" @click="toggleCategory(cat)">
+                    <span class="chevron" :class="{ rotated: collapsedCategories[cat] }">▼</span>
+                    {{ cat }}
+                </div>
+                <div v-show="!collapsedCategories[cat]" class="category-content">
+                    <label v-for="t in getTopicsByCategory(cat)" :key="t.id" class="topic-checkbox">
+                    <input 
+                        type="checkbox" 
+                        :checked="store.state.p2Config.topics.includes(t.id)"
+                        @change="toggleTopic('p2', t.id)"
+                    />
+                    <span :title="t.description">{{ t.name }}</span>
+                    </label>
+                </div>
+            </div>
           </div>
         </div>
       </div>
@@ -190,6 +221,42 @@ input, select {
   padding: 0.5rem;
   background: #000;
   border: 2px solid #555;
+}
+
+.category-group {
+    border-bottom: 1px solid #333;
+}
+
+.category-header {
+    background: #111;
+    padding: 0.5rem;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    user-select: none;
+    color: #aaa;
+}
+
+.category-header:hover {
+    background: #222;
+    color: white;
+}
+
+.chevron {
+    font-size: 0.7rem;
+    transition: transform 0.2s;
+}
+
+.chevron.rotated {
+    transform: rotate(-90deg);
+}
+
+.category-content {
+    display: flex;
+    flex-direction: column;
 }
 
 .topic-checkbox {

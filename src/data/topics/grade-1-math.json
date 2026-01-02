@@ -1,5 +1,6 @@
 {
     "id": "grade-1-math",
+    "category": "Math",
     "name": "Ontario Grade 1 Math",
     "description": "Comprehensive math following the 2020 Ontario Curriculum (Number Sense, Algebra, Data, Spatial Sense, and Financial Literacy).",
     "questions": [

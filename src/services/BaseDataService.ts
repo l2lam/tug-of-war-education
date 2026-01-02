@@ -27,7 +27,8 @@ export abstract class BaseDataService {
                 const topic: Topic = {
                     id: content.id || path.split('/').pop()?.replace('.json', '') || 'unknown',
                     name: content.name || 'Unknown Topic',
-                    description: content.description
+                    description: content.description,
+                    category: content.category
                 };
                 this.libraryTopics.push(topic);
 

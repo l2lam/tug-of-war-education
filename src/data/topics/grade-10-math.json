@@ -1,5 +1,6 @@
 {
     "id": "grade-10-math",
+    "category": "Math",
     "name": "Ontario Grade 10 Math (MPM2D)",
     "description": "Academic math: Linear Systems, Analytic Geometry, Quadratics, and Trigonometry.",
     "questions": [

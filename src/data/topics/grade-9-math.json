@@ -1,5 +1,6 @@
 {
     "id": "grade-9-math",
+    "category": "Math",
     "name": "Ontario Grade 9 Math (MTH1W)",
     "description": "Destreamed math curriculum: Number Sense, Algebra, Coding, Data, and Geometry.",
     "questions": [
