@@ -5,6 +5,7 @@ export interface Topic {
     name: string;
     description?: string;
     category?: string;
+    isBuiltIn?: boolean;
 }
 
 export interface Question {

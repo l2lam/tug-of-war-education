@@ -2,11 +2,23 @@
 import { computed, ref, watch, onMounted, onUnmounted } from 'vue';
 import { useGameStore } from '../stores/game';
 import { COMMENTARY, COMMENTARY_TYPE, type CommentaryType } from '../data/commentary';
+import { PLAYER_ID } from '../constants';
 
 const store = useGameStore();
 
+const ROPE_CONSTANTS = {
+  MAX_VW: 20,
+  MOMENTUM_THRESHOLD: 0.15,
+  IMMINENT_THRESHOLD: 0.7,
+  COMMENTARY_INTERVAL: 3000,
+  COMMENTARY_DURATION_MIN: 2500,
+  COMMENTARY_DURATION_RANDOM: 1000,
+  RECOIL_DURATION: 500,
+  TENSION_JITTER_THRESHOLD: 10,
+} as const;
+
 const ropeTranslate = computed(() => {
-  const maxVW = 20; // Increased from 10 to match new threshold lines at 30%/70% (±20% from center)
+  const maxVW = ROPE_CONSTANTS.MAX_VW; // Increased from 10 to match new threshold lines at 30%/70% (±20% from center)
   const current = store.state.ropePosition; 
   const threshold = store.config.winningThreshold;
   const ratio = current / threshold; 
@@ -32,9 +44,9 @@ const getPlayerState = (isLeft: boolean): CommentaryType => {
     // Check for game-over states
     if (winner) {
         if (isLeft) {
-            return winner === 'left' ? COMMENTARY_TYPE.WON : COMMENTARY_TYPE.LOST;
+            return winner === PLAYER_ID.LEFT ? COMMENTARY_TYPE.WON : COMMENTARY_TYPE.LOST;
         } else {
-            return winner === 'right' ? COMMENTARY_TYPE.WON : COMMENTARY_TYPE.LOST;
+            return winner === PLAYER_ID.RIGHT ? COMMENTARY_TYPE.WON : COMMENTARY_TYPE.LOST;
         }
     }
     
@@ -48,20 +60,20 @@ const getPlayerState = (isLeft: boolean): CommentaryType => {
     const hasStrengthDisadvantage = playerStrength < opponentStrength;
     
     // Tie condition
-    if (Math.abs(ratio) < 0.15) return COMMENTARY_TYPE.TIE;
+    if (Math.abs(ratio) < ROPE_CONSTANTS.MOMENTUM_THRESHOLD) return COMMENTARY_TYPE.TIE;
 
     if (isLeft) {
         // Left wins if rope moves Left (negative ratio)
-        if (ratio < -0.7) return COMMENTARY_TYPE.IMMINENT_VICTORY;
-        if (ratio < -0.15) {
+        if (ratio < -ROPE_CONSTANTS.IMMINENT_THRESHOLD) return COMMENTARY_TYPE.IMMINENT_VICTORY;
+        if (ratio < -ROPE_CONSTANTS.MOMENTUM_THRESHOLD) {
             // Winning position but weaker strength = losing momentum
             if (hasStrengthDisadvantage) {
                 return COMMENTARY_TYPE.WINNING_LOSING_MOMENTUM;
             }
             return COMMENTARY_TYPE.WINNING;
         }
-        if (ratio > 0.7) return COMMENTARY_TYPE.IMMINENT_DEFEAT;
-        if (ratio > 0.15) {
+        if (ratio > ROPE_CONSTANTS.IMMINENT_THRESHOLD) return COMMENTARY_TYPE.IMMINENT_DEFEAT;
+        if (ratio > ROPE_CONSTANTS.MOMENTUM_THRESHOLD) {
             // Losing position but stronger strength = gaining momentum
             if (hasStrengthAdvantage) {
                 return COMMENTARY_TYPE.LOSING_GAINING_MOMENTUM;
@@ -70,16 +82,16 @@ const getPlayerState = (isLeft: boolean): CommentaryType => {
         }
     } else {
         // Right wins if rope moves Right (positive ratio)
-        if (ratio > 0.7) return COMMENTARY_TYPE.IMMINENT_VICTORY;
-        if (ratio > 0.15) {
+        if (ratio > ROPE_CONSTANTS.IMMINENT_THRESHOLD) return COMMENTARY_TYPE.IMMINENT_VICTORY;
+        if (ratio > ROPE_CONSTANTS.MOMENTUM_THRESHOLD) {
             // Winning position but weaker strength = losing momentum
             if (hasStrengthDisadvantage) {
                 return COMMENTARY_TYPE.WINNING_LOSING_MOMENTUM;
             }
             return COMMENTARY_TYPE.WINNING;
         }
-        if (ratio < -0.7) return COMMENTARY_TYPE.IMMINENT_DEFEAT;
-        if (ratio < -0.15) {
+        if (ratio < -ROPE_CONSTANTS.IMMINENT_THRESHOLD) return COMMENTARY_TYPE.IMMINENT_DEFEAT;
+        if (ratio < -ROPE_CONSTANTS.MOMENTUM_THRESHOLD) {
             // Losing position but stronger strength = gaining momentum
             if (hasStrengthAdvantage) {
                 return COMMENTARY_TYPE.LOSING_GAINING_MOMENTUM;
@@ -108,7 +120,7 @@ const triggerCommentary = () => {
 
         setTimeout(() => {
             delete commentaries.value[member.instanceId];
-        }, 2500 + Math.random() * 1000); // 2.5 - 3.5s duration
+        }, ROPE_CONSTANTS.COMMENTARY_DURATION_MIN + Math.random() * ROPE_CONSTANTS.COMMENTARY_DURATION_RANDOM); // 2.5 - 3.5s duration
     }
 };
 
@@ -119,17 +131,17 @@ const isRecoilRight = ref(false);
 watch(() => store.state.lastOutcome, (outcome) => {
     if (!outcome) return;
     
-    if (outcome.playerId === 'left') {
+    if (outcome.playerId === PLAYER_ID.LEFT) {
         isRecoilLeft.value = true;
-        setTimeout(() => isRecoilLeft.value = false, 500);
+        setTimeout(() => isRecoilLeft.value = false, ROPE_CONSTANTS.RECOIL_DURATION);
     } else {
         isRecoilRight.value = true;
-        setTimeout(() => isRecoilRight.value = false, 500);
+        setTimeout(() => isRecoilRight.value = false, ROPE_CONSTANTS.RECOIL_DURATION);
     }
 });
 
 onMounted(() => {
-    commentaryInterval = window.setInterval(triggerCommentary, 3000);
+    commentaryInterval = window.setInterval(triggerCommentary, ROPE_CONSTANTS.COMMENTARY_INTERVAL);
 });
 
 onUnmounted(() => {
@@ -145,7 +157,7 @@ onUnmounted(() => {
     <div class="threshold right-threshold"></div>
     
     <!-- Moving Assembly (Rope + Pullers) -->
-    <div class="rope-assembly" :class="{ 'jitter': tension > 10, 'recoil-left': isRecoilLeft, 'recoil-right': isRecoilRight }" :style="{ transform: `translate(calc(-50% + ${ropeTranslate}), -50%)`, '--tension-scale': Math.min(tension / 20, 1), '--rope-pos': ropeTranslate }">
+    <div class="rope-assembly" :class="{ 'jitter': tension > ROPE_CONSTANTS.TENSION_JITTER_THRESHOLD, 'recoil-left': isRecoilLeft, 'recoil-right': isRecoilRight }" :style="{ transform: `translate(calc(-50% + ${ropeTranslate}), -50%)`, '--tension-scale': Math.min(tension / 20, 1), '--rope-pos': ropeTranslate }">
         <div class="rope-line"></div>
         
         <!-- Center Flag -->

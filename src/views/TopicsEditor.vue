@@ -1,7 +1,12 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import ServiceFactory from '../services';
-import type { Question, Topic, VariableDefinition, QuestionTemplate } from '../types';
+import type { Topic, VariableDefinition, QuestionTemplate } from '../types';
+
+const props = defineProps<{
+  topicId?: string;
+  isClone?: boolean;
+}>();
 
 const emit = defineEmits<{
   (e: 'back'): void;
@@ -9,13 +14,38 @@ const emit = defineEmits<{
 
 const topicName = ref('');
 const topicDescription = ref('');
-const questions = ref<Question[]>([]);
+const questions = ref<QuestionTemplate[]>([]);
 const newQText = ref('');
 const newQOption1 = ref('');
 const newQOption2 = ref('');
 const newQOption3 = ref('');
 const newQOption4 = ref('');
 const correctIndex = ref(0);
+
+// Editing State
+const editingIndex = ref(-1);
+
+onMounted(async () => {
+  if (props.topicId) {
+    const dataService = ServiceFactory.getDataService();
+    const topic = await dataService.getTopic(props.topicId);
+    if (topic) {
+      if (props.isClone) {
+        topicName.value = `${topic.name} (Clone)`;
+        topicDescription.value = topic.description || '';
+      } else {
+        topicName.value = topic.name;
+        topicDescription.value = topic.description || '';
+      }
+      
+      const qs = await dataService.getTopicQuestions(props.topicId);
+      // Strip random suffixes from IDs if they were instantiated before, 
+      // but for editing we want the "canonical" templates if possible.
+      // The current getTopicQuestions returns the templates.
+      questions.value = qs.map(q => ({ ...q }));
+    }
+  }
+});
 
 // Variable Management
 const currentVariables = ref<Record<string, VariableDefinition>>({});
@@ -48,30 +78,73 @@ const generateId = () => Math.random().toString(36).substr(2, 9);
 function addQuestion() {
   if (!newQText.value) return;
   
-  // Note: topicId will be assigned during saveTopic
+  let qId = generateId();
+  if (editingIndex.value > -1) {
+    const existing = questions.value[editingIndex.value];
+    if (existing) qId = existing.id;
+  }
+
   const q: QuestionTemplate = {
-    id: generateId(),
+    id: qId,
     text: newQText.value,
     options: [newQOption1.value, newQOption2.value, newQOption3.value, newQOption4.value],
     correctIndex: correctIndex.value,
-    topicId: '', // placeholder
+    topicId: props.topicId && !props.isClone ? props.topicId : '', // placeholder or current
     variables: Object.keys(currentVariables.value).length > 0 ? { ...currentVariables.value } : undefined
   };
   
-  questions.value.push(q);
-  // Reset fields
+  if (editingIndex.value > -1) {
+    questions.value[editingIndex.value] = q;
+  } else {
+    questions.value.push(q);
+  }
+  
+  resetForm();
+}
+
+function resetForm() {
   newQText.value = '';
   newQOption1.value = '';
   newQOption2.value = '';
   newQOption3.value = '';
   newQOption4.value = '';
+  correctIndex.value = 0;
   currentVariables.value = {};
+  editingIndex.value = -1;
+}
+
+function editQuestion(index: number) {
+  const q = questions.value[index];
+  if (!q) return;
+  newQText.value = q.text;
+  newQOption1.value = q.options[0] || '';
+  newQOption2.value = q.options[1] || '';
+  newQOption3.value = q.options[2] || '';
+  newQOption4.value = q.options[3] || '';
+  correctIndex.value = q.correctIndex;
+  currentVariables.value = q.variables ? { ...q.variables } : {};
+  editingIndex.value = index;
+}
+
+function removeQuestion(index: number) {
+  if (confirm('Delete this question?')) {
+    questions.value.splice(index, 1);
+    if (editingIndex.value === index) {
+      resetForm();
+    } else if (editingIndex.value > index) {
+      editingIndex.value--;
+    }
+  }
 }
 
 async function saveTopic() {
   if (!topicName.value || questions.value.length === 0) return;
   
-  const topicId = topicName.value.toLowerCase().replace(/\s+/g, '-');
+  let topicId = props.topicId;
+  if (!topicId || props.isClone) {
+    topicId = topicName.value.toLowerCase().replace(/\s+/g, '-');
+  }
+
   const topic: Topic = {
     id: topicId,
     name: topicName.value,
@@ -98,13 +171,13 @@ function handleFileUpload(event: Event) {
             const parsed = JSON.parse(content);
             if (Array.isArray(parsed)) {
                 // Legacy flat array
-                questions.value = parsed.map(q => ({ ...q, topicId: '' })) as Question[];
+                questions.value = parsed.map(q => ({ ...q, topicId: '' })) as QuestionTemplate[];
                 alert(`Imported ${parsed.length} questions!`);
             } else if (parsed && typeof parsed === 'object') {
                 // Hierarchical format
                 topicName.value = parsed.name || topicName.value;
                 topicDescription.value = parsed.description || topicDescription.value;
-                questions.value = (parsed.questions || []).map((q: any) => ({ ...q, topicId: parsed.id || '' })) as Question[];
+                questions.value = (parsed.questions || []).map((q: any) => ({ ...q, topicId: parsed.id || '' })) as QuestionTemplate[];
                 alert(`Imported ${questions.value.length} questions from ${topicName.value}!`);
             } else {
                 alert('Invalid format: structure must be an array or a topic object');
@@ -122,7 +195,7 @@ function handleFileUpload(event: Event) {
   <div class="topics-editor">
     <div class="header">
       <button @click="emit('back')">BACK</button>
-      <h1>TOPICS EDITOR</h1>
+      <h1>TOPICS EDITOR {{ props.topicId ? (props.isClone ? '(CLONING)' : '(EDITING)') : '(NEW)' }}</h1>
       <button @click="saveTopic" :disabled="!topicName || questions.length === 0">SAVE</button>
     </div>
 
@@ -138,8 +211,8 @@ function handleFileUpload(event: Event) {
         </div>
       </div>
 
-      <div class="new-question-form pixel-border">
-        <h3>NEW QUESTION</h3>
+      <div class="new-question-form pixel-border" :class="{ 'editing-mode': editingIndex > -1 }">
+        <h3>{{ editingIndex > -1 ? `EDITING QUESTION #${editingIndex + 1}` : 'NEW QUESTION' }}</h3>
         <textarea v-model="newQText" placeholder="Question Text (use {{VAR}} for variables)" rows="3"></textarea>
         
         <!-- Variables Section -->
@@ -169,18 +242,25 @@ function handleFileUpload(event: Event) {
            </div>
         </div>
 
-        <button @click="addQuestion">ADD QUESTION</button>
+        <div class="form-actions">
+          <button @click="addQuestion">{{ editingIndex > -1 ? 'UPDATE QUESTION' : 'ADD QUESTION' }}</button>
+          <button v-if="editingIndex > -1" @click="resetForm" class="cancel-btn">CANCEL</button>
+        </div>
       </div>
 
       <div class="questions-list">
         <h3>QUESTIONS ({{ questions.length }})</h3>
         <div v-for="(q, idx) in questions" :key="q.id" class="q-item">
           <span class="badge">{{ idx + 1 }}</span>
-          <span>{{ q.text }}</span>
+          <span class="q-text">{{ q.text }}</span>
+          <div class="q-actions">
+            <button class="small-btn edit-btn" @click="editQuestion(idx)">EDIT</button>
+            <button class="small-btn delete-btn" @click="removeQuestion(idx)">DEL</button>
+          </div>
         </div>
       </div>
       
-      <div class="import-section">
+      <div class="import-section" v-if="!props.topicId">
          <label>Import JSON (Flat or Hierarchical):</label>
          <input type="file" @change="handleFileUpload" />
       </div>
@@ -259,6 +339,42 @@ textarea, input[type="text"], input[type="file"] {
   margin-bottom: 0.5rem;
   display: flex;
   gap: 1rem;
+  align-items: center;
+}
+
+.q-text {
+  flex: 1;
+  font-size: 0.9rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.q-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.editing-mode {
+  border: 2px solid #4CAF50 !important;
+  box-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
+}
+
+.form-actions {
+  display: flex;
+  gap: 1rem;
+}
+
+.cancel-btn {
+  background: #666;
+}
+
+.edit-btn {
+  background: #2196F3;
+}
+
+.delete-btn {
+  background: #f44336;
 }
 
 .variables-section {

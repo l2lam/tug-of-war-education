@@ -27,3 +27,25 @@ export const CHARACTERS = [
     { id: 't-rex', name: 'T-Rex', emoji: '🦖', strength: 3.0 },
     { id: 'dragon', name: 'Dragon', emoji: '🐉', strength: 5.0 },
 ] as const;
+
+export const SCREEN_ID = {
+    CONFIG: 'config',
+    GAME: 'game',
+    TOPICS_EDITOR: 'topics-editor'
+} as const;
+
+export type ScreenId = typeof SCREEN_ID[keyof typeof SCREEN_ID];
+
+export const STORAGE_KEYS = {
+    MUSIC_VOLUME: 'musicVolume',
+    CUSTOM_TOPICS: 'mock_custom_topics',
+    CUSTOM_QUESTIONS: 'mock_custom_questions',
+    PLAYER_CONFIG_PREFIX: 'player_config_',
+    P1_NAME: 'last_p1_name',
+    P2_NAME: 'last_p2_name',
+    PULL_FORCE_MULTIPLIER: 'pullForceMultiplier'
+} as const;
+
+export const CATEGORY = {
+    CUSTOM: 'Custom'
+} as const;

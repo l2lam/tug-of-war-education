@@ -18,17 +18,19 @@ export abstract class BaseDataService {
             if (Array.isArray(content)) {
                 // ... (existing array logic)
                 const topicId = path.split('/').pop()?.replace('.json', '') || 'unknown';
-                const topic: Topic = { id: topicId, name: topicId.replace(/-/g, ' ').toUpperCase() };
+                const topic: Topic = { id: topicId, name: topicId.replace(/-/g, ' ').toUpperCase(), isBuiltIn: true };
                 this.libraryTopics.push(topic);
 
                 const questions = content.map(q => ({ ...q, topicId: topic.id }));
                 this.libraryQuestions.set(topic.id, questions);
             } else if (content && typeof content === 'object') {
+                const topicId = path.split('/').pop()?.replace('.json', '') || 'unknown';
                 const topic: Topic = {
-                    id: content.id || path.split('/').pop()?.replace('.json', '') || 'unknown',
+                    id: content.id || topicId,
                     name: content.name || 'Unknown Topic',
                     description: content.description,
-                    category: content.category
+                    category: content.category,
+                    isBuiltIn: true
                 };
                 this.libraryTopics.push(topic);
 
@@ -100,5 +102,9 @@ export abstract class BaseDataService {
 
     public getLibraryTopic(id: string): Topic | null {
         return this.libraryTopics.find(t => t.id === id) || null;
+    }
+
+    public async getTopicQuestions(topicId: string): Promise<Question[]> {
+        return this.getLibraryQuestions(topicId);
     }
 }

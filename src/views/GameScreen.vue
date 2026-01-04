@@ -4,14 +4,14 @@ import { useGameStore } from '../stores/game';
 import { useGameLoop } from '../engine/GameLoop';
 import PlayerArea from '../components/PlayerArea.vue';
 import RopeAnimation from '../components/RopeAnimation.vue';
-import { PLAYER_ID, SOUND_TYPE } from '../constants';
+import { PLAYER_ID, SOUND_TYPE, STORAGE_KEYS } from '../constants';
 import { playSound, startBackgroundMusic, stopBackgroundMusic, setMusicVolume, MUSIC_TRACK } from '../services/audio';
 
 const store = useGameStore();
 const { startGameLoop, nextRound } = useGameLoop();
 
 // Volume control
-const savedVolume = localStorage.getItem('musicVolume');
+const savedVolume = localStorage.getItem(STORAGE_KEYS.MUSIC_VOLUME);
 const musicVolume = ref(savedVolume ? parseFloat(savedVolume) : 0.3);
 
 function handleVolumeChange(event: Event) {
@@ -19,7 +19,7 @@ function handleVolumeChange(event: Event) {
   const volume = parseFloat(target.value);
   musicVolume.value = volume;
   setMusicVolume(volume);
-  localStorage.setItem('musicVolume', volume.toString());
+  localStorage.setItem(STORAGE_KEYS.MUSIC_VOLUME, volume.toString());
 }
 
 onMounted(() => {

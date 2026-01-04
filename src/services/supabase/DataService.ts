@@ -66,13 +66,36 @@ export class SupabaseDataService extends BaseDataService implements IDataService
         return !qsError;
     }
 
+    async getTopicQuestions(topicId: string): Promise<Question[]> {
+        // Try library first
+        const library = this.getLibraryQuestions(topicId);
+        if (library.length > 0) return library;
+
+        if (!supabase) return [];
+
+        const { data, error } = await supabase
+            .from('questions')
+            .select('*')
+            .eq('topic_id', topicId);
+
+        if (error) throw error;
+        return (data || []).map(q => ({
+            id: q.id,
+            text: q.text,
+            options: q.options,
+            correctIndex: q.correct_index,
+            topicId: q.topic_id,
+            variables: q.variables
+        }));
+    }
+
     async getAllTopics(): Promise<Topic[]> {
         const libraryTopics = this.getLibraryTopics();
 
         let remoteTopics: Topic[] = [];
         if (supabase) {
             const { data } = await supabase.from('topics').select('*');
-            remoteTopics = data || [];
+            remoteTopics = (data || []).map(t => ({ ...t, isBuiltIn: false }));
         }
 
         return Array.from(new Set([...libraryTopics, ...remoteTopics]));
@@ -84,7 +107,7 @@ export class SupabaseDataService extends BaseDataService implements IDataService
 
         if (!supabase) return null;
         const { data } = await supabase.from('topics').select('*').eq('id', id).single();
-        return data || null;
+        return data ? { ...data, isBuiltIn: false } : null;
     }
 
     async savePlayerConfig(config: PlayerConfig): Promise<boolean> {

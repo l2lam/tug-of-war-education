@@ -4,11 +4,12 @@ import { useGameStore } from '../stores/game';
 import type { Topic } from '../types';
 import ServiceFactory from '../services';
 import { startBackgroundMusic, MUSIC_TRACK } from '../services/audio';
+import { STORAGE_KEYS, CATEGORY } from '../constants';
 
 const store = useGameStore();
 
 const emit = defineEmits<{
-  (e: 'edit'): void;
+  (e: 'edit', topicId?: string, isClone?: boolean): void;
 }>();
 
 const topics = ref<Topic[]>([]);
@@ -17,23 +18,24 @@ const collapsedCategories = ref<Record<string, boolean>>({});
 
 onMounted(async () => {
   // Resume menu music when returning to config
-  const savedVolume = localStorage.getItem('musicVolume');
+  const savedVolume = localStorage.getItem(STORAGE_KEYS.MUSIC_VOLUME);
   const volume = savedVolume ? parseFloat(savedVolume) : 0.3;
   startBackgroundMusic(MUSIC_TRACK.MENU, volume);
 
   // Load saved topics for the current names
   await store.loadConfigs();
 
-  const allTopics = await ServiceFactory.getDataService().getAllTopics();
+  const dataService = ServiceFactory.getDataService();
+  const allTopics = await dataService.getAllTopics();
   topics.value = allTopics;
   
   // Extract unique categories
-  const cats = Array.from(new Set(allTopics.map(t => t.category || 'Other')));
+  const cats = Array.from(new Set(allTopics.map(t => t.category || CATEGORY.CUSTOM)));
   categories.value = cats.sort();
 });
 
 function getTopicsByCategory(cat: string) {
-  return topics.value.filter(t => (t.category || 'Other') === cat);
+  return topics.value.filter(t => (t.category || CATEGORY.CUSTOM) === cat);
 }
 
 function toggleCategory(cat: string) {
@@ -89,14 +91,18 @@ function handleStart() {
                     {{ cat }}
                 </div>
                 <div v-show="!collapsedCategories[cat]" class="category-content">
-                    <label v-for="t in getTopicsByCategory(cat)" :key="t.id" class="topic-checkbox">
-                    <input 
-                        type="checkbox" 
-                        :checked="store.state.p1Config.topics.includes(t.id)"
-                        @change="toggleTopic('p1', t.id)"
-                    />
-                    <span :title="t.description">{{ t.name }}</span>
-                    </label>
+                    <div v-for="t in getTopicsByCategory(cat)" :key="t.id" class="topic-row">
+                      <label class="topic-checkbox">
+                        <input 
+                            type="checkbox" 
+                            :checked="store.state.p1Config.topics.includes(t.id)"
+                            @change="toggleTopic('p1', t.id)"
+                        />
+                        <span :title="t.description">{{ t.name }}</span>
+                      </label>
+                      <button v-if="!t.isBuiltIn" class="mini-btn" @click="emit('edit', t.id, false)">EDIT</button>
+                      <button v-else class="mini-btn clone-btn" @click="emit('edit', t.id, true)">CLONE</button>
+                    </div>
                 </div>
             </div>
           </div>
@@ -120,14 +126,18 @@ function handleStart() {
                     {{ cat }}
                 </div>
                 <div v-show="!collapsedCategories[cat]" class="category-content">
-                    <label v-for="t in getTopicsByCategory(cat)" :key="t.id" class="topic-checkbox">
-                    <input 
-                        type="checkbox" 
-                        :checked="store.state.p2Config.topics.includes(t.id)"
-                        @change="toggleTopic('p2', t.id)"
-                    />
-                    <span :title="t.description">{{ t.name }}</span>
-                    </label>
+                    <div v-for="t in getTopicsByCategory(cat)" :key="t.id" class="topic-row">
+                      <label class="topic-checkbox">
+                        <input 
+                            type="checkbox" 
+                            :checked="store.state.p2Config.topics.includes(t.id)"
+                            @change="toggleTopic('p2', t.id)"
+                        />
+                        <span :title="t.description">{{ t.name }}</span>
+                      </label>
+                      <button v-if="!t.isBuiltIn" class="mini-btn" @click="emit('edit', t.id, false)">EDIT</button>
+                      <button v-else class="mini-btn clone-btn" @click="emit('edit', t.id, true)">CLONE</button>
+                    </div>
                 </div>
             </div>
           </div>
@@ -150,7 +160,7 @@ function handleStart() {
     </div>
 
     <div class="actions">
-        <button class="editor-btn" @click="emit('edit')">TOPICS EDITOR</button>
+        <button class="editor-btn" @click="emit('edit')">ADD CUSTOM TOPIC</button>
         <button class="start-btn" @click="handleStart">FIGHT!</button>
     </div>
   </div>
@@ -270,6 +280,32 @@ input, select {
 
 .topic-checkbox:hover {
   background: #333;
+}
+
+.topic-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-right: 0.5rem;
+}
+
+.mini-btn {
+  font-size: 0.6rem;
+  padding: 0.2rem 0.4rem;
+  background: #444;
+  border: 1px solid #666;
+  color: #aaa;
+  cursor: pointer;
+  margin-left: 0.5rem;
+}
+
+.mini-btn:hover {
+  background: #666;
+  color: white;
+}
+
+.clone-btn {
+  color: #81c784;
 }
 
 .topic-checkbox input[type="checkbox"] {

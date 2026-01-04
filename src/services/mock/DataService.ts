@@ -1,6 +1,6 @@
-import type { IDataService } from '../types';
-import type { Question, Topic, PlayerConfig } from '../types';
+import type { IDataService, Question, Topic, PlayerConfig } from '../types';
 import { BaseDataService } from '../BaseDataService';
+import { STORAGE_KEYS } from '../../constants';
 
 export class MockDataService extends BaseDataService implements IDataService {
     private customTopics: Topic[] = [];
@@ -12,8 +12,8 @@ export class MockDataService extends BaseDataService implements IDataService {
     }
 
     private loadCustomFromStorage() {
-        const storedTopics = localStorage.getItem('mock_custom_topics');
-        const storedQs = localStorage.getItem('mock_custom_questions');
+        const storedTopics = localStorage.getItem(STORAGE_KEYS.CUSTOM_TOPICS);
+        const storedQs = localStorage.getItem(STORAGE_KEYS.CUSTOM_QUESTIONS);
 
         if (storedTopics) {
             try {
@@ -62,28 +62,38 @@ export class MockDataService extends BaseDataService implements IDataService {
             ...linkedQs
         ];
 
-        localStorage.setItem('mock_custom_topics', JSON.stringify(this.customTopics));
-        localStorage.setItem('mock_custom_questions', JSON.stringify(this.customQuestions));
+        localStorage.setItem(STORAGE_KEYS.CUSTOM_TOPICS, JSON.stringify(this.customTopics));
+        localStorage.setItem(STORAGE_KEYS.CUSTOM_QUESTIONS, JSON.stringify(this.customQuestions));
         return true;
+    }
+
+    async getTopicQuestions(topicId: string): Promise<Question[]> {
+        const library = this.getLibraryQuestions(topicId);
+        const custom = this.customQuestions.filter(q => q.topicId === topicId);
+        return [...library, ...custom];
     }
 
     async getAllTopics(): Promise<Topic[]> {
         const libraryTopics = this.getLibraryTopics();
-        return Array.from(new Set([...libraryTopics, ...this.customTopics]));
+        const custom = this.customTopics.map(t => ({ ...t, isBuiltIn: false }));
+        return Array.from(new Set([...libraryTopics, ...custom]));
     }
 
     async getTopic(id: string): Promise<Topic | null> {
-        return this.getLibraryTopic(id) || this.customTopics.find(t => t.id === id) || null;
+        const library = this.getLibraryTopic(id);
+        if (library) return library;
+        const custom = this.customTopics.find(t => t.id === id);
+        return custom ? { ...custom, isBuiltIn: false } : null;
     }
 
     async savePlayerConfig(config: PlayerConfig): Promise<boolean> {
-        const key = `player_config_${config.name}`;
+        const key = `${STORAGE_KEYS.PLAYER_CONFIG_PREFIX}${config.name}`;
         localStorage.setItem(key, JSON.stringify(config));
         return true;
     }
 
     async getPlayerConfig(name: string): Promise<PlayerConfig | null> {
-        const key = `player_config_${name}`;
+        const key = `${STORAGE_KEYS.PLAYER_CONFIG_PREFIX}${name}`;
         const stored = localStorage.getItem(key);
         if (stored) {
             try {

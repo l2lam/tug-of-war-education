@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
 import type { GameState, Question } from '../types';
-import { PLAYER_ID, type PlayerId, CHARACTERS, SOUND_TYPE } from '../constants';
+import { PLAYER_ID, type PlayerId, CHARACTERS, SOUND_TYPE, STORAGE_KEYS } from '../constants';
 import ServiceFactory from '../services';
 import { playSound } from '../services/audio';
 
@@ -17,8 +17,6 @@ function createCrewMember(character: Character) {
 }
 
 export const useGameStore = defineStore('game', () => {
-    const p1NameKey = 'last_p1_name';
-    const p2NameKey = 'last_p2_name';
     const state = ref<GameState>({
         isPlaying: false,
         isPaused: false,
@@ -31,11 +29,11 @@ export const useGameStore = defineStore('game', () => {
         rightPlayer: { id: PLAYER_ID.RIGHT, name: 'Player 2', score: 0, strength: 3, topics: [], currentQuestion: undefined, crew: [createCrewMember(ANT), createCrewMember(ANT), createCrewMember(ANT)] },
         winner: null,
         p1Config: {
-            name: localStorage.getItem(p1NameKey) || 'Player 1',
+            name: localStorage.getItem(STORAGE_KEYS.P1_NAME) || 'Player 1',
             topics: []
         },
         p2Config: {
-            name: localStorage.getItem(p2NameKey) || 'Player 2',
+            name: localStorage.getItem(STORAGE_KEYS.P2_NAME) || 'Player 2',
             topics: []
         },
     });
@@ -45,16 +43,16 @@ export const useGameStore = defineStore('game', () => {
         roundDuration: 30,
         mass: 5,
         friction: 0.95,
-        pullForceMultiplier: parseFloat(localStorage.getItem('pullForceMultiplier') || '0.01'),
+        pullForceMultiplier: parseFloat(localStorage.getItem(STORAGE_KEYS.PULL_FORCE_MULTIPLIER) || '0.01'),
     });
 
     const ropeOffset = computed(() => state.value.ropePosition);
 
     async function saveConfigs() {
         const ds = ServiceFactory.getDataService();
-        localStorage.setItem(p1NameKey, state.value.p1Config.name);
-        localStorage.setItem(p2NameKey, state.value.p2Config.name);
-        localStorage.setItem('pullForceMultiplier', config.value.pullForceMultiplier.toString());
+        localStorage.setItem(STORAGE_KEYS.P1_NAME, state.value.p1Config.name);
+        localStorage.setItem(STORAGE_KEYS.P2_NAME, state.value.p2Config.name);
+        localStorage.setItem(STORAGE_KEYS.PULL_FORCE_MULTIPLIER, config.value.pullForceMultiplier.toString());
         await Promise.all([
             ds.savePlayerConfig(state.value.p1Config),
             ds.savePlayerConfig(state.value.p2Config)
