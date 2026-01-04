@@ -76,7 +76,7 @@ function handleAnswer(playerId: typeof PLAYER_ID.LEFT | typeof PLAYER_ID.RIGHT, 
           // Play victory sound
           playSound(SOUND_TYPE.WIN);
       }
-  }, 1000);
+  }, 3000);
 }
 
 function getWinnerName() {
@@ -573,7 +573,7 @@ watch(() => store.state.lastOutcome, (outcome) => {
 }
 
 .outcome-enter-active, .outcome-leave-active {
-  transition: opacity 0.3s ease;
+  transition: opacity 1.8s ease;
 }
 .outcome-enter-from, .outcome-leave-to {
   opacity: 0;
