@@ -52,6 +52,17 @@ function handleAnswer(shuffledIndex: number) {
   emit('answer', isCorrect);
 }
 
+function calculateFontSize(text: string, maxChars: number, baseSize: number, minSize: number): string {
+    if (!text) return `${baseSize}em`;
+    const length = text.length;
+    if (length <= maxChars) return `${baseSize}em`;
+    
+    // Scale down linearly-ish
+    const ratio = maxChars / length;
+    const size = Math.max(minSize, baseSize * ratio);
+    return `${size}em`;
+}
+
 defineExpose({
   handleAnswer
 });
@@ -71,7 +82,9 @@ defineExpose({
     </div>
 
     <div class="question-board pixel-border" v-if="currentQuestion">
-      <div class="question-text">{{ currentQuestion.text }}</div>
+      <div class="question-text" :style="{ fontSize: calculateFontSize(currentQuestion.text, 50, 1.2, 0.6) }">
+        {{ currentQuestion.text }}
+      </div>
       <div class="options">
         <button 
           v-for="(item, idx) in shuffledOptions" 
@@ -85,6 +98,7 @@ defineExpose({
               dimmed: selectedAnswerIndex !== null && selectedAnswerIndex !== idx
             }
           ]"
+          :style="{ fontSize: calculateFontSize(item.opt, 20, 1, 0.5) }"
         >
           <span class="key-hint">{{ keyboardHints[idx] }}</span>
           {{ item.opt }}
@@ -102,11 +116,13 @@ defineExpose({
   flex: 1;
   display: flex;
   flex-direction: column;
-  padding: 1rem;
-  gap: 1rem;
+  padding: 0.5rem; /* Reduced padding */
+  gap: 0.5rem; /* Reduced gap */
   border: 2px solid var(--player-color);
   background: rgba(0,0,0,0.5);
   transition: opacity 0.2s;
+  min-height: 0; /* Allow shrinking */
+  overflow: hidden;
 }
 
 .player-area.disabled {
@@ -149,33 +165,49 @@ defineExpose({
 .question-board {
   flex: 1;
   background: #333;
-  padding: 1rem;
+  padding: 0.5rem;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 0.5rem;
+  min-height: 0; /* Allow shrinking */
+  overflow: hidden;
+  font-size: 4vmin; /* Fluid base size */
 }
 
 .question-text {
-  font-size: 2rem;
-  min-height: 3rem;
+  /* font-size dynamic */
+  flex: 4; /* 40% of parent space */
+  display: flex;
+  align-items: center;
+  justify-content: center;
   text-align: center;
+  padding: 0.5rem;
+  line-height: 1.2;
 }
 
 .options {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 1rem;
+  flex: 6; /* 60% of parent space */
+  min-height: 0; /* Important for flex shrinking/growing logic */
 }
 
 .option-btn {
-  font-size: 2rem;
+  /* font-size dynamic */
   border: 4px solid rgba(0,0,0,0.2);
   border-radius: 16px;
   position: relative;
-  padding: 1.5rem 0.5rem;
+  padding: 0.5rem; /* Reduced padding used flex centering instead */
   color: white;
   text-shadow: 1px 1px 0 rgba(0,0,0,0.5);
   transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  height: 100%; /* Fill grid cell */
+  line-height: 1.1;
 }
 
 .option-btn:hover:not(:disabled) {

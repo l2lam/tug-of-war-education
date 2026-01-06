@@ -250,7 +250,8 @@ watch(() => store.state.lastOutcome, (outcome) => {
 <style scoped>
 .game-screen {
   width: 100%;
-  height: 100%;
+  height: 100dvh; /* Dynamic viewport height for mobile browsers */
+  overflow: hidden; /* No scrolling */
   display: flex;
   flex-direction: column;
   background: var(--bg-color);
