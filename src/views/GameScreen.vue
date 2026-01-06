@@ -176,7 +176,7 @@ watch(() => store.state.lastOutcome, (outcome) => {
         <div class="round-info">
             <!-- <div class="round-label">ROUND {{ store.state.round }}</div> -->
             <div class="recruit-target" v-if="store.state.roundReward">
-                ROUND {{ store.state.round }}: {{ store.state.roundReward?.emoji }}
+                ROUND {{ store.state.round }}: <span class="reward-emoji">{{ store.state.roundReward?.emoji }}</span>
             </div>
         </div>
       </div>
@@ -299,7 +299,28 @@ watch(() => store.state.lastOutcome, (outcome) => {
     color: #00ff00;
     font-size: 1.5rem;
     text-shadow: 0 0 5px #0f0;
+    display: flex;
+    align-items: center;
+    position: relative; /* Anchor for the absolute emoji */
     animation: pulse 1s infinite alternate;
+}
+
+.reward-emoji {
+    font-size: 4rem; /* Even bigger as requested */
+    position: absolute;
+    left: 100%; /* Float to the right of the text */
+    top: 50%;
+    transform: translateY(-50%); /* Center vertically relative to text */
+    margin-left: 10px; /* Spacing */
+    filter: drop-shadow(0 0 10px rgba(0, 255, 0, 0.8));
+    animation: bounce 1s infinite alternate;
+    pointer-events: none; /* Let clicks pass through if needed */
+    z-index: 101; /* Ensure on top */
+}
+
+@keyframes bounce {
+    from { transform: translateY(-50%) scale(1); }
+    to { transform: translateY(-60%) scale(1.1); } /* Adjusted for centering */
 }
 
 .controls {

@@ -21,10 +21,12 @@ const currentQuestion = computed(() => props.player.currentQuestion);
 
 // Randomize option order while tracking original indices
 const shuffledOptions = ref<{ opt: string; originalIdx: number }[]>([]);
+const selectedAnswerIndex = ref<number | null>(null);
 
 watch(currentQuestion, (newQ) => {
   if (!newQ) {
     shuffledOptions.value = [];
+    selectedAnswerIndex.value = null;
     return;
   }
   
@@ -40,7 +42,9 @@ watch(currentQuestion, (newQ) => {
 }, { immediate: true });
 
 function handleAnswer(shuffledIndex: number) {
-  if (props.disabled || !currentQuestion.value) return;
+  if (props.disabled || !currentQuestion.value || selectedAnswerIndex.value !== null) return;
+  
+  selectedAnswerIndex.value = shuffledIndex;
   
   // Map shuffled index back to original index
   const originalIdx = shuffledOptions.value[shuffledIndex]!.originalIdx;
@@ -74,6 +78,13 @@ defineExpose({
           :key="idx" 
           @click="handleAnswer(idx)"
           class="option-btn"
+          :class="[
+            `color-${idx}`,
+            { 
+              selected: selectedAnswerIndex === idx,
+              dimmed: selectedAnswerIndex !== null && selectedAnswerIndex !== idx
+            }
+          ]"
         >
           <span class="key-hint">{{ keyboardHints[idx] }}</span>
           {{ item.opt }}
@@ -158,10 +169,40 @@ defineExpose({
 
 .option-btn {
   font-size: 2rem;
-  border-color: var(--player-color);
+  border: 4px solid rgba(0,0,0,0.2);
   border-radius: 16px;
   position: relative;
   padding: 1.5rem 0.5rem;
+  color: white;
+  text-shadow: 1px 1px 0 rgba(0,0,0,0.5);
+  transition: all 0.2s;
+}
+
+.option-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  filter: brightness(1.1);
+}
+
+.option-btn:active:not(:disabled) {
+  transform: translateY(2px);
+}
+
+/* Kahoot-like colors */
+.color-0 { background-color: #26890c; } /* Green */
+.color-1 { background-color: #d89e00; } /* Yellow/Gold */
+.color-2 { background-color: #1368ce; } /* Blue */
+.color-3 { background-color: #e21b3c; } /* Red */
+
+.option-btn.selected {
+  border-color: white;
+  box-shadow: 0 0 15px white;
+  z-index: 10;
+  transform: scale(1.05);
+}
+
+.option-btn.dimmed {
+  opacity: 0.3;
+  filter: grayscale(0.5);
 }
 
 .key-hint {

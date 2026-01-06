@@ -155,7 +155,7 @@ function handleStart() {
         <input 
           type="range" 
           min="0.001" 
-          max="0.05" 
+          max="0.02" 
           step="0.001" 
           v-model.number="store.config.pullForceMultiplier" 
           class="slider"

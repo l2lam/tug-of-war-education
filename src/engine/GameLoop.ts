@@ -31,6 +31,12 @@ export function useGameLoop() {
         // Maybe rounds are just "new questions".
 
         // Let's refetch questions
+        store.state.leftPlayer.currentQuestion = undefined;
+        store.state.rightPlayer.currentQuestion = undefined;
+
+        // Short delay to show "Ready..." state
+        await new Promise(resolve => setTimeout(resolve, 1500));
+
         await fetchNewQuestions();
 
         // Reset timer

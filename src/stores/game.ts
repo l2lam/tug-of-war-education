@@ -43,7 +43,7 @@ export const useGameStore = defineStore('game', () => {
         roundDuration: 30,
         mass: 5,
         friction: 0.95,
-        pullForceMultiplier: parseFloat(localStorage.getItem(STORAGE_KEYS.PULL_FORCE_MULTIPLIER) || '0.01'),
+        pullForceMultiplier: parseFloat(localStorage.getItem(STORAGE_KEYS.PULL_FORCE_MULTIPLIER) || '0.005'),
     });
 
     const ropeOffset = computed(() => state.value.ropePosition);
@@ -141,7 +141,7 @@ export const useGameStore = defineStore('game', () => {
             Math.sin(time * 1.5) * 0.2;
 
         // Struggle intensity scales with total strength and provides resistance
-        const struggleIntensity = totalStrength * config.value.pullForceMultiplier * 1;
+        const struggleIntensity = totalStrength * config.value.pullForceMultiplier;
         const struggleForce = struggleOscillation * struggleIntensity;
 
         // F = ma -> a = F/m
@@ -232,9 +232,6 @@ export const useGameStore = defineStore('game', () => {
             playerId,
             timestamp: Date.now()
         };
-
-        state.value.leftPlayer.currentQuestion = undefined;
-        state.value.rightPlayer.currentQuestion = undefined;
     }
 
     function setQuestion(playerId: PlayerId, question: Question) {

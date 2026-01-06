@@ -279,7 +279,7 @@ onUnmounted(() => {
 }
 
 .sprite {
-    font-size: 2.5rem;
+    font-size: 3.5rem;
     filter: drop-shadow(2px 2px 0px black);
     transform-origin: center;
 }
