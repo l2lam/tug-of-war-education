@@ -4,8 +4,9 @@ import { useGameStore } from '../stores/game';
 import { useGameLoop } from '../engine/GameLoop';
 import PlayerArea from '../components/PlayerArea.vue';
 import RopeAnimation from '../components/RopeAnimation.vue';
-import { PLAYER_ID, SOUND_TYPE, STORAGE_KEYS } from '../constants';
-import { playSound, startBackgroundMusic, stopBackgroundMusic, setMusicVolume, MUSIC_TRACK } from '../services/audio';
+import { PLAYER_ID, SOUND_TYPE } from '../constants';
+import { playSound, startBackgroundMusic, stopBackgroundMusic, MUSIC_TRACK } from '../services/audio';
+import { useVolumeControl } from '../composables/useVolumeControl';
 
 const store = useGameStore();
 const { startGameLoop, nextRound } = useGameLoop();
@@ -34,16 +35,7 @@ function handleKeydown(e: KeyboardEvent) {
 }
 
 // Volume control
-const savedVolume = localStorage.getItem(STORAGE_KEYS.MUSIC_VOLUME);
-const musicVolume = ref(savedVolume ? parseFloat(savedVolume) : 0.3);
-
-function handleVolumeChange(event: Event) {
-  const target = event.target as HTMLInputElement;
-  const volume = parseFloat(target.value);
-  musicVolume.value = volume;
-  setMusicVolume(volume);
-  localStorage.setItem(STORAGE_KEYS.MUSIC_VOLUME, volume.toString());
-}
+const { musicVolume, handleVolumeChange } = useVolumeControl();
 
 onMounted(() => {
   // Start background music with persisted volume

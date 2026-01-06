@@ -4,7 +4,8 @@ import { useGameStore } from '../stores/game';
 import type { Topic } from '../types';
 import ServiceFactory from '../services';
 import { startBackgroundMusic, MUSIC_TRACK } from '../services/audio';
-import { STORAGE_KEYS, CATEGORY } from '../constants';
+import { CATEGORY } from '../constants';
+import { useVolumeControl } from '../composables/useVolumeControl';
 
 const store = useGameStore();
 
@@ -15,12 +16,11 @@ const emit = defineEmits<{
 const topics = ref<Topic[]>([]);
 const categories = ref<string[]>([]);
 const collapsedCategories = ref<Record<string, boolean>>({});
+const { musicVolume, handleVolumeChange } = useVolumeControl();
 
 onMounted(async () => {
   // Resume menu music when returning to config
-  const savedVolume = localStorage.getItem(STORAGE_KEYS.MUSIC_VOLUME);
-  const volume = savedVolume ? parseFloat(savedVolume) : 0.3;
-  startBackgroundMusic(MUSIC_TRACK.MENU, volume);
+  startBackgroundMusic(MUSIC_TRACK.MENU, musicVolume.value);
 
   // Load saved topics for the current names
   await store.loadConfigs();
@@ -158,6 +158,19 @@ function handleStart() {
           max="0.02" 
           step="0.001" 
           v-model.number="store.config.pullForceMultiplier" 
+          class="slider"
+        />
+      </div>
+
+      <div class="field">
+        <label>MUSIC VOLUME ({{ Math.round(musicVolume * 100) }}%)</label>
+        <input 
+          type="range" 
+          min="0" 
+          max="1" 
+          step="0.05" 
+          :value="musicVolume"
+          @input="handleVolumeChange"
           class="slider"
         />
       </div>
