@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref, watch } from 'vue';
+import { onMounted, ref, watch, computed } from 'vue';
 import { useGameStore } from '../stores/game';
 import type { Topic } from '../types';
 import ServiceFactory from '../services';
@@ -58,13 +58,15 @@ function toggleTopic(player: 'p1' | 'p2', topicId: string) {
   const index = config.topics.indexOf(topicId);
   
   if (index > -1) {
-    if (config.topics.length > 1) {
-      config.topics.splice(index, 1);
-    }
+    config.topics.splice(index, 1);
   } else {
     config.topics.push(topicId);
   }
 }
+
+const canStart = computed(() => {
+  return store.state.p1Config.topics.length > 0 && store.state.p2Config.topics.length > 0;
+});
 
 function handleStart() {
   store.startGame();
@@ -84,7 +86,7 @@ function handleStart() {
         </div>
         <div class="field">
           <label>TOPICS (Select at least one)</label>
-          <div class="topic-list">
+          <div class="topic-list" :class="{ 'warning-border': store.state.p1Config.topics.length === 0 }">
             <div v-for="cat in categories" :key="cat" class="category-group">
                 <div class="category-header" @click="toggleCategory(cat)">
                     <span class="chevron" :class="{ rotated: collapsedCategories[cat] }">▼</span>
@@ -106,6 +108,7 @@ function handleStart() {
                 </div>
             </div>
           </div>
+          <div v-if="store.state.p1Config.topics.length === 0" class="warning-text">Select at least one topic!</div>
         </div>
       </div>
 
@@ -119,7 +122,7 @@ function handleStart() {
         </div>
         <div class="field">
           <label>TOPICS (Select at least one)</label>
-          <div class="topic-list">
+          <div class="topic-list" :class="{ 'warning-border': store.state.p2Config.topics.length === 0 }">
             <div v-for="cat in categories" :key="cat" class="category-group">
                 <div class="category-header" @click="toggleCategory(cat)">
                     <span class="chevron" :class="{ rotated: collapsedCategories[cat] }">▼</span>
@@ -141,6 +144,7 @@ function handleStart() {
                 </div>
             </div>
           </div>
+          <div v-if="store.state.p2Config.topics.length === 0" class="warning-text">Select at least one topic!</div>
         </div>
       </div>
     </div>
@@ -161,7 +165,14 @@ function handleStart() {
 
     <div class="actions">
         <button class="editor-btn" @click="emit('edit')">ADD CUSTOM TOPIC</button>
-        <button class="start-btn" @click="handleStart">FIGHT!</button>
+        <button 
+          class="start-btn" 
+          @click="handleStart"
+          :disabled="!canStart"
+          :title="!canStart ? 'Each player must select at least one topic' : ''"
+        >
+          FIGHT!
+        </button>
     </div>
   </div>
 </template>
@@ -333,6 +344,26 @@ input, select {
   font-size: 2rem;
   padding: 1rem 3rem;
   animation: pulse 1s infinite;
+}
+
+.start-btn:disabled {
+  animation: none;
+  background: #333;
+  color: #666;
+  border-color: #444;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+.warning-border {
+  border-color: #f44336 !important;
+}
+
+.warning-text {
+  color: #f44336;
+  font-size: 0.8rem;
+  font-weight: bold;
+  margin-top: 0.25rem;
 }
 
 .editor-btn {
