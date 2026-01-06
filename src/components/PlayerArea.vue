@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
 import type { PlayerState } from '../types';
+import { PLAYER_ID } from '../constants';
 
 const props = defineProps<{
   player: PlayerState;
@@ -11,6 +12,10 @@ const props = defineProps<{
 const emit = defineEmits<{
   (e: 'answer', isCorrect: boolean): void;
 }>();
+
+const keyboardHints = computed(() => {
+  return props.player.id === PLAYER_ID.LEFT ? ['A', 'B', 'C', 'D'] : ['1', '2', '3', '4'];
+});
 
 const currentQuestion = computed(() => props.player.currentQuestion);
 
@@ -42,6 +47,10 @@ function handleAnswer(shuffledIndex: number) {
   const isCorrect = originalIdx === currentQuestion.value.correctIndex;
   emit('answer', isCorrect);
 }
+
+defineExpose({
+  handleAnswer
+});
 </script>
 
 <template>
@@ -66,6 +75,7 @@ function handleAnswer(shuffledIndex: number) {
           @click="handleAnswer(idx)"
           class="option-btn"
         >
+          <span class="key-hint">{{ keyboardHints[idx] }}</span>
           {{ item.opt }}
         </button>
       </div>
@@ -150,6 +160,20 @@ function handleAnswer(shuffledIndex: number) {
   font-size: 2rem;
   border-color: var(--player-color);
   border-radius: 16px;
+  position: relative;
+  padding: 1.5rem 0.5rem;
+}
+
+.key-hint {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  font-size: 0.8rem;
+  background: rgba(255, 255, 255, 0.2);
+  padding: 2px 6px;
+  border-radius: 4px;
+  color: #aaa;
+  font-family: monospace;
 }
 
 @media (max-height: 500px) {

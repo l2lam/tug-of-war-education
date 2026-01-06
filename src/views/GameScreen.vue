@@ -10,6 +10,29 @@ import { playSound, startBackgroundMusic, stopBackgroundMusic, setMusicVolume, M
 const store = useGameStore();
 const { startGameLoop, nextRound } = useGameLoop();
 
+const leftPlayerArea = ref<any>(null);
+const rightPlayerArea = ref<any>(null);
+
+function handleKeydown(e: KeyboardEvent) {
+  if (!store.state.isPlaying || store.state.isPaused || store.state.isTransitioning || store.state.winner) {
+    return;
+  }
+
+  const key = e.key.toLowerCase();
+
+  // Left Player: A, B, C, D
+  if (key === 'a') leftPlayerArea.value?.handleAnswer(0);
+  if (key === 'b') leftPlayerArea.value?.handleAnswer(1);
+  if (key === 'c') leftPlayerArea.value?.handleAnswer(2);
+  if (key === 'd') leftPlayerArea.value?.handleAnswer(3);
+
+  // Right Player: 1, 2, 3, 4
+  if (key === '1') rightPlayerArea.value?.handleAnswer(0);
+  if (key === '2') rightPlayerArea.value?.handleAnswer(1);
+  if (key === '3') rightPlayerArea.value?.handleAnswer(2);
+  if (key === '4') rightPlayerArea.value?.handleAnswer(3);
+}
+
 // Volume control
 const savedVolume = localStorage.getItem(STORAGE_KEYS.MUSIC_VOLUME);
 const musicVolume = ref(savedVolume ? parseFloat(savedVolume) : 0.3);
@@ -26,6 +49,8 @@ onMounted(() => {
   // Start background music with persisted volume
   startBackgroundMusic(MUSIC_TRACK.GAMEPLAY, musicVolume.value);
   
+  window.addEventListener('keydown', handleKeydown);
+
   if (store.state.isPlaying) {
     startGameLoop();
   }
@@ -41,6 +66,7 @@ watch(() => store.state.winner, (winner: string | null) => {
 onUnmounted(() => {
   // Stop background music when leaving the game screen
   stopBackgroundMusic();
+  window.removeEventListener('keydown', handleKeydown);
 });
 
 function handleStart() {
@@ -180,6 +206,7 @@ watch(() => store.state.lastOutcome, (outcome) => {
         <!-- Players Section -->
         <div class="players-container">
           <PlayerArea 
+            ref="leftPlayerArea"
             :player="store.state.leftPlayer" 
             color="#e63946"
             :disabled="store.state.isTransitioning || store.state.isPaused"
@@ -187,6 +214,7 @@ watch(() => store.state.lastOutcome, (outcome) => {
           />
           <div class="vs-divider">VS</div>
           <PlayerArea 
+            ref="rightPlayerArea"
             :player="store.state.rightPlayer" 
             color="#457b9d"
             :disabled="store.state.isTransitioning || store.state.isPaused"
