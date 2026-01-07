@@ -89,7 +89,7 @@ defineExpose({
         <button 
           v-for="(item, idx) in shuffledOptions" 
           :key="idx" 
-          @click="handleAnswer(idx)"
+          @pointerdown.prevent="handleAnswer(idx)"
           class="option-btn"
           :class="[
             `color-${idx}`,

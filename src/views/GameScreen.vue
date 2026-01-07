@@ -247,6 +247,7 @@ watch(() => store.state.lastOutcome, (outcome) => {
   display: flex;
   flex-direction: column;
   background: var(--bg-color);
+  touch-action: none;
 }
 
 .header-bar {
