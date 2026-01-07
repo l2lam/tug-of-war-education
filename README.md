@@ -6,6 +6,7 @@ An educational, competitive arcade game where knowledge is power! Battle your fr
 
 - **Competitive Gameplay**: Two-player battle (Local VS).
 - **Educational Topics**: Built-in topics for Math and Science, plus support for custom levels.
+- **Mathematical Rendering**: MathJax integration for beautiful rendering of mathematical symbols and equations using AsciiMath syntax.
 - **Dynamic Physics**: A velocity-based rope simulation with friction and momentum.
 - **Retro Arcade Aesthetics**:
   - Dynamic glassmorphism UI.
@@ -62,7 +63,43 @@ To import questions, upload a JSON file containing an array of question objects 
 > [!NOTE]
 > The **Topic** name is automatically assigned based on the **filename**. For example, if you import `capitals.json`, the topic will be named "capitals".
 >
-### 3. Dynamic Questions
+### Mathematical Notation with MathJax
+
+The game uses **MathJax** with **AsciiMath** syntax to render mathematical symbols and equations beautifully. To include math in your questions or answers, wrap mathematical expressions in backticks (`` ` ``).
+
+#### AsciiMath Syntax Examples
+
+```json
+{
+  "id": "math-example",
+  "text": "Solve for x: `3x + 5 = 20`",
+  "options": [
+    "`x = 5`",
+    "`x = 15`",
+    "`x = 10`",
+    "`x = 25`"
+  ],
+  "correctIndex": 0
+}
+```
+
+**Common AsciiMath notation:**
+
+- **Fractions**: `` `a/b` `` renders as a/b
+- **Exponents**: `` `x^2` `` renders as x²
+- **Subscripts**: `` `H_2O` `` renders as H₂O
+- **Square roots**: `` `sqrt(x)` `` renders as √x
+- **Greek letters**: `` `alpha`, `beta`, `pi` `` render as α, β, π
+- **Comparison**: `` `x <= 5` `` renders as x ≤ 5
+- **Set notation**: `` `x in [1, 10]` `` renders with ∈ symbol
+- **Statistics**: `` `bar x` `` for mean, `` `mu` `` for μ, `` `sigma` `` for σ
+
+For more AsciiMath syntax, see the [AsciiMath reference](http://asciimath.org/).
+
+> [!IMPORTANT]
+> MathJax requires an internet connection to load from the CDN. Ensure you're online when playing with math-heavy topics.
+
+### Dynamic Questions
 
 You can create questions with randomized numbers using the `variables` property. The system will auto-generate values and evaluate math expressions.
 
@@ -92,6 +129,7 @@ This project is built with a modern, performance-oriented stack:
 
 - **Frontend**: [Vue 3](https://vuejs.org/) with `<script setup>` and TypeScript for robust, reactive UI.
 - **State Management**: [Pinia](https://pinia.vuejs.org/) handles the complex game state, player topics, and persistence.
+- **Mathematical Rendering**: [MathJax 3](https://www.mathjax.org/) via CDN with AsciiMath input processor. A custom `MathJaxRenderer` Vue component handles dynamic typesetting of question and answer content.
 - **Audio Engine**: A custom synthesizer built on the **Web Audio API**. It generates 8-bit waveforms (Square, Triangle) in real-time, featuring:
   - Procedural melody scheduling.
   - ADSR envelopes for "clean" retro sounds.
