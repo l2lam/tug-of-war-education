@@ -198,7 +198,7 @@ onUnmounted(() => {
 .rope-viewport {
   position: relative;
   width: 100%;
-  height: 250px;
+  height: 25%;
   background: #333;
   border-top: 4px solid #111;
   border-bottom: 4px solid #111;
@@ -222,7 +222,7 @@ onUnmounted(() => {
 .rope-assembly {
     position: absolute;
     left: 50%; /* Start at exact center */
-    top: 50%;
+    top: 65%;
     transform: translate(-50%, -50%); /* Center the assembly itself, THEN apply the rope translate */
     width: 700px;
     height: 100px;
@@ -279,7 +279,7 @@ onUnmounted(() => {
 }
 
 .sprite {
-    font-size: 3.5rem;
+    font-size: 2.5rem;
     filter: drop-shadow(2px 2px 0px black);
     transform-origin: center;
 }
@@ -401,7 +401,6 @@ onUnmounted(() => {
 }
 
 @media (max-height: 500px) {
-  .rope-viewport { height: 120px; }
   .rope-assembly { width: 500px; height: 60px; }
   .sprite { font-size: 1.5rem; }
   .center-flag { font-size: 2rem; }
