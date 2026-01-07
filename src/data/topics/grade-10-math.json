@@ -6,7 +6,7 @@
     "questions": [
         {
             "id": "mpm2d-lin-1",
-            "text": "Solve linear system: y = {{A}} and x + y = {{B}}",
+            "text": "Solve linear system: `y = {{A}}` and `x + y = {{B}}`",
             "variables": {
                 "A": {
                     "min": 1,
@@ -18,16 +18,16 @@
                 }
             },
             "options": [
-                "x={{B - A}}, y={{A}}",
-                "x={{B + A}}, y={{A}}",
-                "x={{A}}, y={{B}}",
-                "x={{B}}, y={{A}}"
+                "`x={{B - A}}, y={{A}}`",
+                "`x={{B + A}}, y={{A}}`",
+                "`x={{A}}, y={{B}}`",
+                "`x={{B}}, y={{A}}`"
             ],
             "correctIndex": 0
         },
         {
             "id": "mpm2d-lin-2",
-            "text": "Solve linear system: x + y = {{S}} and x - y = {{D}}",
+            "text": "Solve linear system: `x + y = {{S}}` and `x - y = {{D}}`",
             "variables": {
                 "S": {
                     "min": 10,
@@ -39,10 +39,10 @@
                 }
             },
             "options": [
-                "x={{(S + D)/2}}, y={{(S - D)/2}}",
-                "x={{S}}, y={{D}}",
-                "x={{(S - D)/2}}, y={{(S + D)/2}}",
-                "x={{S + D}}, y={{S - D}}"
+                "`x={{(S + D)/2}}, y={{(S - D)/2}}`",
+                "`x={{S}}, y={{D}}`",
+                "`x={{(S - D)/2}}, y={{(S + D)/2}}`",
+                "`x={{S + D}}, y={{S - D}}`"
             ],
             "correctIndex": 0,
             "_comment": "x = (S+D)/2, y = (S-D)/2. We assume S+D and S-D produce integers or .5, usually set distinct parities?"
@@ -60,7 +60,7 @@
         },
         {
             "id": "mpm2d-lin-4",
-            "text": "Find intersection of y = x and y = {{K}}x + {{C}}",
+            "text": "Find intersection of `y = x` and `y = {{K}}x + {{C}}`",
             "variables": {
                 "K": {
                     "min": 2,
@@ -72,17 +72,17 @@
                 }
             },
             "options": [
-                "({{(-C / (K - 1)).toFixed(1)}}, {{(-C / (K - 1)).toFixed(1)}})",
-                "({{C}}, {{C}})",
-                "(0, {{C}})",
-                "({{-C}}, {{-C}})"
+                "`({{(-C / (K - 1)).toFixed(1)}}, {{(-C / (K - 1)).toFixed(1)}})`",
+                "`({{C}}, {{C}})`",
+                "`(0, {{C}})`",
+                "`({{-C}}, {{-C}})`"
             ],
             "correctIndex": 0,
             "_comment": "x = Kx + C => x(1-K) = C => x = C/(1-K) = -C/(K-1)"
         },
         {
             "id": "mpm2d-geo-1",
-            "text": "Midpoint of ({{X1}}, {{Y1}}) and ({{X2}}, {{Y2}})?",
+            "text": "Midpoint of `({{X1}}, {{Y1}})` and `({{X2}}, {{Y2}})`?",
             "variables": {
                 "X1": {
                     "min": 0,
@@ -102,16 +102,16 @@
                 }
             },
             "options": [
-                "({{((X1+X2)/2).toFixed(1)}}, {{((Y1+Y2)/2).toFixed(1)}})",
-                "({{X1+X2}}, {{Y1+Y2}})",
-                "({{Math.abs(X1-X2)}}, {{Math.abs(Y1-Y2)}})",
-                "({{((X1+X2)/2 - 1).toFixed(1)}}, {{((Y1+Y2)/2 - 1).toFixed(1)}})"
+                "`({{((X1+X2)/2).toFixed(1)}}, {{((Y1+Y2)/2).toFixed(1)}})`",
+                "`({{X1+X2}}, {{Y1+Y2}})`",
+                "`({{Math.abs(X1-X2)}}, {{Math.abs(Y1-Y2)}})`",
+                "`({{((X1+X2)/2 - 1).toFixed(1)}}, {{((Y1+Y2)/2 - 1).toFixed(1)}})`"
             ],
             "correctIndex": 0
         },
         {
             "id": "mpm2d-geo-2",
-            "text": "Length of segment from (0,0) to ({{X}}, {{Y}})?",
+            "text": "Length of segment from `(0,0)` to `({{X}}, {{Y}})`?",
             "variables": {
                 "X": {
                     "min": 3,
@@ -123,16 +123,16 @@
                 }
             },
             "options": [
-                "{{Math.sqrt(X*X + Y*Y).toFixed(2)}}",
-                "{{(X + Y).toFixed(2)}}",
-                "{{Math.max(X, Y)}}",
-                "{{(X * Y).toFixed(2)}}"
+                "`{{Math.sqrt(X*X + Y*Y).toFixed(2)}}`",
+                "`{{(X + Y).toFixed(2)}}`",
+                "`{{Math.max(X, Y)}}`",
+                "`{{(X * Y).toFixed(2)}}`"
             ],
             "correctIndex": 0
         },
         {
             "id": "mpm2d-geo-3",
-            "text": "Radius of circle x^2 + y^2 = {{R*R}}?",
+            "text": "Radius of circle `x^2 + y^2 = {{R*R}}`?",
             "variables": {
                 "R": {
                     "min": 3,
@@ -140,16 +140,16 @@
                 }
             },
             "options": [
-                "{{R}}",
-                "{{R * R}}",
-                "{{R / 2}}",
-                "{{R * 2}}"
+                "`{{R}}`",
+                "`{{R * R}}`",
+                "`{{R / 2}}`",
+                "`{{R * 2}}`"
             ],
             "correctIndex": 0
         },
         {
             "id": "mpm2d-geo-3-fixed",
-            "text": "Radius of circle x^2 + y^2 = {{R * R}}?",
+            "text": "Radius of circle `x^2 + y^2 = {{R * R}}`?",
             "variables": {
                 "R": {
                     "min": 2,
@@ -166,7 +166,7 @@
         },
         {
             "id": "mpm2d-geo-4",
-            "text": "Slope of line perpendicular to slope {{M}}?",
+            "text": "Slope of line perpendicular to slope `{{M}}`?",
             "variables": {
                 "M": {
                     "min": 2,
@@ -174,16 +174,16 @@
                 }
             },
             "options": [
-                "{{-1/M}}",
-                "{{M}}",
-                "{{-M}}",
-                "{{1/M}}"
+                "`{{-1/M}}`",
+                "`{{M}}`",
+                "`{{-M}}`",
+                "`{{1/M}}`"
             ],
             "correctIndex": 0
         },
         {
             "id": "mpm2d-quad-1",
-            "text": "Expand: (x + {{A}})(x + {{B}})",
+            "text": "Expand: `(x + {{A}})(x + {{B}})`",
             "variables": {
                 "A": {
                     "min": 1,
@@ -195,16 +195,16 @@
                 }
             },
             "options": [
-                "x^2 + {{A+B}}x + {{A*B}}",
-                "x^2 + {{A*B}}x + {{A+B}}",
-                "x^2 - {{A+B}}x + {{A*B}}",
-                "x^2 + {{A+B}}x - {{A*B}}"
+                "`x^2 + {{A+B}}x + {{A*B}}`",
+                "`x^2 + {{A*B}}x + {{A+B}}`",
+                "`x^2 - {{A+B}}x + {{A*B}}`",
+                "`x^2 + {{A+B}}x - {{A*B}}`"
             ],
             "correctIndex": 0
         },
         {
             "id": "mpm2d-quad-2",
-            "text": "Vertex of parabola y = (x - {{H}})^2 + {{K}}",
+            "text": "Vertex of parabola `y = (x - {{H}})^2 + {{K}}`",
             "variables": {
                 "H": {
                     "min": 1,
@@ -216,16 +216,16 @@
                 }
             },
             "options": [
-                "({{H}}, {{K}})",
-                "({{-H}}, {{K}})",
-                "({{H}}, {{-K}})",
-                "({{-H}}, {{-K}})"
+                "`({{H}}, {{K}})`",
+                "`({{-H}}, {{K}})`",
+                "`({{H}}, {{-K}})`",
+                "`({{-H}}, {{-K}})`"
             ],
             "correctIndex": 0
         },
         {
             "id": "mpm2d-quad-3",
-            "text": "y-intercept of y = x^2 + {{B}}x + {{C}}",
+            "text": "y-intercept of `y = x^2 + {{B}}x + {{C}}`",
             "variables": {
                 "B": {
                     "min": 1,
@@ -237,16 +237,16 @@
                 }
             },
             "options": [
-                "{{C}}",
-                "{{B}}",
-                "0",
-                "{{B+C}}"
+                "`{{C}}`",
+                "`{{B}}`",
+                "`0`",
+                "`{{B+C}}`"
             ],
             "correctIndex": 0
         },
         {
             "id": "mpm2d-quad-4",
-            "text": "Factor: x^2 + {{A+B}}x + {{A*B}}",
+            "text": "Factor: `x^2 + {{A+B}}x + {{A*B}}`",
             "variables": {
                 "A": {
                     "min": 1,
@@ -258,27 +258,27 @@
                 }
             },
             "options": [
-                "(x + {{A}})(x + {{B}})",
-                "(x - {{A}})(x - {{B}})",
-                "(x + {{A}})(x - {{B}})",
-                "(x + {{A+B}})(x + 1)"
+                "`(x + {{A}})(x + {{B}})`",
+                "`(x - {{A}})(x - {{B}})`",
+                "`(x + {{A}})(x - {{B}})`",
+                "`(x + {{A+B}})(x + 1)`"
             ],
             "correctIndex": 0
         },
         {
             "id": "mpm2d-trig-1",
-            "text": "In right triangle, sin(A) = ...?",
+            "text": "In right triangle, `sin(A) =` ...?",
             "options": [
-                "Opp / Hyp",
-                "Adj / Hyp",
-                "Opp / Adj",
-                "Hyp / Opp"
+                "`text(Opp) / text(Hyp)`",
+                "`text(Adj) / text(Hyp)`",
+                "`text(Opp) / text(Adj)`",
+                "`text(Hyp) / text(Opp)`"
             ],
             "correctIndex": 0
         },
         {
             "id": "mpm2d-trig-2",
-            "text": "Find x if tan(45°) = x / {{A}}",
+            "text": "Find x if `tan(45°) = x / {{A}}`",
             "variables": {
                 "A": {
                     "min": 5,
@@ -286,16 +286,16 @@
                 }
             },
             "options": [
-                "{{A}}",
-                "{{(A * Math.sqrt(3)).toFixed(1)}}",
-                "{{(A / 2)}}",
-                "{{A * 2}}"
+                "`{{A}}`",
+                "`{{(A * Math.sqrt(3)).toFixed(1)}}`",
+                "`{{(A / 2)}}`",
+                "`{{A * 2}}`"
             ],
             "correctIndex": 0
         },
         {
             "id": "mpm2d-trig-3",
-            "text": "Find Hypotenuse if Adj = {{A}} and cos(Angle) = 0.5",
+            "text": "Find Hypotenuse if `Adj = {{A}}` and `cos(Angle) = 0.5`",
             "variables": {
                 "A": {
                     "min": 4,
@@ -303,22 +303,22 @@
                 }
             },
             "options": [
-                "{{A * 2}}",
-                "{{A}}",
-                "{{A / 2}}",
-                "{{A * 0.5}}"
+                "`{{A * 2}}`",
+                "`{{A}}`",
+                "`{{A / 2}}`",
+                "`{{A * 0.5}}`"
             ],
             "correctIndex": 0,
             "_comment": "cos(60)=0.5 = Adj/Hyp => 0.5 = A/H => H = A/0.5 = 2A"
         },
         {
             "id": "mpm2d-trig-4",
-            "text": "Sine Law: a/sinA = ...?",
+            "text": "Sine Law: `a/sinA =` ...?",
             "options": [
-                "b/sinB",
-                "sinB/b",
-                "c/cosC",
-                "b*sinB"
+                "`b/sinB`",
+                "`sinB/b`",
+                "`c/cosC`",
+                "`b*sinB`"
             ],
             "correctIndex": 0
         }

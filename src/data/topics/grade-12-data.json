@@ -14,16 +14,16 @@
                 }
             },
             "options": [
-                "{{factorial(N)}}",
-                "{{N * N}}",
-                "{{2 * N}}",
-                "{{N == 3 ? 3 : N == 4 ? 4 : N == 5 ? 5 : 6}}"
+                "`{{factorial(N)}}`",
+                "`{{N * N}}`",
+                "`{{2 * N}}`",
+                "`{{N == 3 ? 3 : N == 4 ? 4 : N == 5 ? 5 : 6}}`"
             ],
             "correctIndex": 0
         },
         {
             "id": "mdm4u-cnt-2",
-            "text": "Calculate P({{N}}, {{R}}): Permutations of {{N}} items choose {{R}}.",
+            "text": "Calculate `P({{N}}, {{R}})`: Permutations of `{{N}}` items choose `{{R}}`.",
             "variables": {
                 "N": {
                     "min": 5,
@@ -35,16 +35,16 @@
                 }
             },
             "options": [
-                "{{permutations(N, R)}}",
-                "{{combinations(N, R)}}",
-                "{{N * N}}",
-                "{{2 * N}}"
+                "`{{permutations(N, R)}}`",
+                "`{{combinations(N, R)}}`",
+                "`{{N * N}}`",
+                "`{{2 * N}}`"
             ],
             "correctIndex": 0
         },
         {
             "id": "mdm4u-cnt-3",
-            "text": "Calculate C({{N}}, {{R}}): Combinations of {{N}} items choose {{R}}.",
+            "text": "Calculate `C({{N}}, {{R}})`: Combinations of `{{N}}` items choose `{{R}}`.",
             "variables": {
                 "N": {
                     "min": 5,
@@ -56,10 +56,10 @@
                 }
             },
             "options": [
-                "{{combinations(N, R)}}",
-                "{{permutations(N, R)}}",
-                "{{N + R}}",
-                "{{N * R}}"
+                "`{{combinations(N, R)}}`",
+                "`{{permutations(N, R)}}`",
+                "`{{N + R}}`",
+                "`{{N * R}}`"
             ],
             "correctIndex": 0
         },
@@ -77,16 +77,16 @@
                 }
             },
             "options": [
-                "{{S * P}}",
-                "{{S + P}}",
-                "{{S * P - 1}}",
-                "{{Math.pow(S, P)}}"
+                "`{{S * P}}`",
+                "`{{S + P}}`",
+                "`{{S * P - 1}}`",
+                "`{{Math.pow(S, P)}}`"
             ],
             "correctIndex": 0
         },
         {
             "id": "mdm4u-cnt-5",
-            "text": "Ways to arrange letters in '{{\"ABCDEFGHIJKLMNOPQRSTU\".substring(0, L)}}'?",
+            "text": "Ways to arrange letters in `{{\"ABCDEFGHIJKLMNOPQRSTU\".substring(0, L)}}`?",
             "variables": {
                 "L": {
                     "min": 3,
@@ -94,10 +94,10 @@
                 }
             },
             "options": [
-                "{{factorial(L)}}",
-                "{{factorial(L - 1)}}",
-                "1",
-                "{{L}}"
+                "`{{factorial(L)}}`",
+                "`{{factorial(L - 1)}}`",
+                "`1`",
+                "`{{L}}`"
             ],
             "correctIndex": 0
         },
@@ -111,16 +111,16 @@
                 }
             },
             "options": [
-                "{{N * (N - 1) / 2}}",
-                "{{N * (N - 1)}}",
-                "{{Math.pow(2, N)}}",
-                "{{N}}"
+                "`{{N * (N - 1) / 2}}`",
+                "`{{N * (N - 1)}}`",
+                "`{{Math.pow(2, N)}}`",
+                "`{{N}}`"
             ],
             "correctIndex": 0
         },
         {
             "id": "mdm4u-prob-1",
-            "text": "P(A) = 0.{{A}}, P(B) = 0.{{B}}. If independent, P(A and B)?",
+            "text": "`P(A) = 0.{{A}}`, `P(B) = 0.{{B}}`. If independent, `P(A nn B)`?",
             "variables": {
                 "A": {
                     "min": 2,
@@ -132,16 +132,16 @@
                 }
             },
             "options": [
-                "{{(0.1 * A * 0.1 * B).toFixed(2)}}",
-                "{{(0.1 * A + 0.1 * B).toFixed(2)}}",
-                "{{(1 - 0.1 * A).toFixed(2)}}",
-                "0.50"
+                "`{{(0.1 * A * 0.1 * B).toFixed(2)}}`",
+                "`{{(0.1 * A + 0.1 * B).toFixed(2)}}`",
+                "`{{(1 - 0.1 * A).toFixed(2)}}`",
+                "`0.50`"
             ],
             "correctIndex": 0
         },
         {
             "id": "mdm4u-prob-2",
-            "text": "P(A) = 0.{{A}}. What are the odds in favour of A?",
+            "text": "`P(A) = 0.{{A}}`. What are the odds in favour of A?",
             "variables": {
                 "A": {
                     "min": 2,
@@ -149,16 +149,16 @@
                 }
             },
             "options": [
-                "{{A}}:{{10 - A}}",
-                "{{10 - A}}:{{A}}",
-                "1:{{A}}",
-                "{{A}}:10"
+                "`{{A}}:{{10 - A}}`",
+                "`{{10 - A}}:{{A}}`",
+                "`1:{{A}}`",
+                "`{{A}}:10`"
             ],
             "correctIndex": 0
         },
         {
             "id": "mdm4u-prob-3",
-            "text": "Roll a die. P(rolling > {{N}})?",
+            "text": "Roll a die. `P(text(rolling) > {{N}})`?",
             "variables": {
                 "N": {
                     "min": 1,
@@ -166,16 +166,16 @@
                 }
             },
             "options": [
-                "{{(6 - N)}}/6",
-                "{{N}}/6",
-                "1/6",
-                "{{(6 - N + 1)}}/6"
+                "`{{(6 - N)}}/6`",
+                "`{{N}}/6`",
+                "`1/6`",
+                "`{{(6 - N + 1)}}/6`"
             ],
             "correctIndex": 0
         },
         {
             "id": "mdm4u-prob-4",
-            "text": "P(Rain) = {{P}}%. P(No Rain)?",
+            "text": "`P(text(Rain)) = {{P}}%`. `P(text(No Rain))`?",
             "variables": {
                 "P": {
                     "min": 10,
@@ -183,16 +183,16 @@
                 }
             },
             "options": [
-                "{{100 - P}}%",
-                "{{P}}%",
-                "{{100 + P}}%",
-                "{{P / 2}}%"
+                "`{{100 - P}}%`",
+                "`{{P}}%`",
+                "`{{100 + P}}%`",
+                "`{{P / 2}}%`"
             ],
             "correctIndex": 0
         },
         {
             "id": "mdm4u-prob-5",
-            "text": "Mutually exclusive: P(A)={{PA}}%, P(B)={{PB}}%. P(A or B)?",
+            "text": "Mutually exclusive: `P(A)={{PA}}%`, `P(B)={{PB}}%`, `P(A uu B)=?`",
             "variables": {
                 "PA": {
                     "min": 10,
@@ -204,16 +204,16 @@
                 }
             },
             "options": [
-                "{{PA + PB}}%",
-                "{{PA * PB}}%",
-                "{{PA + PB - (PA*PB/100)}}%",
-                "{{Math.abs(PA - PB)}}%"
+                "`{{PA + PB}}%`",
+                "`{{PA * PB}}%`",
+                "`{{PA + PB - (PA*PB/100)}}%`",
+                "`{{Math.abs(PA - PB)}}%`"
             ],
             "correctIndex": 0
         },
         {
             "id": "mdm4u-dist-1",
-            "text": "Expected Value E(X) for Binomial n={{N}}, p=0.5?",
+            "text": "Expected Value `E(X)` for Binomial `n={{N}}`, `p=0.5`?",
             "variables": {
                 "N": {
                     "min": 10,
@@ -222,16 +222,16 @@
                 }
             },
             "options": [
-                "{{N * 0.5}}",
-                "{{N * 0.25}}",
-                "{{Math.sqrt(N * 0.5 * 0.5)}}",
-                "{{N}}"
+                "`{{N * 0.5}}`",
+                "`{{N * 0.25}}`",
+                "`{{Math.sqrt(N * 0.5 * 0.5)}}`",
+                "`{{N}}`"
             ],
             "correctIndex": 0
         },
         {
             "id": "mdm4u-dist-2",
-            "text": "Uniform distribution X \u2208 [{{A}}, {{B}}]. P(X = {{A}})?",
+            "text": "Uniform distribution `X in [{{A}}, {{B}}]`. `P(X = {{A}})`?",
             "variables": {
                 "A": {
                     "min": 1,
@@ -243,17 +243,17 @@
                 }
             },
             "options": [
-                "1/{{B - A + 1}}",
-                "1/{{B - A}}",
-                "1/{{B}}",
-                "0"
+                "`1/{{B - A + 1}}`",
+                "`1/{{B - A}}`",
+                "`1/{{B}}`",
+                "`0`"
             ],
             "correctIndex": 0,
             "_comment": "Discrete uniform integers inclusive"
         },
         {
             "id": "mdm4u-dist-3",
-            "text": "Normal Dist: Mean={{M}}, SD={{S}}. What is Z for x={{M + S}}?",
+            "text": "Normal Dist: `bar x={{M}}`, `sigma={{S}}`, `x={{M + S}}`. `z=?`",
             "variables": {
                 "M": {
                     "min": 50,
@@ -265,33 +265,37 @@
                 }
             },
             "options": [
-                "1",
-                "0",
-                "-1",
-                "2"
+                "`1`",
+                "`0`",
+                "`-1`",
+                "`2`"
             ],
             "correctIndex": 0
         },
         {
             "id": "mdm4u-dist-4",
-            "text": "Binomial: n=10, p=0.{{P}}. Mean?",
+            "text": "Binomial: `n={{N}}`, `p=0.{{P}}`. Mean?",
             "variables": {
                 "P": {
+                    "min": 1,
+                    "max": 9
+                },
+                "N": {
                     "min": 1,
                     "max": 9
                 }
             },
             "options": [
-                "{{(10 * P / 10).toFixed(1)}}",
-                "{{(10 * P / 100).toFixed(1)}}",
-                "{{P}}",
-                "10"
+                "`{{N * P / 10}}`",
+                "`{{N * P / 100}}`",
+                "`{{N * P}}`",
+                "`{{N}}`"
             ],
             "correctIndex": 0
         },
         {
             "id": "mdm4u-dist-5",
-            "text": "Hypergeometric: 5 red, 5 blue cards. Draw {{K}}. E(Red)?",
+            "text": "Hypergeometric: 5 red, 5 blue cards. Draw `{{K}}`. `E(Red)`?",
             "variables": {
                 "K": {
                     "min": 2,
@@ -299,16 +303,16 @@
                 }
             },
             "options": [
-                "{{(K * 0.5).toFixed(1)}}",
-                "{{K}}",
-                "{{(K / 5)}}",
-                "2.5"
+                "`{{(K * 0.5).toFixed(1)}}`",
+                "`{{K}}`",
+                "`{{(K / 5)}}`",
+                "`2.5`"
             ],
             "correctIndex": 0
         },
         {
             "id": "mdm4u-stat-1",
-            "text": "Mean of {{A}}, {{B}}, {{C}}?",
+            "text": "Mean of `{{A}}`, `{{B}}`, `{{C}}`?",
             "variables": {
                 "A": {
                     "min": 1,
@@ -324,16 +328,16 @@
                 }
             },
             "options": [
-                "{{((A + B + C) / 3).toFixed(1)}}",
-                "{{A + B + C}}",
-                "{{Math.max(A, B, C)}}",
-                "{{((A + B) / 2).toFixed(1)}}"
+                "`{{((A + B + C) / 3).toFixed(1)}}`",
+                "`{{A + B + C}}`",
+                "`{{Math.max(A, B, C)}}`",
+                "`{{((A + B) / 2).toFixed(1)}}`"
             ],
             "correctIndex": 0
         },
         {
             "id": "mdm4u-stat-2-fixed",
-            "text": "Calculate Z-Score: x={{M + S * D}}, \u03bc={{M}}, \u03c3={{S}}",
+            "text": "Calculate Z-Score: `x={{M + S * D}}`, `\\mu={{M}}`, `sigma={{S}}`",
             "variables": {
                 "M": {
                     "min": 50,
@@ -349,16 +353,16 @@
                 }
             },
             "options": [
-                "{{D}}",
-                "{{-D}}",
-                "{{D + 1}}",
-                "{{D / 2}}"
+                "`{{D}}`",
+                "`{{-D}}`",
+                "`{{D + 1}}`",
+                "`{{D / 2}}`"
             ],
             "correctIndex": 0
         },
         {
             "id": "mdm4u-stat-3",
-            "text": "Weighted Mean: Mark 80 (wt 1), Mark {{M}} (wt 3)?",
+            "text": "Weighted Mean: Mark 80 (wt 1), Mark `{{M}}` (wt 3)?",
             "variables": {
                 "M": {
                     "min": 50,
@@ -366,16 +370,16 @@
                 }
             },
             "options": [
-                "{{((80 * 1 + M * 3) / 4).toFixed(1)}}",
-                "{{((80 + M) / 2).toFixed(1)}}",
-                "{{M}}",
-                "80"
+                "`{{((80 * 1 + M * 3) / 4).toFixed(1)}}`",
+                "`{{((80 + M) / 2).toFixed(1)}}`",
+                "`{{M}}`",
+                "`80`"
             ],
             "correctIndex": 0
         },
         {
             "id": "mdm4u-stat-4",
-            "text": "Median of {{A}}, {{B}}, {{C}} where {{A}} < {{B}} < {{C}}",
+            "text": "Median of `{{A}}, {{B}}, {{C}}`",
             "variables": {
                 "A": {
                     "min": 1,
@@ -391,21 +395,79 @@
                 }
             },
             "options": [
-                "{{B}}",
-                "{{A}}",
-                "{{C}}",
-                "{{(A+C)/2}}"
+                "`{{B}}`",
+                "`{{A}}`",
+                "`{{C}}`",
+                "`{{(A+C)/2}}`"
             ],
             "correctIndex": 0
         },
         {
             "id": "mdm4u-stat-5",
             "text": "Which correlation coeff `r` is strongest?",
+            "variables": {
+                "A": {
+                    "min": -10,
+                    "max": -8
+                },
+                "B": {
+                    "min": -4,
+                    "max": 0
+                },
+                "C": {
+                    "min": 1,
+                    "max": 4
+                },
+                "D": {
+                    "min": 5,
+                    "max": 7
+                }
+            },
             "options": [
-                "-0.95",
-                "0.80",
-                "0.10",
-                "-0.50"
+                "`{{A/10}}`",
+                "`{{B/10}}`",
+                "`{{C/10}}`",
+                "`{{D/10}}`"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "id": "mdm4u-stat-6",
+            "text": "Which correlation coeff `r` is weakest?",
+            "variables": {
+                "A": {
+                    "min": -10,
+                    "max": -3
+                },
+                "B": {
+                    "min": -2,
+                    "max": 2
+                },
+                "C": {
+                    "min": 3,
+                    "max": 6
+                },
+                "D": {
+                    "min": 7,
+                    "max": 10
+                }
+            },
+            "options": [
+                "`{{A/10}}`",
+                "`{{B/10}}`",
+                "`{{C/10}}`",
+                "`{{D/10}}`"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "id": "mdm4u-stat-7",
+            "text": "`z=?`",
+            "options": [
+                "`(x-bar x)/sigma`",
+                "`(bar x - x)/sigma`",
+                "`sigma^2`",
+                "`3`"
             ],
             "correctIndex": 0
         }

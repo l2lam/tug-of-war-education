@@ -215,7 +215,7 @@
         },
         {
             "id": "snc1w-phy-4",
-            "text": "Which law states that Voltage = Current × Resistance (V = IR)?",
+            "text": "Which law states that Voltage = Current × Resistance (`V = IR`)?",
             "options": [
                 "Newton's Law",
                 "Ohm's Law",

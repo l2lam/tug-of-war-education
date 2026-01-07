@@ -2,6 +2,7 @@
 import { computed, ref, watch } from 'vue';
 import type { PlayerState } from '../types';
 import { PLAYER_ID } from '../constants';
+import MathJaxRenderer from './MathJaxRenderer.vue';
 
 const props = defineProps<{
   player: PlayerState;
@@ -83,7 +84,7 @@ defineExpose({
 
     <div class="question-board pixel-border" v-if="currentQuestion">
       <div class="question-text" :style="{ fontSize: calculateFontSize(currentQuestion.text, 50, 1.2, 0.6) }">
-        {{ currentQuestion.text }}
+        <MathJaxRenderer :content="currentQuestion.text" />
       </div>
       <div class="options">
         <button 
@@ -101,7 +102,7 @@ defineExpose({
           :style="{ fontSize: calculateFontSize(item.opt, 20, 1, 0.5) }"
         >
           <span class="key-hint">{{ keyboardHints[idx] }}</span>
-          {{ item.opt }}
+          <MathJaxRenderer :content="item.opt" :inline="true" />
         </button>
       </div>
     </div>

@@ -138,7 +138,7 @@
         },
         {
             "id": "snc2d-chem-5",
-            "text": "Which type of reaction follows the pattern: A + B → AB?",
+            "text": "Which type of reaction follows the pattern: `A + B -> AB`?",
             "options": [
                 "Decomposition",
                 "Single Displacement",
@@ -173,10 +173,10 @@
             "id": "snc2d-chem-8",
             "text": "What would be the formula for Magnesium Chloride?",
             "options": [
-                "MgCl",
-                "MgCl2",
-                "Mg2Cl",
-                "Mg2Cl2"
+                "`MgCl`",
+                "`MgCl_2`",
+                "`Mg_2Cl`",
+                "`Mg_2Cl_2`"
             ],
             "correctIndex": 1
         },

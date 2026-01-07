@@ -6,7 +6,7 @@
     "questions": [
         {
             "id": "mth1w-num-1",
-            "text": "Evaluate the power: {{B}}^{{E}}",
+            "text": "Evaluate the power: `{{B}}^{{E}}`",
             "variables": {
                 "B": {
                     "min": 2,
@@ -18,16 +18,16 @@
                 }
             },
             "options": [
-                "{{Math.pow(B, E)}}",
-                "{{B * E}}",
-                "{{Math.pow(B, E) + 1}}",
-                "{{Math.pow(B, E-1)}}"
+                "`{{Math.pow(B, E)}}`",
+                "`{{B * E}}`",
+                "`{{Math.pow(B, E) + 1}}`",
+                "`{{Math.pow(B, E-1)}}`"
             ],
             "correctIndex": 0
         },
         {
             "id": "mth1w-num-2",
-            "text": "Evaluate: -{{B}}^{{E}}",
+            "text": "Evaluate: `-{{B}}^{{E}}`",
             "variables": {
                 "B": {
                     "min": 2,
@@ -39,22 +39,22 @@
                 }
             },
             "options": [
-                "{{-Math.pow(B, E)}}",
-                "{{Math.pow(B, E)}}",
-                "{{-(B * E)}}",
-                "{{Math.pow(B, E) - 1}}"
+                "`{{-Math.pow(B, E)}}`",
+                "`{{Math.pow(B, E)}}`",
+                "`{{-(B * E)}}`",
+                "`{{Math.pow(B, E) - 1}}`"
             ],
             "correctIndex": 0
         },
         {
             "id": "mth1w-alg-1",
-            "text": "Solve for x: {{A}}x + {{C}} = {{R}}",
+            "text": "Solve for x: `{{A}}x + {{C}} = {{A * X + C}}`",
             "variables": {
                 "A": {
                     "min": 2,
                     "max": 9
                 },
-                "X": {
+                "R": {
                     "min": 2,
                     "max": 9
                 },
@@ -64,17 +64,17 @@
                 }
             },
             "options": [
-                "{{X}}",
-                "{{X + 1}}",
-                "{{X - 1}}",
-                "{{X * 2}}"
+                "`{{X}}`",
+                "`{{X + 1}}`",
+                "`{{X - 1}}`",
+                "`{{X * 2}}`"
             ],
             "correctIndex": 0,
             "_comment": "R = Ax + C, so we display R as {{A*X+C}}. We ask for x, correct answer is {{X}}"
         },
         {
             "id": "mth1w-alg-1-fixed",
-            "text": "Solve for x: {{A}}x + {{C}} = {{A * X + C}}",
+            "text": "Solve for x: `{{A}}x - {{C}} = {{A * X - C}}`",
             "variables": {
                 "A": {
                     "min": 2,
@@ -90,16 +90,16 @@
                 }
             },
             "options": [
-                "{{X}}",
-                "{{X + 1}}",
-                "{{X - 1}}",
-                "{{X * 2}}"
+                "`{{X}}`",
+                "`{{X + 1}}`",
+                "`{{X - 1}}`",
+                "`{{X * 2}}`"
             ],
             "correctIndex": 0
         },
         {
             "id": "mth1w-alg-2",
-            "text": "Simplify: {{A}}x + {{B}}x",
+            "text": "Simplify: `{{A}}x + {{B}}x`",
             "variables": {
                 "A": {
                     "min": 2,
@@ -111,16 +111,16 @@
                 }
             },
             "options": [
-                "{{A + B}}x",
-                "{{A * B}}x",
-                "{{A + B}}x^2",
-                "{{Math.abs(A - B)}}x"
+                "`{{A + B}}x`",
+                "`{{A * B}}x`",
+                "`{{A + B}}x^2`",
+                "`{{Math.abs(A - B)}}x`"
             ],
             "correctIndex": 0
         },
         {
             "id": "mth1w-lin-1",
-            "text": "What is the slope of the line y = {{M}}x + {{B}}?",
+            "text": "What is the slope of the line `y = {{M}}x + {{B}}`?",
             "variables": {
                 "M": {
                     "min": 2,
@@ -132,16 +132,16 @@
                 }
             },
             "options": [
-                "{{M}}",
-                "{{B}}",
-                "{{-M}}",
-                "{{1/M}}"
+                "`{{M}}`",
+                "`{{B}}`",
+                "`{{-M}}`",
+                "`{{1/M}}`"
             ],
             "correctIndex": 0
         },
         {
             "id": "mth1w-lin-2",
-            "text": "What is the y-intercept of y = {{M}}x + {{B}}?",
+            "text": "What is the y-intercept of `y = {{M}}x + {{B}}`?",
             "variables": {
                 "M": {
                     "min": 2,
@@ -153,16 +153,16 @@
                 }
             },
             "options": [
-                "{{B}}",
-                "{{M}}",
-                "{{-B}}",
-                "0"
+                "`{{B}}`",
+                "`{{M}}`",
+                "`{{-B}}`",
+                "`0`"
             ],
             "correctIndex": 0
         },
         {
             "id": "mth1w-geo-1",
-            "text": "Area of a rectangle with length {{L}} and width {{W}}?",
+            "text": "Area of a rectangle with length `{{L}}` and width `{{W}}`?",
             "variables": {
                 "L": {
                     "min": 5,
@@ -174,16 +174,16 @@
                 }
             },
             "options": [
-                "{{L * W}}",
-                "{{2 * (L + W)}}",
-                "{{L + W}}",
-                "{{L * W / 2}}"
+                "`{{L * W}}`",
+                "`{{2 * (L + W)}}`",
+                "`{{L + W}}`",
+                "`{{L * W / 2}}`"
             ],
             "correctIndex": 0
         },
         {
             "id": "mth1w-geo-2",
-            "text": "Volume of a cube with side length {{S}}?",
+            "text": "Volume of a cube with side length `{{S}}`?",
             "variables": {
                 "S": {
                     "min": 2,
@@ -191,16 +191,16 @@
                 }
             },
             "options": [
-                "{{Math.pow(S, 3)}}",
-                "{{S * S}}",
-                "{{4 * S}}",
-                "{{6 * S * S}}"
+                "`{{Math.pow(S, 3)}}`",
+                "`{{S * S}}`",
+                "`{{4 * S}}`",
+                "`{{6 * S * S}}`"
             ],
             "correctIndex": 0
         },
         {
             "id": "mth1w-fin-1",
-            "text": "{{P}}$ item with {{T}}% tax. What is the tax amount?",
+            "text": "`{{P}}`$ item with `{{T}}`% tax. What is the tax amount?",
             "variables": {
                 "P": {
                     "min": 10,
@@ -212,16 +212,16 @@
                 }
             },
             "options": [
-                "{{(P * T / 100).toFixed(2)}}",
-                "{{(P * (1 + T / 100)).toFixed(2)}}",
-                "{{(P / T).toFixed(2)}}",
-                "{{(P + T).toFixed(2)}}"
+                "`{{(P * T / 100).toFixed(2)}}`",
+                "`{{(P * (1 + T / 100)).toFixed(2)}}`",
+                "`{{(P / T).toFixed(2)}}`",
+                "`{{(P + T).toFixed(2)}}`"
             ],
             "correctIndex": 0
         },
         {
             "id": "mth1w-num-3",
-            "text": "Evaluate: {{A}}/{{D}} + {{B}}/{{D}}",
+            "text": "Evaluate: `{{A}}/{{D}} + {{B}}/{{D}}`",
             "variables": {
                 "A": {
                     "min": 1,
@@ -237,16 +237,16 @@
                 }
             },
             "options": [
-                "{{(A + B)}}/{{D}}",
-                "{{(A * B)}}/{{D}}",
-                "{{(A + B)}}/{{D * 2}}",
-                "{{(A + B)}}"
+                "`{{(A + B)}}/{{D}}`",
+                "`{{(A * B)}}/{{D}}`",
+                "`{{(A + B)}}/{{D * 2}}`",
+                "`{{(A + B)}}`"
             ],
             "correctIndex": 0
         },
         {
             "id": "mth1w-alg-3",
-            "text": "Expand: {{A}}(x + {{B}})",
+            "text": "Expand: `{{A}}(x + {{B}})`",
             "variables": {
                 "A": {
                     "min": 2,
@@ -258,16 +258,16 @@
                 }
             },
             "options": [
-                "{{A}}x + {{A * B}}",
-                "{{A}}x + {{B}}",
-                "{{A}}x - {{A * B}}",
-                "x + {{A * B}}"
+                "`{{A}}x + {{A * B}}`",
+                "`{{A}}x + {{B}}`",
+                "`{{A}}x - {{A * B}}`",
+                "`x + {{A * B}}`"
             ],
             "correctIndex": 0
         },
         {
             "id": "mth1w-alg-4",
-            "text": "Solve: {{A}}x + {{B}} = {{C}}x + {{A * X + B - C * X}}",
+            "text": "Solve: `{{A}}x + {{B}} = {{C}}x + {{A * X + B - C * X}}`",
             "variables": {
                 "X": {
                     "min": 2,
@@ -297,7 +297,7 @@
         },
         {
             "id": "mth1w-lin-3",
-            "text": "Find slope between ({{X1}}, {{Y1}}) and ({{X1 + Run}}, {{Y1 + Rise}})",
+            "text": "Find slope between `({{X1}}, {{Y1}})` and `({{X1 + Run}}, {{Y1 + Rise}})`",
             "variables": {
                 "X1": {
                     "min": 0,
@@ -317,16 +317,16 @@
                 }
             },
             "options": [
-                "{{(Rise / Run).toFixed(1)}}",
-                "{{(Run / Rise).toFixed(1)}}",
-                "{{(Rise + Run).toFixed(1)}}",
-                "{{(Rise * Run).toFixed(1)}}"
+                "`{{(Rise / Run).toFixed(1)}}`",
+                "`{{(Run / Rise).toFixed(1)}}`",
+                "`{{(Rise + Run).toFixed(1)}}`",
+                "`{{(Rise * Run).toFixed(1)}}`"
             ],
             "correctIndex": 0
         },
         {
             "id": "mth1w-geo-3",
-            "text": "Find hypotenuse if legs are {{A}} and {{B}} (approx)",
+            "text": "Find hypotenuse if legs are `{{A}}` and `{{B}}` (approx)",
             "variables": {
                 "A": {
                     "min": 3,
@@ -338,16 +338,16 @@
                 }
             },
             "options": [
-                "{{Math.sqrt(A*A + B*B).toFixed(1)}}",
-                "{{(A + B).toFixed(1)}}",
-                "{{Math.sqrt(A*A - B*B > 0 ? A*A - B*B : B*B - A*A).toFixed(1)}}",
-                "{{(A * B).toFixed(1)}}"
+                "`{{Math.sqrt(A*A + B*B).toFixed(1)}}`",
+                "`{{(A + B).toFixed(1)}}`",
+                "`{{Math.sqrt(A*A - B*B > 0 ? A*A - B*B : B*B - A*A).toFixed(1)}}`",
+                "`{{(A * B).toFixed(1)}}`"
             ],
             "correctIndex": 0
         },
         {
             "id": "mth1w-fin-2",
-            "text": "Simple interest on ${{P}} at {{R}}% for {{T}} years?",
+            "text": "Simple interest on `{{P}}`$ at `{{R}}`% for `{{T}}` years?",
             "variables": {
                 "P": {
                     "min": 100,
@@ -363,10 +363,10 @@
                 }
             },
             "options": [
-                "{{(P * R * T / 100).toFixed(2)}}",
-                "{{(P * R * T).toFixed(2)}}",
-                "{{(P + P * R * T / 100).toFixed(2)}}",
-                "{{(P / R / T).toFixed(2)}}"
+                "`{{(P * R * T / 100).toFixed(2)}}`",
+                "`{{(P * R * T).toFixed(2)}}`",
+                "`{{(P + P * R * T / 100).toFixed(2)}}`",
+                "`{{(P / R / T).toFixed(2)}}`"
             ],
             "correctIndex": 0
         }
