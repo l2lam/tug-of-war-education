@@ -686,5 +686,6 @@ watch(() => store.state.lastOutcome, (outcome) => {
   .stat-row { font-size: 0.9rem; gap: 0.5rem; }
   .stat-row .label { min-width: 80px; }
   .rematch-btn { font-size: 1rem; padding: 0.25rem 1rem; }
+  .outcome-text { font-size: 5rem; }
 }
 </style>
