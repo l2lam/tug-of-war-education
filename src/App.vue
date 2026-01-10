@@ -4,6 +4,7 @@ import { useGameStore } from './stores/game';
 import GameScreen from './views/GameScreen.vue';
 import ConfigScreen from './views/ConfigScreen.vue';
 import TopicsEditor from './views/TopicsEditor.vue';
+import AboutScreen from './views/AboutScreen.vue';
 import { onMounted } from 'vue';
 import { startBackgroundMusic, MUSIC_TRACK } from './services/audio';
 import { SCREEN_ID, type ScreenId } from './constants';
@@ -40,6 +41,14 @@ function handleBackFromEditor() {
   currentScreen.value = SCREEN_ID.CONFIG;
 }
 
+function handleAbout() {
+  currentScreen.value = SCREEN_ID.ABOUT;
+}
+
+function handleBackFromAbout() {
+  currentScreen.value = SCREEN_ID.CONFIG;
+}
+
 onMounted(() => {
   // Start menu music on initial load
   startBackgroundMusic(MUSIC_TRACK.MENU);
@@ -55,7 +64,15 @@ onMounted(() => {
     @back="handleBackFromEditor"
   />
   <GameScreen v-if="currentScreen === SCREEN_ID.GAME" />
-  <ConfigScreen v-if="currentScreen === SCREEN_ID.CONFIG" @edit="handleEditTopic" />
+  <ConfigScreen 
+    v-if="currentScreen === SCREEN_ID.CONFIG" 
+    @edit="handleEditTopic"
+    @about="handleAbout"
+  />
+  <AboutScreen 
+    v-if="currentScreen === SCREEN_ID.ABOUT"
+    @back="handleBackFromAbout"
+  />
 </template>
 
 <style scoped>

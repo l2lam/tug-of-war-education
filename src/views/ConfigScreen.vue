@@ -11,6 +11,7 @@ const store = useGameStore();
 
 const emit = defineEmits<{
   (e: 'edit', topicId?: string, isClone?: boolean): void;
+  (e: 'about'): void;
 }>();
 
 const topics = ref<Topic[]>([]);
@@ -75,6 +76,7 @@ function handleStart() {
 
 <template>
   <div class="config-screen">
+    <a href="#" class="about-link" @click.prevent="emit('about')" title="About this game">ℹ️ About</a>
     <h1>TUG-OF-WAR Setup</h1>
     
     <div class="players-setup">
@@ -199,6 +201,22 @@ function handleStart() {
   justify-content: center;
   gap: 2rem;
   background: black;
+  color: white;
+  position: relative;
+}
+
+.about-link {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  color: #888;
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: color 0.2s;
+  cursor: pointer;
+}
+
+.about-link:hover {
   color: white;
 }
 

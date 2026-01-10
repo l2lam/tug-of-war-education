@@ -24,14 +24,15 @@ export const CHARACTERS = [
     { id: 'horse', name: 'Horse', emoji: '🐎', strength: 2.2 },
     { id: 'rhinoceros', name: 'Rhino', emoji: '🦏', strength: 2.2 },
     { id: 'elephant', name: 'Elephant', emoji: '🐘', strength: 3.0 },
-    { id: 't-rex', name: 'T-Rex', emoji: '🦖', strength: 3.0 },
+    { id: 't-rex', name: 'T-Rex', emoji: '🦖', strength: 4.0 },
     { id: 'dragon', name: 'Dragon', emoji: '🐉', strength: 5.0 },
 ] as const;
 
 export const SCREEN_ID = {
     CONFIG: 'config',
     GAME: 'game',
-    TOPICS_EDITOR: 'topics-editor'
+    TOPICS_EDITOR: 'topics-editor',
+    ABOUT: 'about'
 } as const;
 
 export type ScreenId = typeof SCREEN_ID[keyof typeof SCREEN_ID];
