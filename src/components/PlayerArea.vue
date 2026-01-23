@@ -73,10 +73,10 @@ defineExpose({
   <div class="player-area" :class="{ disabled: disabled }" :style="{ '--player-color': color }">
     <div class="stats pixel-border">
       <h2>{{ player.name }}</h2>
-      <div class="p-info">
-        <!-- <span class="score">SCORE: {{ player.score }}</span> -->
+      <!-- <div class="p-info">
+        <span class="score">SCORE: {{ player.score }}</span>
         <span class="strength">POWER: {{ player.strength.toFixed(1) }}</span>
-      </div>
+      </div> -->
       <!-- <div class="crew-list">
           <span v-for="member in player.crew" :key="member.instanceId" class="crew-member">{{ member.character.emoji }}</span>
       </div> -->
