@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
-import type { GameState, Question } from '../types';
-import { PLAYER_ID, type PlayerId, CHARACTERS, SOUND_TYPE, STORAGE_KEYS } from '../constants';
+import type { GameState, Question, PowerSprite } from '../types';
+import { PLAYER_ID, type PlayerId, CHARACTERS, SOUND_TYPE, STORAGE_KEYS, POWER_SPRITES_DATA, POWER_TYPE, POWER_CONFIG } from '../constants';
 import ServiceFactory from '../services';
 import { playSound } from '../services/audio';
 
@@ -12,7 +12,7 @@ const ANT = CHARACTERS[0];
 function createCrewMember(character: Character) {
     return {
         instanceId: Math.random().toString(36).substr(2, 9),
-        character
+        character: { ...character }
     };
 }
 
@@ -36,6 +36,8 @@ export const useGameStore = defineStore('game', () => {
             name: localStorage.getItem(STORAGE_KEYS.P2_NAME) || 'Player 2',
             topics: []
         },
+        activeSprites: [],
+        activePower: null,
     });
 
     const config = ref({
@@ -114,7 +116,51 @@ export const useGameStore = defineStore('game', () => {
     }
 
     function tick() {
-        if (!state.value.isPlaying || state.value.isPaused) return;
+        if (!state.value.isPlaying) return;
+
+        // Sprite & Power Logic (Runs even if physics is paused)
+        if (!state.value.activePower) {
+            // Spawn Sprites
+            if (state.value.activeSprites.length < 2 && Math.random() < POWER_CONFIG.SPAWN_CHANCE) {
+                spawnPowerSprite();
+            }
+
+            // Update Sprites
+            const now = Date.now();
+            for (let i = state.value.activeSprites.length - 1; i >= 0; i--) {
+                const s = state.value.activeSprites[i];
+                if (!s) continue; // Safety check
+
+                // Expiration
+                if (now - s.createdAt > POWER_CONFIG.DURATION) {
+                    state.value.activeSprites.splice(i, 1);
+                    continue;
+                }
+
+                // Movement
+                s.x += s.vx + (Math.random() - 0.5) * 0.5;
+                s.y += s.vy + (Math.random() - 0.5) * 0.5;
+
+                // Bounds
+                if (s.playerId === PLAYER_ID.LEFT) {
+                    if (s.x < 0) { s.x = 0; s.vx *= -1; }
+                    if (s.x > 35) { s.x = 35; s.vx *= -1; }
+                } else {
+                    if (s.x < 65) { s.x = 65; s.vx *= -1; }
+                    if (s.x > 100) { s.x = 100; s.vx *= -1; }
+                }
+
+                if (s.y < 0) { s.y = 0; s.vy *= -1; }
+                if (s.y > 100) { s.y = 100; s.vy *= -1; }
+            }
+        } else {
+            // Check active power expiration
+            if (Date.now() > state.value.activePower.endTime) {
+                endPowerPhase();
+            }
+        }
+
+        if (state.value.isPaused) return;
 
         // Physics Loop
         // Physics Loop - Strength is sum of crew
@@ -247,6 +293,91 @@ export const useGameStore = defineStore('game', () => {
         state.value.winner = null;
     }
 
+    function spawnPowerSprite() {
+        // Only spawn if field is clear (START of a power event)
+        if (state.value.activeSprites.length > 0) return;
+
+        [PLAYER_ID.LEFT, PLAYER_ID.RIGHT].forEach(pid => {
+            const spriteData = POWER_SPRITES_DATA[Math.floor(Math.random() * POWER_SPRITES_DATA.length)];
+            if (!spriteData) return;
+
+            // Position: 2-32% from the player's edge
+            const xPos = pid === PLAYER_ID.LEFT
+                ? Math.random() * 30 + 2
+                : Math.random() * 30 + 68;
+
+            const sprite: PowerSprite = {
+                id: Math.random().toString(36).substr(2, 9),
+                type: spriteData.type,
+                playerId: pid,
+                x: xPos,
+                y: Math.random() * 60 + 20, // 20-80% vertical
+                vx: (Math.random() - 0.5) * 0.5,
+                vy: (Math.random() - 0.5) * 0.5,
+                createdAt: Date.now(),
+                asset: spriteData.emoji,
+                amount: spriteData.amount,
+                name: spriteData.name
+            };
+            state.value.activeSprites.push(sprite);
+        });
+    }
+
+    function capturePowerSprite(spriteId: string) {
+        const spriteIndex = state.value.activeSprites.findIndex(s => s.id === spriteId);
+        if (spriteIndex === -1) return;
+
+        const sprite = state.value.activeSprites[spriteIndex];
+        if (!sprite) return; // Safety check
+
+        // Clear ALL sprites immediately (Mutual Exclusion)
+        state.value.activeSprites = [];
+
+        state.value.activePower = {
+            playerId: sprite.playerId,
+            type: sprite.type,
+            amount: sprite.amount,
+            endTime: Date.now() + POWER_CONFIG.PHASE_DURATION,
+            sprite
+        };
+
+        state.value.isPaused = true;
+        playSound(SOUND_TYPE.SPAWN);
+    }
+
+    function applyPower(targetInstanceId: string) {
+        if (!state.value.activePower) return;
+
+        // Find target in EITHER crew (allows applying to self or opponent)
+        // User requirements said: "Note that the player can select a puller on either side of the rope; 
+        // so they can accidentally increase/decrease the pulling power of a puller that is detrimental to their goal."
+        let target = state.value.leftPlayer.crew.find(c => c.instanceId === targetInstanceId);
+        if (!target) {
+            target = state.value.rightPlayer.crew.find(c => c.instanceId === targetInstanceId);
+        }
+
+        if (target) {
+            const powerType = state.value.activePower.type;
+            const change = powerType === POWER_TYPE.STRENGTHEN ? 0.1 : -0.1;
+
+            // Apply change (min 0.1 strength to avoid division by zero or negative strength issues)
+            target.character.strength = Math.max(0.1, parseFloat((target.character.strength + change).toFixed(1)));
+
+            // Decrement amount
+            state.value.activePower.amount--;
+            playSound(SOUND_TYPE.HIT);
+
+            if (state.value.activePower.amount <= 0) {
+                endPowerPhase();
+            }
+        }
+    }
+
+    function endPowerPhase() {
+        state.value.activePower = null;
+        state.value.isPaused = false;
+    }
+
     return {
         state,
         config,
@@ -258,6 +389,9 @@ export const useGameStore = defineStore('game', () => {
         endGame,
         abortGame,
         saveConfigs,
-        loadConfigs
+        loadConfigs,
+        capturePowerSprite,
+        applyPower,
+        endPowerPhase
     };
 });

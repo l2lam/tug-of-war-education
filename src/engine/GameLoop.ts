@@ -85,9 +85,7 @@ export function useGameLoop() {
         const loop = () => {
             if (!store.state.isPlaying) return;
 
-            if (!store.state.isPaused) {
-                store.tick();
-            }
+            store.tick();
             requestAnimationFrame(loop);
         };
         requestAnimationFrame(loop);

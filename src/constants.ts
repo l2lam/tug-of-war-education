@@ -50,3 +50,35 @@ export const STORAGE_KEYS = {
 export const CATEGORY = {
     CUSTOM: 'Custom'
 } as const;
+
+export const POWER_TYPE = {
+    STRENGTHEN: 'strengthen',
+    WEAKEN: 'weaken'
+} as const;
+
+export type PowerType = typeof POWER_TYPE[keyof typeof POWER_TYPE];
+
+export const POWER_CONFIG = {
+    SPAWN_CHANCE: 0.005,
+    DURATION: 5000, // Sprite stays on screen for 5s
+    PHASE_DURATION: 5000, // Time to use power once caught
+};
+
+export const POWER_SPRITES_DATA = [
+    { id: 'strawberry', emoji: '🍓', type: POWER_TYPE.STRENGTHEN, amount: 1, name: 'Strawberry' },
+    { id: 'cherry', emoji: '🍒', type: POWER_TYPE.STRENGTHEN, amount: 2, name: 'Cherry' },
+    { id: 'peach', emoji: '🍑', type: POWER_TYPE.STRENGTHEN, amount: 3, name: 'Peach' },
+    { id: 'apple', emoji: '🍎', type: POWER_TYPE.STRENGTHEN, amount: 4, name: 'Apple' },
+    { id: 'watermelon', emoji: '🍉', type: POWER_TYPE.STRENGTHEN, amount: 5, name: 'Watermelon' },
+    { id: 'avocado', emoji: '🥑', type: POWER_TYPE.STRENGTHEN, amount: 6, name: 'Avocado' },
+    { id: 'candy', emoji: '🍬', type: POWER_TYPE.STRENGTHEN, amount: 7, name: 'Candy' },
+    { id: 'fairy', emoji: '🧚', type: POWER_TYPE.STRENGTHEN, amount: 8, name: 'Fairy' },
+    { id: 'potion', emoji: '💖', type: POWER_TYPE.STRENGTHEN, amount: 9, name: 'Love' },
+    { id: 'diamond', emoji: '💎', type: POWER_TYPE.STRENGTHEN, amount: 10, name: 'Diamond' },
+    { id: 'hammer', emoji: '🔨', type: POWER_TYPE.WEAKEN, amount: 1, name: 'Hammer' },
+    { id: 'poison', emoji: '☠️', type: POWER_TYPE.WEAKEN, amount: 2, name: 'Poison' },
+    { id: 'fire', emoji: '🔥', type: POWER_TYPE.WEAKEN, amount: 3, name: 'Fire' },
+    { id: 'bomb', emoji: '💥', type: POWER_TYPE.WEAKEN, amount: 4, name: 'Bomb' },
+    { id: 'lightning', emoji: '⚡', type: POWER_TYPE.WEAKEN, amount: 5, name: 'Lightning' },
+    { id: 'broken_heart', emoji: '💔', type: POWER_TYPE.WEAKEN, amount: 6, name: 'Broken Heart' },
+] as const;

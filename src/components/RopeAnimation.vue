@@ -157,15 +157,40 @@ onUnmounted(() => {
     <div class="threshold right-threshold"></div>
     
     <!-- Moving Assembly (Rope + Pullers) -->
-    <div class="rope-assembly" :class="{ 'jitter': tension > ROPE_CONSTANTS.TENSION_JITTER_THRESHOLD, 'recoil-left': isRecoilLeft, 'recoil-right': isRecoilRight }" :style="{ transform: `translate(calc(-50% + ${ropeTranslate}), -50%)`, '--tension-scale': Math.min(tension / 20, 1), '--rope-pos': ropeTranslate }">
-        <div class="rope-line"></div>
-        
-        <!-- Center Flag -->
-        <div class="center-flag">🚩</div>
+    <div class="rope-container">
+        <!-- Power Sprites (Static relative to screen) -->
+        <TransitionGroup name="pop" tag="div" class="power-sprites-layer">
+             <div 
+                v-for="sprite in store.state.activeSprites" 
+                :key="sprite.id"
+                class="power-sprite"
+                :class="{ 'clickable': !store.state.activePower }"
+                :style="{ 
+                    left: sprite.playerId === PLAYER_ID.LEFT ? `${sprite.x}%` : 'auto',
+                    right: sprite.playerId === PLAYER_ID.RIGHT ? `${100 - sprite.x}%` : 'auto',
+                    top: `${sprite.y}%`
+                }"
+                @click.stop="store.capturePowerSprite(sprite.id)"
+             >
+                {{ sprite.asset }}
+             </div>
+        </TransitionGroup>
 
-        <!-- Left Pullers (P1) -->
+        <div class="rope-assembly" :class="{ 'jitter': tension > ROPE_CONSTANTS.TENSION_JITTER_THRESHOLD, 'recoil-left': isRecoilLeft, 'recoil-right': isRecoilRight }" :style="{ transform: `translate(calc(-50% + ${ropeTranslate}), -50%)`, '--tension-scale': Math.min(tension / 20, 1), '--rope-pos': ropeTranslate }">
+            <div class="rope-line"></div>
+            
+            <!-- Center Flag -->
+            <div class="center-flag">🚩</div>
+
+            <!-- Left Pullers (P1) -->
         <TransitionGroup name="pop" tag="div" class="puller-group left-group">
-            <div v-for="member in store.state.leftPlayer.crew" :key="member.instanceId" class="sprite-wrapper">
+            <div 
+                v-for="member in store.state.leftPlayer.crew" 
+                :key="member.instanceId" 
+                class="sprite-wrapper"
+                :class="{ 'targetable': !!store.state.activePower }"
+                @click.stop="store.applyPower(member.instanceId)"
+            >
                 <Transition name="fade">
                     <div v-if="commentaries[member.instanceId]" class="commentary-bubble">
                         {{ commentaries[member.instanceId] }}
@@ -179,7 +204,13 @@ onUnmounted(() => {
 
         <!-- Right Pullers (P2) -->
         <TransitionGroup name="pop" tag="div" class="puller-group right-group">
-            <div v-for="member in store.state.rightPlayer.crew" :key="member.instanceId" class="sprite-wrapper">
+            <div 
+                v-for="member in store.state.rightPlayer.crew" 
+                :key="member.instanceId" 
+                class="sprite-wrapper"
+                :class="{ 'targetable': !!store.state.activePower }"
+                @click.stop="store.applyPower(member.instanceId)"
+            >
                 <Transition name="fade">
                     <div v-if="commentaries[member.instanceId]" class="commentary-bubble">
                         {{ commentaries[member.instanceId] }}
@@ -190,6 +221,7 @@ onUnmounted(() => {
                 </div>
             </div>
         </TransitionGroup>
+    </div>
     </div>
   </div>
 </template>
@@ -405,5 +437,73 @@ onUnmounted(() => {
   .sprite { font-size: 1.5rem; }
   .center-flag { font-size: 2rem; }
   .rope-line { left: 20px; right: 20px; }
+}
+
+.rope-container {
+    position: relative;
+    width: 100%;
+    height: 100px; /* Or whatever space we allot to rope */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Power Sprites */
+.power-sprites-layer {
+    position: absolute;
+    top: 50%;
+    left: 50px;
+    right: 50px;
+    height: 100%;
+    transform: translateY(-50%);
+    pointer-events: none; /* Let clicks pass through layer, but hit sprites */
+    z-index: 100;
+}
+
+.power-sprite {
+    position: absolute;
+    font-size: 3rem;
+    filter: drop-shadow(0 0 10px white);
+    transform: translate(-50%, -50%);
+    pointer-events: auto;
+    transition: transform 0.1s;
+    z-index: 101;
+}
+
+.power-sprite.clickable {
+    cursor: pointer;
+    animation: pulse 0.5s infinite alternate;
+}
+
+.power-sprite.clickable:hover {
+    transform: translate(-50%, -50%) scale(1.2);
+    filter: drop-shadow(0 0 15px gold);
+}
+
+/* Targetable Pullers */
+.targetable {
+    cursor:crosshair;
+    position: relative;
+    z-index: 200; /* Above overlay if exists */
+}
+
+.targetable::before {
+    content: '';
+    position: absolute;
+    top: -10px; left: -10px; right: -10px; bottom: -10px;
+    border: 2px dashed cyan;
+    border-radius: 50%;
+    animation: rotate 2s linear infinite;
+    pointer-events: none;
+}
+
+.targetable:hover::before {
+    background: rgba(0, 255, 255, 0.2);
+    border-style: solid;
+}
+
+@keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
 }
 </style>

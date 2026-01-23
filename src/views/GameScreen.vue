@@ -144,6 +144,22 @@ watch(() => store.state.lastOutcome, (outcome) => {
         }
     }, 800);
 });
+
+const now = ref(Date.now());
+let rafId: number;
+
+const updateNow = () => {
+    now.value = Date.now();
+    rafId = requestAnimationFrame(updateNow);
+};
+
+onMounted(() => {
+    rafId = requestAnimationFrame(updateNow);
+});
+
+onUnmounted(() => {
+    cancelAnimationFrame(rafId);
+});
 </script>
 
 <template>
@@ -192,8 +208,23 @@ watch(() => store.state.lastOutcome, (outcome) => {
     </Transition>
 
     <div class="game-content" :class="{ 'screen-shake': isShaking }">
+        <!-- Power Active Overlay - Inside content to allow Rope layering -->
+        <div v-if="store.state.activePower" class="power-overlay">
+            <div class="power-banner">
+                <h2>USE YOUR POWER {{ store.state.activePower.playerId === PLAYER_ID.LEFT ? store.state.p1Config.name : store.state.p2Config.name }}!</h2>
+                <div class="power-details">
+                    <span class="power-icon">{{ store.state.activePower.sprite.asset }}</span>
+                    <div class="power-info-text">
+                        <div class="power-name">{{ store.state.activePower.sprite.name }}</div>
+                        <div class="power-desc">{{ store.state.activePower.type === 'strengthen' ? 'Buff' : 'Debuff' }} x {{ store.state.activePower.amount }}</div>
+                    </div>
+                    <div class="power-timer">{{ ((store.state.activePower.endTime - now) / 1000).toFixed(1) }}s</div>
+                </div>
+            </div>
+        </div>
+
         <!-- Rope Section -->
-        <RopeAnimation />
+        <RopeAnimation style="z-index: 60" />
 
         <!-- Players Section -->
         <div class="players-container">
@@ -236,6 +267,7 @@ watch(() => store.state.lastOutcome, (outcome) => {
       
       <button class="rematch-btn arcade-btn" @click="handleRematch">CONTINUE</button>
     </div>
+
   </div>
 </template>
 
@@ -688,5 +720,95 @@ watch(() => store.state.lastOutcome, (outcome) => {
   .stat-row .label { min-width: 80px; }
   .rematch-btn { font-size: 1rem; padding: 0.25rem 1rem; }
   .outcome-text { font-size: 5rem; }
+}
+/* Power Overlay */
+.power-overlay {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(4px);
+    z-index: 50; /* Above players (z-index undetermined but likely 0), below Header (100) and Rope (needs to be higher) */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end; /* Align content to bottom */
+    padding-bottom: 5vh; /* Space from bottom */
+    pointer-events: none; /* Allow clicking through to rope? No, we want to block clicks elsewhere */
+}
+
+/* We want to block clicks on Players etc, but allow clicks on Rope */
+/* .power-overlay covers everything. 
+   To make Rope clickable, we need a stacking context trick or just verify z-indices.
+   Header is z-index 100.
+   RopeAnimation sprites have z-index 101/200.
+   But RopeAnimation parent container needs to be higher than overlay?
+   Or RopeAnimation elements are just visually above?
+   The sprites in RopeAnimation are: .power-sprites-layer (z: 100), .power-sprite (z: 101), .targetable (z: 200).
+   The overlay is z: 50. 
+   Since RopeAnimation is a child of .game-content, and .game-content is just flex item.
+   We need to ensure .game-content or RopeAnimation creates a stacking context or sits above.
+   If .power-overlay is sibling of .game-content, and z-index 50.
+   .game-content default auto.
+   We should probably bump RopeAnimation z-index or .game-content z-index.
+*/
+
+.power-banner {
+    background: linear-gradient(90deg, transparent, rgba(0,0,0,0.8), transparent);
+    padding: 1rem 3rem;
+    color: white;
+    text-align: center;
+    animation: slideDown 0.3s ease-out;
+    pointer-events: auto; /* Allow blocking clicks on banner */
+}
+
+.power-banner h2 {
+    font-size: 2rem;
+    color: #ffcc00;
+    text-shadow: 0 0 10px #ffcc00;
+    margin-bottom: 1rem;
+}
+
+.power-details {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 1rem;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.2);
+}
+
+.power-icon {
+    font-size: 3rem;
+    filter: drop-shadow(0 0 5px white);
+}
+
+.power-info-text {
+    text-align: left;
+}
+
+.power-name {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: white;
+}
+
+.power-desc {
+    color: #ccc;
+    font-size: 1rem;
+}
+
+.power-timer {
+    font-size: 2.5rem;
+    font-weight: 900;
+    font-family: monospace;
+    color: #ff4444;
+    min-width: 100px;
+    text-align: right;
+}
+
+@keyframes slideDown {
+    from { transform: translateY(-50px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
 }
 </style>
