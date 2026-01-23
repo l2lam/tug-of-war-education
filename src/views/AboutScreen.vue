@@ -12,13 +12,13 @@ function handleBack() {
   <div class="about-screen">
     <a href="#" class="back-link" @click.prevent="handleBack">← Back to Config</a>
     
-    <h1>🎓 Tug-of-War Education</h1>
+    <h1>🎓 Mr. Lam's TUG-OF-WAR</h1>
     
     <div class="content">
       <section>
         <h2>About the Game</h2>
         <p>
-          Tug-of-War Education is an interactive learning game where two players compete head-to-head
+          Mr. Lam's Tug-of-War for Education is an interactive learning game where two players compete head-to-head
           by answering questions from various topics. Answer correctly and faster than your opponent
           to recruit powerful characters to your crew!
         </p>

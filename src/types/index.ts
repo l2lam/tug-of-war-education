@@ -1,4 +1,26 @@
-import { type PlayerId } from '../constants';
+import { type PlayerId, type PowerType } from '../constants';
+
+export interface PowerSprite {
+    id: string; // Unique ID for the sprite instance
+    type: PowerType;
+    playerId: PlayerId; // The player who can catch it
+    x: number; // 0-100% relative to player's rope area
+    y: number; // 0-100% vertical
+    vx: number; // Velocity x
+    vy: number; // Velocity y
+    createdAt: number; // Timestamp when sprite was spawned
+    asset: string; // Emoji character
+    amount: number; // Power amount
+    name: string; // Name of the power
+}
+
+export interface ActivePower {
+    playerId: PlayerId;
+    type: PowerType;
+    amount: number; // Remaining power to apply (e.g., 5)
+    endTime: number;
+    sprite: PowerSprite; // Reference to the source sprite
+}
 
 export interface Topic {
     id: string;
@@ -78,5 +100,7 @@ export interface GameState {
     p2Config: PlayerConfig;
     winner: PlayerId | null;
     roundReward?: Character; // The character up for grabs this round
+    activeSprites: PowerSprite[];
+    activePower: ActivePower | null;
     lastOutcome?: GameOutcome;
 }
