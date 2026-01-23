@@ -140,21 +140,102 @@ export function playSound(type: string) {
             break;
 
         case SOUND_TYPE.WIN:
-            // Dramatic Fanfare
-            [440, 554, 659, 880, 1108, 1318].forEach((freq, i) => {
-                const start = now + (i * 0.08);
+            // 1. Stop background music immediately
+            stopBackgroundMusic();
+
+            // 2. Heavy Impact Sound (Explosion/Slam)
+            {
+                // Noise burst
+                const bufferSize = c.sampleRate * 0.5; // 0.5 sec
+                const buffer = c.createBuffer(1, bufferSize, c.sampleRate);
+                const data = buffer.getChannelData(0);
+                for (let i = 0; i < bufferSize; i++) {
+                    data[i] = Math.random() * 2 - 1;
+                }
+                const noise = c.createBufferSource();
+                noise.buffer = buffer;
+                const noiseGain = c.createGain();
+
+                noiseGain.gain.setValueAtTime(0.5, now);
+                noiseGain.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
+
+                // Low pass filter sweeping down (Impact thud)
+                const filter = c.createBiquadFilter();
+                filter.type = 'lowpass';
+                filter.frequency.setValueAtTime(800, now);
+                filter.frequency.exponentialRampToValueAtTime(50, now + 0.3);
+
+                noise.connect(filter);
+                filter.connect(noiseGain);
+                noiseGain.connect(c.destination);
+                noise.start(now);
+
+                // Sub-bass Kick
                 const osc = c.createOscillator();
                 const gain = c.createGain();
-                osc.type = i % 2 === 0 ? 'square' : 'triangle';
-                osc.frequency.value = freq;
+                osc.frequency.setValueAtTime(150, now);
+                osc.frequency.exponentialRampToValueAtTime(40, now + 0.3);
 
-                gain.gain.setValueAtTime(0.1, start);
-                gain.gain.exponentialRampToValueAtTime(0.01, start + 0.4);
+                gain.gain.setValueAtTime(0.8, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
 
                 osc.connect(gain);
                 gain.connect(c.destination);
-                osc.start(start);
-                osc.stop(start + 0.4);
+                osc.start(now);
+                osc.stop(now + 0.3);
+            }
+
+            // 3. Announcer Voice ("You Win")
+            // Delay slightly to let impact hit first
+            setTimeout(() => {
+                const utter = new SpeechSynthesisUtterance("You Win!");
+                utter.pitch = 0.7; // Deep voice
+                utter.rate = 0.9;  // Slightly slow
+                utter.volume = 1.0;
+                window.speechSynthesis.speak(utter);
+            }, 300);
+
+            // 4. Triumph Fanfare (Arcade Style) - Starts after voice/impact
+            const fanfareStart = now + 1.2;
+
+            // Fast Arpeggio Run
+            const arpeggio = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
+            arpeggio.forEach((freq, i) => {
+                const t = fanfareStart + (i * 0.06);
+                const osc = c.createOscillator();
+                const gain = c.createGain();
+                osc.type = 'square';
+                osc.frequency.value = freq;
+                gain.gain.setValueAtTime(0.1, t);
+                gain.gain.linearRampToValueAtTime(0, t + 0.06);
+                osc.connect(gain);
+                gain.connect(c.destination);
+                osc.start(t);
+                osc.stop(t + 0.06);
+            });
+
+            // Final Chords (Ba-Dum!)
+            [
+                { t: 0.3, freq: [783.99, 987.77, 1174.66] }, // G major (G5, B5, D6)
+                { t: 0.6, freq: [1046.50, 1318.51, 1567.98] } // C Major (C6, E6, G6)
+            ].forEach(chord => {
+                const t = fanfareStart + chord.t;
+                chord.freq.forEach(f => {
+                    const osc = c.createOscillator();
+                    const gain = c.createGain();
+                    osc.type = 'sawtooth';
+                    osc.frequency.value = f;
+
+                    // Brass envelope
+                    gain.gain.setValueAtTime(0, t);
+                    gain.gain.linearRampToValueAtTime(0.15, t + 0.05);
+                    gain.gain.exponentialRampToValueAtTime(0.01, t + 0.5);
+
+                    osc.connect(gain);
+                    gain.connect(c.destination);
+                    osc.start(t);
+                    osc.stop(t + 0.6);
+                });
             });
             break;
     }

@@ -189,6 +189,7 @@ onUnmounted(() => {
                 :key="member.instanceId" 
                 class="sprite-wrapper"
                 :class="{ 'targetable': !!store.state.activePower }"
+                :style="{ '--strength-scale': Math.pow(member.character.strength, 0.4) }"
                 @click.stop="store.applyPower(member.instanceId)"
             >
                 <Transition name="fade">
@@ -209,6 +210,7 @@ onUnmounted(() => {
                 :key="member.instanceId" 
                 class="sprite-wrapper"
                 :class="{ 'targetable': !!store.state.activePower }"
+                :style="{ '--strength-scale': Math.pow(member.character.strength, 0.4) }"
                 @click.stop="store.applyPower(member.instanceId)"
             >
                 <Transition name="fade">
@@ -230,7 +232,7 @@ onUnmounted(() => {
 .rope-viewport {
   position: relative;
   width: 100%;
-  height: 25%;
+  height: 20%;
   background: #333;
   border-top: 4px solid #111;
   border-bottom: 4px solid #111;
@@ -311,7 +313,7 @@ onUnmounted(() => {
 }
 
 .sprite {
-    font-size: 2.5rem;
+    font-size: calc(2.5rem * var(--strength-scale, 1));
     filter: drop-shadow(2px 2px 0px black);
     transform-origin: center;
 }
@@ -434,7 +436,7 @@ onUnmounted(() => {
 
 @media (max-height: 500px) {
   .rope-assembly { width: 500px; height: 60px; }
-  .sprite { font-size: 1.5rem; }
+  .sprite { font-size: calc(1.5rem * var(--strength-scale, 1)); }
   .center-flag { font-size: 2rem; }
   .rope-line { left: 20px; right: 20px; }
 }
@@ -442,7 +444,7 @@ onUnmounted(() => {
 .rope-container {
     position: relative;
     width: 100%;
-    height: 100px; /* Or whatever space we allot to rope */
+    height: 80%; /* Or whatever space we allot to rope */
     display: flex;
     justify-content: center;
     align-items: center;
