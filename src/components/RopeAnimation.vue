@@ -2,7 +2,7 @@
 import { computed, ref, watch, onMounted, onUnmounted } from 'vue';
 import { useGameStore } from '../stores/game';
 import { COMMENTARY, COMMENTARY_TYPE, type CommentaryType } from '../data/commentary';
-import { PLAYER_ID } from '../constants';
+import { PLAYER_ID, TARGET_KEYS } from '../constants';
 
 const store = useGameStore();
 
@@ -172,6 +172,7 @@ onUnmounted(() => {
                 }"
                 @click.stop="store.capturePowerSprite(sprite.id)"
              >
+                <div class="sprite-key" v-if="sprite.key">{{ sprite.key.toUpperCase() }}</div>
                 {{ sprite.asset }}
              </div>
         </TransitionGroup>
@@ -185,13 +186,14 @@ onUnmounted(() => {
             <!-- Left Pullers (P1) -->
         <TransitionGroup name="pop" tag="div" class="puller-group left-group">
             <div 
-                v-for="member in store.state.leftPlayer.crew" 
+                v-for="(member, idx) in store.state.leftPlayer.crew" 
                 :key="member.instanceId" 
                 class="sprite-wrapper"
                 :class="{ 'targetable': !!store.state.activePower }"
                 :style="{ '--strength-scale': Math.pow(member.character.strength, 0.4) }"
                 @click.stop="store.applyPower(member.instanceId)"
             >
+                <div class="puller-key" v-if="store.state.activePower">{{ TARGET_KEYS.LEFT[idx]?.toUpperCase() }}</div>
                 <Transition name="fade">
                     <div v-if="commentaries[member.instanceId]" class="commentary-bubble">
                         {{ commentaries[member.instanceId] }}
@@ -206,13 +208,14 @@ onUnmounted(() => {
         <!-- Right Pullers (P2) -->
         <TransitionGroup name="pop" tag="div" class="puller-group right-group">
             <div 
-                v-for="member in store.state.rightPlayer.crew" 
+                v-for="(member, idx) in store.state.rightPlayer.crew" 
                 :key="member.instanceId" 
                 class="sprite-wrapper"
                 :class="{ 'targetable': !!store.state.activePower }"
                 :style="{ '--strength-scale': Math.pow(member.character.strength, 0.4) }"
                 @click.stop="store.applyPower(member.instanceId)"
             >
+                <div class="puller-key" v-if="store.state.activePower">{{ TARGET_KEYS.RIGHT[idx]?.toUpperCase() }}</div>
                 <Transition name="fade">
                     <div v-if="commentaries[member.instanceId]" class="commentary-bubble">
                         {{ commentaries[member.instanceId] }}
@@ -472,6 +475,25 @@ onUnmounted(() => {
     z-index: 101;
 }
 
+.sprite-key {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    background: #fff;
+    color: #000;
+    font-size: 1rem;
+    font-weight: bold;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    z-index: 102;
+    border: 2px solid #000;
+}
+
 .power-sprite.clickable {
     cursor: pointer;
     animation: pulse 0.5s infinite alternate;
@@ -497,6 +519,26 @@ onUnmounted(() => {
     border-radius: 50%;
     animation: rotate 2s linear infinite;
     pointer-events: none;
+}
+
+.puller-key {
+    position: absolute;
+    top: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #ffff00;
+    color: #000;
+    font-size: 0.8rem;
+    font-weight: bold;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    z-index: 201; /* Above targetable border */
+    border: 1px solid #000;
 }
 
 .targetable:hover::before {

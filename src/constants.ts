@@ -82,3 +82,13 @@ export const POWER_SPRITES_DATA = [
     { id: 'lightning', emoji: '⚡', type: POWER_TYPE.WEAKEN, amount: 5, name: 'Lightning' },
     { id: 'broken_heart', emoji: '💔', type: POWER_TYPE.WEAKEN, amount: 6, name: 'Broken Heart' },
 ] as const;
+
+export const SPRITE_KEYS = [
+    'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
+    '5', '6', '7', '8', '9', '0'
+];
+
+export const TARGET_KEYS = {
+    LEFT: ['q', 'w', 'e', 'r', 't', 'y'],
+    RIGHT: ['u', 'i', 'o', 'p', 'j', 'k']
+} as const;

@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
 import type { GameState, Question, PowerSprite } from '../types';
-import { PLAYER_ID, type PlayerId, CHARACTERS, SOUND_TYPE, STORAGE_KEYS, POWER_SPRITES_DATA, POWER_TYPE, POWER_CONFIG } from '../constants';
+import { PLAYER_ID, type PlayerId, CHARACTERS, SOUND_TYPE, STORAGE_KEYS, POWER_SPRITES_DATA, POWER_TYPE, POWER_CONFIG, SPRITE_KEYS } from '../constants';
 import ServiceFactory from '../services';
 import { playSound } from '../services/audio';
 
@@ -297,6 +297,15 @@ export const useGameStore = defineStore('game', () => {
         // Only spawn if field is clear (START of a power event)
         if (state.value.activeSprites.length > 0) return;
 
+        // Prepare keys: shuffle SPRITE_KEYS
+        const availableKeys = [...SPRITE_KEYS];
+        for (let i = availableKeys.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            const temp = availableKeys[i]!;
+            availableKeys[i] = availableKeys[j]!;
+            availableKeys[j] = temp;
+        }
+
         [PLAYER_ID.LEFT, PLAYER_ID.RIGHT].forEach(pid => {
             const spriteData = POWER_SPRITES_DATA[Math.floor(Math.random() * POWER_SPRITES_DATA.length)];
             if (!spriteData) return;
@@ -305,6 +314,8 @@ export const useGameStore = defineStore('game', () => {
             const xPos = pid === PLAYER_ID.LEFT
                 ? Math.random() * 30 + 2
                 : Math.random() * 30 + 68;
+
+            const key = availableKeys.pop() || '';
 
             const sprite: PowerSprite = {
                 id: Math.random().toString(36).substr(2, 9),
@@ -317,7 +328,8 @@ export const useGameStore = defineStore('game', () => {
                 createdAt: Date.now(),
                 asset: spriteData.emoji,
                 amount: spriteData.amount,
-                name: spriteData.name
+                name: spriteData.name,
+                key
             };
             state.value.activeSprites.push(sprite);
         });

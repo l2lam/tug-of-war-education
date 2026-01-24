@@ -12,6 +12,7 @@ export interface PowerSprite {
     asset: string; // Emoji character
     amount: number; // Power amount
     name: string; // Name of the power
+    key?: string; // Keyboard key to capture
 }
 
 export interface ActivePower {

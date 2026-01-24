@@ -4,7 +4,7 @@ import { useGameStore } from '../stores/game';
 import { useGameLoop } from '../engine/GameLoop';
 import PlayerArea from '../components/PlayerArea.vue';
 import RopeAnimation from '../components/RopeAnimation.vue';
-import { PLAYER_ID, SOUND_TYPE } from '../constants';
+import { PLAYER_ID, SOUND_TYPE, TARGET_KEYS } from '../constants';
 import { playSound, startBackgroundMusic, stopBackgroundMusic, MUSIC_TRACK } from '../services/audio';
 import { useVolumeControl } from '../composables/useVolumeControl';
 
@@ -15,11 +15,39 @@ const leftPlayerArea = ref<any>(null);
 const rightPlayerArea = ref<any>(null);
 
 function handleKeydown(e: KeyboardEvent) {
-  if (!store.state.isPlaying || store.state.isPaused || store.state.isTransitioning || store.state.winner) {
+  // Allow input if activePower is present (even if paused), otherwise block on pause/transition
+  if (!store.state.isPlaying || (store.state.isPaused && !store.state.activePower) || store.state.isTransitioning || store.state.winner) {
     return;
   }
 
   const key = e.key.toLowerCase();
+
+  // Phase 2: Power Application (Select Target)
+  if (store.state.activePower) {
+      const leftIdx = TARGET_KEYS.LEFT.indexOf(key as any);
+      if (leftIdx !== -1) {
+          const member = store.state.leftPlayer.crew[leftIdx];
+          if (member) store.applyPower(member.instanceId);
+          return;
+      }
+      
+      const rightIdx = TARGET_KEYS.RIGHT.indexOf(key as any);
+      if (rightIdx !== -1) {
+          const member = store.state.rightPlayer.crew[rightIdx];
+          if (member) store.applyPower(member.instanceId);
+          return;
+      }
+      return; // Block other inputs during power phase
+  }
+
+  // Phase 1: Gameplay (Catch Sprites or Answer)
+  
+  // Check Sprites first
+  const sprite = store.state.activeSprites.find(s => s.key === key);
+  if (sprite) {
+      store.capturePowerSprite(sprite.id);
+      return; 
+  }
 
   // Left Player: A, B, C, D
   if (key === 'a') leftPlayerArea.value?.handleAnswer(0);
